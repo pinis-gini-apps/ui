@@ -56,7 +56,7 @@ export const parseJob = (job, tab) => {
 
     jobItem = {
       artifacts: job.status.artifacts || [],
-      error: job.status.error ?? '',
+      error: job.status.error ?? job.status.status_text ?? '',
       function: job.spec?.function ?? '',
       handler: job.spec?.handler ?? '',
       hyper_param_options: job.spec?.hyper_param_options || {},
