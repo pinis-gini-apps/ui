@@ -36,6 +36,7 @@ import { parseUri } from './parseUri'
 import { generateFunctionDetailsLink } from './generateFunctionDetailsLink'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 import { validateArguments } from './validateArguments'
+import { roundFloats } from './roundFloats'
 import TableProducerCell from '../elements/TableProducerCell/TableProducerCell'
 
 import { ReactComponent as SeverityOk } from 'igz-controls/images/severity-ok.svg'
@@ -227,7 +228,7 @@ export const createModelsRowData = (
       content.push({
         id: `${key}.${artifact.ui.identifierUnique}`,
         headerIsHidden: true,
-        value: parseFloat(value),
+        value: roundFloats(value, 4),
         className: 'table-cell-1',
         bodyCellClassName
       })

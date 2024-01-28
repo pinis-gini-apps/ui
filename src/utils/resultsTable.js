@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { capitalize, isObjectLike } from 'lodash'
+import { roundFloats } from './roundFloats'
 
 export const generateResultsContent = job => {
   let content = []
@@ -40,8 +41,7 @@ export const generateResultsContent = job => {
     content = Object.keys(job.results).map(resultName => {
       const resultValue = isObjectLike(job.results[resultName])
         ? JSON.stringify(job.results[resultName])
-        : job.results[resultName]
-
+        : roundFloats(job.results[resultName], 4)
       return [
         {
           headerId: 'name',
