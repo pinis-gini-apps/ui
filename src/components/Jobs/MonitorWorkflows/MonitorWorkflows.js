@@ -61,7 +61,7 @@ import { parseJob } from '../../../utils/parseJob'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { setNotification } from '../../../reducers/notificationReducer'
 import { showErrorNotification } from '../../../utils/notifications.util'
-import { datePickerOptions, PAST_24_HOUR_DATE_OPTION } from '../../../utils/datePicker.util'
+import { datePickerOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
 import { useMode } from '../../../hooks/mode.hook'
 import { usePods } from '../../../hooks/usePods.hook'
 import { useSortTable } from '../../../hooks/useSortTable.hook'
@@ -516,7 +516,7 @@ const MonitorWorkflows = ({
           dispatch(setFilters(filters))
         } else {
           const pastDayOption = datePickerOptions.find(
-            option => option.id === PAST_24_HOUR_DATE_OPTION
+            option => option.id === PAST_WEEK_DATE_OPTION
           )
           const filters = {
             dates: {
