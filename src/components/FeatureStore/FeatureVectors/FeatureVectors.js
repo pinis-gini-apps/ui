@@ -69,6 +69,8 @@ const FeatureVectors = ({
   const [selectedFeatureVector, setSelectedFeatureVector] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
+  const [createVectorPopUpIsOpen, setCreateVectorPopUpIsOpen] = useState(false)
+
   const openPanelByDefault = useOpenPanel()
   const [urlTagOption] = useGetTagOptions(fetchFeatureVectorsTags, featureVectorsFilters)
   const params = useParams()
@@ -80,12 +82,7 @@ const FeatureVectors = ({
   const location = useLocation()
   const dispatch = useDispatch()
 
-  const {
-    createVectorPopUpIsOpen,
-    setCreateVectorPopUpIsOpen,
-    setConfirmData,
-    toggleConvertedYaml
-  } = React.useContext(FeatureStoreContext)
+  const { setConfirmData, toggleConvertedYaml } = React.useContext(FeatureStoreContext)
 
   const pageData = useMemo(() => generatePageData(selectedFeatureVector), [selectedFeatureVector])
 
@@ -97,7 +94,11 @@ const FeatureVectors = ({
       description: selectedFeatureVector.description,
       labels: parseChipsData(selectedFeatureVector.labels)
     }),
-    [selectedFeatureVector.description, selectedFeatureVector.labels, selectedFeatureVector.specFeatures]
+    [
+      selectedFeatureVector.description,
+      selectedFeatureVector.labels,
+      selectedFeatureVector.specFeatures
+    ]
   )
 
   const fetchData = useCallback(
@@ -353,6 +354,10 @@ const FeatureVectors = ({
     navigate(`/projects/${params.projectName}/feature-store/add-to-feature-vector`)
   }
 
+  const handleActionsMenuClick = () => {
+    return setCreateVectorPopUpIsOpen(true)
+  }
+
   useEffect(() => {
     setSelectedRowData({})
   }, [filtersStore.tag])
@@ -434,6 +439,7 @@ const FeatureVectors = ({
       featureStore={featureStore}
       featureVectors={featureVectors}
       filtersStore={filtersStore}
+      handleActionsMenuClick={handleActionsMenuClick}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
       largeRequestErrorMessage={largeRequestErrorMessage}
@@ -442,8 +448,11 @@ const FeatureVectors = ({
       selectedFeatureVector={selectedFeatureVector}
       selectedRowData={selectedRowData}
       setCreateVectorPopUpIsOpen={setCreateVectorPopUpIsOpen}
+      setFeatureVectors={setFeatureVectors}
       setSelectedFeatureVector={handleSelectFeatureVector}
+      setSelectedRowData={setSelectedRowData}
       tableContent={tableContent}
+      urlTagOption={urlTagOption}
     />
   )
 }

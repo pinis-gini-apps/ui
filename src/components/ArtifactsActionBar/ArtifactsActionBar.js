@@ -50,6 +50,7 @@ function ArtifactsActionBar({
   cancelRequest,
   filterMenuName,
   handleRefresh,
+  iteration,
   page,
   removeSelectedItem,
   setContent,
@@ -106,7 +107,7 @@ function ArtifactsActionBar({
       }
 
       setContent([])
-      dispatch(removeSelectedItem({}))
+      if (removeSelectedItem !== null) dispatch(removeSelectedItem({}))
       setSelectedRowData({})
       handleRefresh({ name, ...filterMenuModal })
     }
@@ -156,7 +157,12 @@ function ArtifactsActionBar({
               values={filtersInitialState}
               wizardClassName="artifacts-filters__wrapper"
             >
-              <ArtifactsFilters artifacts={artifacts} filterMenuName={filterMenuName} page={page} />
+              <ArtifactsFilters
+                iteration={iteration}
+                artifacts={artifacts}
+                filterMenuName={filterMenuName}
+                page={page}
+              />
             </FilterMenuModal>
           </div>
           <div className="action-bar__actions">
@@ -187,6 +193,8 @@ function ArtifactsActionBar({
 ArtifactsActionBar.defaultProps = {
   actionButtons: [],
   cancelRequest: null,
+  iteration: true,
+  removeSelectedItem: null,
   tab: ''
 }
 
@@ -204,8 +212,9 @@ ArtifactsActionBar.propTypes = {
   cancelRequest: PropTypes.func,
   filterMenuName: PropTypes.string.isRequired,
   handleRefresh: PropTypes.func.isRequired,
+  iteration: PropTypes.bool,
   page: PropTypes.string.isRequired,
-  removeSelectedItem: PropTypes.func.isRequired,
+  removeSelectedItem: PropTypes.func,
   setContent: PropTypes.func.isRequired,
   setSelectedRowData: PropTypes.func.isRequired,
   tab: PropTypes.string

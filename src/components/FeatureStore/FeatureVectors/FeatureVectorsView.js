@@ -25,10 +25,14 @@ import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
 import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
 import CreateFeatureVectorPopUp from '../../../elements/CreateFeatureVectorPopUp/CreateFeatureVectorPopUp'
+import FeatureStoreTabs from '../FeatureStoreTabs/FeaturePageTabs'
+import ArtifactsActionBar from '../../ArtifactsActionBar/ArtifactsActionBar'
 
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { featureVectorsFilters } from './featureVectors.util'
-import { FEATURE_STORE_PAGE, FEATURE_VECTORS_TAB } from '../../../constants'
+import { createFeatureVectorTitle } from '../featureStore.util'
+import { PRIMARY_BUTTON } from 'igz-controls/constants'
+import { FEATURE_FILTERS, FEATURE_STORE_PAGE, FEATURE_VECTORS_TAB } from '../../../constants'
 
 const FeatureVectorsView = React.forwardRef(
   (
@@ -41,6 +45,7 @@ const FeatureVectorsView = React.forwardRef(
       featureStore,
       featureVectors,
       filtersStore,
+      handleActionsMenuClick,
       handleExpandRow,
       handleRefresh,
       largeRequestErrorMessage,
@@ -48,14 +53,18 @@ const FeatureVectorsView = React.forwardRef(
       selectedFeatureVector,
       selectedRowData,
       setCreateVectorPopUpIsOpen,
+      setFeatureVectors,
       setSelectedFeatureVector,
-      tableContent
+      setSelectedRowData,
+      tableContent,
+      urlTagOption
     },
     ref
   ) => {
     return (
       <div className="feature-store" ref={ref}>
         <div className="content__action-bar-wrapper">
+          <FeatureStoreTabs />
           <div className="action-bar">
             <FilterMenu
               filters={featureVectorsFilters}
@@ -63,6 +72,27 @@ const FeatureVectorsView = React.forwardRef(
               page={FEATURE_STORE_PAGE}
               tab={FEATURE_VECTORS_TAB}
               withoutExpandButton
+            />
+          </div>
+          <div className="content__action-bar-wrapper">
+            <ArtifactsActionBar
+              actionButtons={[
+                {
+                  variant: PRIMARY_BUTTON,
+                  label: createFeatureVectorTitle,
+                  className: 'action-button',
+                  onClick: handleActionsMenuClick
+                }
+              ]}
+              artifacts={featureVectors}
+              filterMenuName={FEATURE_FILTERS}
+              handleRefresh={handleRefresh}
+              iteration={false}
+              page={FEATURE_STORE_PAGE}
+              setContent={setFeatureVectors}
+              setSelectedRowData={setSelectedRowData}
+              tab={FEATURE_VECTORS_TAB}
+              urlTagOption={urlTagOption}
             />
           </div>
         </div>
@@ -125,6 +155,7 @@ FeatureVectorsView.propTypes = {
   featureStore: PropTypes.object.isRequired,
   featureVectors: PropTypes.arrayOf(PropTypes.object).isRequired,
   filtersStore: PropTypes.object.isRequired,
+  handleActionsMenuClick: PropTypes.func.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
   largeRequestErrorMessage: PropTypes.string.isRequired,
@@ -132,8 +163,11 @@ FeatureVectorsView.propTypes = {
   selectedFeatureVector: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
   setCreateVectorPopUpIsOpen: PropTypes.func.isRequired,
+  setFeatureVectors: PropTypes.func.isRequired,
   setSelectedFeatureVector: PropTypes.func.isRequired,
-  tableContent: PropTypes.arrayOf(PropTypes.object).isRequired
+  setSelectedRowData: PropTypes.func.isRequired,
+  tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
+  urlTagOption: PropTypes.string
 }
 
 export default FeatureVectorsView

@@ -24,6 +24,7 @@ import FilterMenu from '../../FilterMenu/FilterMenu'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
 import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
+import FeatureStoreTabs from '../FeatureStoreTabs/FeaturePageTabs'
 
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { featuresFilters } from './features.util'
@@ -51,6 +52,7 @@ const FeaturesView = React.forwardRef(
     return (
       <div className="feature-store" ref={ref}>
         <div className="content__action-bar-wrapper">
+          <FeatureStoreTabs />
           <div className="action-bar">
             <FilterMenu
               actionButton={{

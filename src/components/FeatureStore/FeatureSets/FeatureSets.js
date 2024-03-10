@@ -64,6 +64,7 @@ const FeatureSets = ({
   const [selectedFeatureSet, setSelectedFeatureSet] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
+  const [featureSetsPanelIsOpen, setFeatureSetsPanelIsOpen] = useState(false)
 
   const openPanelByDefault = useOpenPanel()
   const [urlTagOption] = useGetTagOptions(fetchFeatureSetsTags, featureSetsFilters)
@@ -83,9 +84,7 @@ const FeatureSets = ({
     }),
     [selectedFeatureSet.description, selectedFeatureSet.labels]
   )
-
-  const { featureSetsPanelIsOpen, setFeatureSetsPanelIsOpen, toggleConvertedYaml } =
-    React.useContext(FeatureStoreContext)
+  const { toggleConvertedYaml } = React.useContext(FeatureStoreContext)
 
   const pageData = useMemo(() => generatePageData(selectedFeatureSet), [selectedFeatureSet])
 
@@ -276,6 +275,10 @@ const FeatureSets = ({
     }
   }
 
+  const handleActionsMenuClick = () => {
+    return setFeatureSetsPanelIsOpen(true)
+  }
+
   useEffect(() => {
     setSelectedRowData({})
   }, [filtersStore.tag])
@@ -359,6 +362,7 @@ const FeatureSets = ({
       featureSetsPanelIsOpen={featureSetsPanelIsOpen}
       featureStore={featureStore}
       filtersStore={filtersStore}
+      handleActionsMenuClick={handleActionsMenuClick}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
       largeRequestErrorMessage={largeRequestErrorMessage}
@@ -366,8 +370,11 @@ const FeatureSets = ({
       ref={featureStoreRef}
       selectedFeatureSet={selectedFeatureSet}
       selectedRowData={selectedRowData}
+      setFeatureSets={setFeatureSets}
       setSelectedFeatureSet={handleSelectFeatureSet}
+      setSelectedRowData={setSelectedRowData}
       tableContent={tableContent}
+      urlTagOption={urlTagOption}
     />
   )
 }

@@ -26,9 +26,13 @@ import Table from '../../Table/Table'
 import NoData from '../../../common/NoData/NoData'
 import FeatureSetsPanel from '../../FeatureSetsPanel/FeatureSetsPanel'
 import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
+import FeatureStoreTabs from '../FeatureStoreTabs/FeaturePageTabs'
+import ArtifactsActionBar from '../../ArtifactsActionBar/ArtifactsActionBar'
 
 import { featureSetsFilters } from './featureSets.util'
-import { FEATURE_SETS_TAB, FEATURE_STORE_PAGE } from '../../../constants'
+import { createFeatureSetTitle } from '../featureStore.util'
+import { PRIMARY_BUTTON } from 'igz-controls/constants'
+import { FEATURE_FILTERS, FEATURE_SETS_TAB, FEATURE_STORE_PAGE } from '../../../constants'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 
 const FeatureSetsView = React.forwardRef(
@@ -44,14 +48,18 @@ const FeatureSetsView = React.forwardRef(
       featureSetsPanelIsOpen,
       featureStore,
       filtersStore,
+      handleActionsMenuClick,
       handleExpandRow,
       handleRefresh,
       largeRequestErrorMessage,
       pageData,
       selectedFeatureSet,
       selectedRowData,
+      setFeatureSets,
       setSelectedFeatureSet,
-      tableContent
+      setSelectedRowData,
+      tableContent,
+      urlTagOption
     },
     ref
   ) => {
@@ -60,6 +68,7 @@ const FeatureSetsView = React.forwardRef(
     return (
       <div className="feature-store" ref={ref}>
         <div className="content__action-bar-wrapper">
+          <FeatureStoreTabs />
           <div className="action-bar">
             <FilterMenu
               filters={featureSetsFilters}
@@ -67,6 +76,27 @@ const FeatureSetsView = React.forwardRef(
               page={FEATURE_STORE_PAGE}
               tab={FEATURE_SETS_TAB}
               withoutExpandButton
+            />
+          </div>
+          <div className="content__action-bar-wrapper">
+            <ArtifactsActionBar
+              actionButtons={[
+                {
+                  variant: PRIMARY_BUTTON,
+                  label: createFeatureSetTitle,
+                  className: 'action-button',
+                  onClick: handleActionsMenuClick
+                }
+              ]}
+              artifacts={featureSets}
+              setContent={setFeatureSets}
+              filterMenuName={FEATURE_FILTERS}
+              iteration={false}
+              tab={FEATURE_SETS_TAB}
+              handleRefresh={handleRefresh}
+              page={FEATURE_STORE_PAGE}
+              setSelectedRowData={setSelectedRowData}
+              urlTagOption={urlTagOption}
             />
           </div>
         </div>
@@ -132,14 +162,18 @@ FeatureSetsView.propTypes = {
   featureSetsPanelIsOpen: PropTypes.bool.isRequired,
   featureStore: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
+  handleActionsMenuClick: PropTypes.func.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
   largeRequestErrorMessage: PropTypes.string.isRequired,
   pageData: PropTypes.object.isRequired,
   selectedFeatureSet: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
+  setFeatureSets: PropTypes.func.isRequired,
   setSelectedFeatureSet: PropTypes.func.isRequired,
-  tableContent: PropTypes.arrayOf(PropTypes.object).isRequired
+  setSelectedRowData: PropTypes.func.isRequired,
+  tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
+  urlTagOption: PropTypes.string
 }
 
 export default FeatureSetsView
