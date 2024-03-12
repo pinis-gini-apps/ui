@@ -21,7 +21,6 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
-import FilterMenu from '../../FilterMenu/FilterMenu'
 import Table from '../../Table/Table'
 import NoData from '../../../common/NoData/NoData'
 import FeatureSetsPanel from '../../FeatureSetsPanel/FeatureSetsPanel'
@@ -69,15 +68,6 @@ const FeatureSetsView = React.forwardRef(
       <div className="feature-store" ref={ref}>
         <div className="content__action-bar-wrapper">
           <FeatureStoreTabs />
-          <div className="action-bar">
-            <FilterMenu
-              filters={featureSetsFilters}
-              onChange={handleRefresh}
-              page={FEATURE_STORE_PAGE}
-              tab={FEATURE_SETS_TAB}
-              withoutExpandButton
-            />
-          </div>
           <div className="content__action-bar-wrapper">
             <ArtifactsActionBar
               actionButtons={[

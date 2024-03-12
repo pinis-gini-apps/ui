@@ -20,7 +20,6 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import FilterMenu from '../../FilterMenu/FilterMenu'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
 import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
@@ -65,15 +64,6 @@ const FeatureVectorsView = React.forwardRef(
       <div className="feature-store" ref={ref}>
         <div className="content__action-bar-wrapper">
           <FeatureStoreTabs />
-          <div className="action-bar">
-            <FilterMenu
-              filters={featureVectorsFilters}
-              onChange={handleRefresh}
-              page={FEATURE_STORE_PAGE}
-              tab={FEATURE_VECTORS_TAB}
-              withoutExpandButton
-            />
-          </div>
           <div className="content__action-bar-wrapper">
             <ArtifactsActionBar
               actionButtons={[

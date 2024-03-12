@@ -20,7 +20,7 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import FilterMenu from '../../FilterMenu/FilterMenu'
+import ArtifactsActionBar from '../../ArtifactsActionBar/ArtifactsActionBar'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
 import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
@@ -28,7 +28,7 @@ import FeatureStoreTabs from '../FeatureStoreTabs/FeaturePageTabs'
 
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { featuresFilters } from './features.util'
-import { FEATURE_STORE_PAGE, FEATURES_TAB } from '../../../constants'
+import { FEATURE_FILTERS, FEATURE_STORE_PAGE, FEATURES_TAB } from '../../../constants'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 
 const FeaturesView = React.forwardRef(
@@ -44,8 +44,11 @@ const FeaturesView = React.forwardRef(
       largeRequestErrorMessage,
       pageData,
       selectedRowData,
+      setFeatures,
+      setSelectedRowData,
       tableContent,
-      tableStore
+      tableStore,
+      urlTagOption
     },
     ref
   ) => {
@@ -53,18 +56,26 @@ const FeaturesView = React.forwardRef(
       <div className="feature-store" ref={ref}>
         <div className="content__action-bar-wrapper">
           <FeatureStoreTabs />
-          <div className="action-bar">
-            <FilterMenu
-              actionButton={{
-                label: 'Add to feature vector',
-                variant: SECONDARY_BUTTON,
-                getCustomTemplate: getPopUpTemplate
-              }}
-              filters={featuresFilters}
-              onChange={handleRefresh}
+          <div className="content__action-bar-wrapper">
+            <ArtifactsActionBar
+              actionButtons={[
+                {
+                  className: 'action-button',
+                  label: 'Add to feature vector',
+                  onClick: getPopUpTemplate,
+                  popupButton: true,
+                  variant: SECONDARY_BUTTON
+                }
+              ]}
+              artifacts={features}
+              filterMenuName={FEATURE_FILTERS}
+              handleRefresh={handleRefresh}
+              iteration={false}
               page={FEATURE_STORE_PAGE}
+              setContent={setFeatures}
+              setSelectedRowData={setSelectedRowData}
               tab={FEATURES_TAB}
-              withoutExpandButton
+              urlTagOption={urlTagOption}
             />
           </div>
         </div>
@@ -123,8 +134,11 @@ FeaturesView.propTypes = {
   largeRequestErrorMessage: PropTypes.string.isRequired,
   pageData: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
+  setFeatures: PropTypes.func.isRequired,
+  setSelectedRowData: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
-  tableStore: PropTypes.object.isRequired
+  tableStore: PropTypes.object.isRequired,
+  urlTagOption: PropTypes.string
 }
 
 export default FeaturesView

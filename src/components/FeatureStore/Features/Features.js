@@ -234,7 +234,9 @@ const Features = ({
     action => {
       return (
         <AddToFeatureVectorPopUp
+          key="feature-vector-popup"
           action={action}
+          className="feature-vector-popup-button"
           currentProject={params.projectName}
           fetchFeatureVectors={fetchFeatureVectors}
         />
@@ -291,8 +293,11 @@ const Features = ({
       pageData={pageData}
       ref={featureStoreRef}
       selectedRowData={selectedRowData}
+      setFeatures={setFeatures}
+      setSelectedRowData={setSelectedRowData}
       tableContent={tableContent}
       tableStore={tableStore}
+      urlTagOption={urlTagOption}
     />
   )
 }

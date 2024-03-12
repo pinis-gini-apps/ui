@@ -38,6 +38,7 @@ import './addToFeatureVectorPopUp.scss'
 
 const AddToFeatureVectorPopUp = ({
   action,
+  className,
   currentProject,
   fetchFeatureVectors,
   featureStore,
@@ -197,6 +198,7 @@ const AddToFeatureVectorPopUp = ({
         }
         disabled={action.disabled || !featureStore.features?.allData?.length}
         onClick={handleAddToFeatureVector}
+        className={className}
       />
       {isPopUpOpen && (
         <PopUpDialog
@@ -282,8 +284,13 @@ const AddToFeatureVectorPopUp = ({
   )
 }
 
+AddToFeatureVectorPopUp.defaultProps = {
+  className: ''
+}
+
 AddToFeatureVectorPopUp.propTypes = {
   action: PropTypes.shape({}).isRequired,
+  className: PropTypes.string,
   currentProject: PropTypes.string.isRequired,
   fetchFeatureVectors: PropTypes.func.isRequired
 }
