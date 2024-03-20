@@ -25,7 +25,7 @@ import Table from '../../Table/Table'
 import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
 import CreateFeatureVectorPopUp from '../../../elements/CreateFeatureVectorPopUp/CreateFeatureVectorPopUp'
 import FeatureStoreTabs from '../FeatureStoreTabs/FeaturePageTabs'
-import ArtifactsActionBar from '../../ArtifactsActionBar/ArtifactsActionBar'
+import FeatureActionBar from '../../FeatureActionBar/FeatureActionBar'
 
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { featureVectorsFilters } from './featureVectors.util'
@@ -65,7 +65,7 @@ const FeatureVectorsView = React.forwardRef(
         <div className="content__action-bar-wrapper">
           <FeatureStoreTabs />
           <div className="content__action-bar-wrapper">
-            <ArtifactsActionBar
+            <FeatureActionBar
               actionButtons={[
                 {
                   variant: PRIMARY_BUTTON,
@@ -74,10 +74,9 @@ const FeatureVectorsView = React.forwardRef(
                   onClick: handleActionsMenuClick
                 }
               ]}
-              artifacts={featureVectors}
+              features={featureVectors}
               filterMenuName={FEATURE_FILTERS}
               handleRefresh={handleRefresh}
-              iteration={false}
               page={FEATURE_STORE_PAGE}
               setContent={setFeatureVectors}
               setSelectedRowData={setSelectedRowData}

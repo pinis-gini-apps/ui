@@ -26,7 +26,7 @@ import NoData from '../../../common/NoData/NoData'
 import FeatureSetsPanel from '../../FeatureSetsPanel/FeatureSetsPanel'
 import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
 import FeatureStoreTabs from '../FeatureStoreTabs/FeaturePageTabs'
-import ArtifactsActionBar from '../../ArtifactsActionBar/ArtifactsActionBar'
+import FeatureActionBar from '../../FeatureActionBar/FeatureActionBar'
 
 import { featureSetsFilters } from './featureSets.util'
 import { createFeatureSetTitle } from '../featureStore.util'
@@ -69,7 +69,7 @@ const FeatureSetsView = React.forwardRef(
         <div className="content__action-bar-wrapper">
           <FeatureStoreTabs />
           <div className="content__action-bar-wrapper">
-            <ArtifactsActionBar
+            <FeatureActionBar
               actionButtons={[
                 {
                   variant: PRIMARY_BUTTON,
@@ -78,14 +78,13 @@ const FeatureSetsView = React.forwardRef(
                   onClick: handleActionsMenuClick
                 }
               ]}
-              artifacts={featureSets}
-              setContent={setFeatureSets}
+              features={featureSets}
               filterMenuName={FEATURE_FILTERS}
-              iteration={false}
-              tab={FEATURE_SETS_TAB}
               handleRefresh={handleRefresh}
               page={FEATURE_STORE_PAGE}
+              setContent={setFeatureSets}
               setSelectedRowData={setSelectedRowData}
+              tab={FEATURE_SETS_TAB}
               urlTagOption={urlTagOption}
             />
           </div>

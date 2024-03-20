@@ -32,14 +32,10 @@ import ArtifactsFilters from './ArtifactsFilters'
 import NameFilter from '../../common/NameFilter/NameFilter'
 
 import {
-  FEATURE_FILTERS,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
-  MODELS_FILTERS,
   REQUEST_CANCELED,
-  TAG_FILTER,
-  TAG_FILTER_ALL_ITEMS,
-  TAG_LATEST
+  TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 import detailsActions from '../../actions/details'
 import { removeFilters, setFilters } from '../../reducers/filtersReducer'
@@ -53,7 +49,6 @@ function ArtifactsActionBar({
   cancelRequest,
   filterMenuName,
   handleRefresh,
-  iteration,
   page,
   removeSelectedItem,
   setContent,
@@ -77,10 +72,9 @@ function ArtifactsActionBar({
 
   const filtersInitialState = useMemo(() => {
     return {
-      ...filterMenuModal.initialValues,
-      [TAG_FILTER]: urlTagOption ?? filterMenuModal.initialValues.tag
+      ...filterMenuModal.initialValues
     }
-  }, [filterMenuModal.initialValues, urlTagOption])
+  }, [filterMenuModal.initialValues])
 
   useEffect(() => {
     return () => {
@@ -96,35 +90,21 @@ function ArtifactsActionBar({
         navigate(`/projects/${params.projectName}/${page.toLowerCase()}${tab ? `/${tab}` : ''}`)
       }
 
-      if (filterMenuName === FEATURE_FILTERS) {
-        if (
-          filterMenuModal.tag === TAG_FILTER_ALL_ITEMS &&
-          filtersStore.groupBy === GROUP_BY_NONE
-        ) {
-          dispatch(setFilters({ groupBy: GROUP_BY_NAME, tag: TAG_FILTER_ALL_ITEMS }))
-        } else if (
-          filterMenuModal.tag !== TAG_FILTER_ALL_ITEMS &&
-          filtersStore.groupBy === GROUP_BY_NAME
-        ) {
-          dispatch(setFilters({ groupBy: GROUP_BY_NONE, tag: TAG_LATEST }))
-        }
-      } else if (filterMenuName === MODELS_FILTERS) {
-        if (
-          (filterMenuModal.tag === TAG_FILTER_ALL_ITEMS || isEmpty(filterMenuModal.iter)) &&
-          filtersStore.groupBy === GROUP_BY_NONE
-        ) {
-          dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
-        } else if (
-          filtersStore.groupBy === GROUP_BY_NAME &&
-          filterMenuModal.tag !== TAG_FILTER_ALL_ITEMS &&
-          !isEmpty(filterMenuModal.iter)
-        ) {
-          dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
-        }
+      if (
+        (filterMenuModal.tag === TAG_FILTER_ALL_ITEMS || isEmpty(filterMenuModal.iter)) &&
+        filtersStore.groupBy === GROUP_BY_NONE
+      ) {
+        dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
+      } else if (
+        filtersStore.groupBy === GROUP_BY_NAME &&
+        filterMenuModal.tag !== TAG_FILTER_ALL_ITEMS &&
+        !isEmpty(filterMenuModal.iter)
+      ) {
+        dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
       }
 
       setContent([])
-      if (removeSelectedItem !== null) dispatch(removeSelectedItem({}))
+      dispatch(removeSelectedItem({}))
       setSelectedRowData({})
       handleRefresh({ name, ...filterMenuModal })
     }
@@ -171,34 +151,25 @@ function ArtifactsActionBar({
               filterMenuName={filterMenuName}
               initialValues={filtersInitialState}
               restartFormTrigger={tab ?? page}
-              values={filtersInitialState}
+              values={filterMenuModal.values}
               wizardClassName="artifacts-filters__wrapper"
             >
-              <ArtifactsFilters
-                iteration={iteration}
-                artifacts={artifacts}
-                filterMenuName={filterMenuName}
-                page={page}
-              />
+              <ArtifactsFilters artifacts={artifacts} />
             </FilterMenuModal>
           </div>
           <div className="action-bar__actions">
-            {actionButtons.map((actionButton, index) =>
-              actionButton &&
-              !actionButton.hidden &&
-              actionButton.popupButton &&
-              actionButton.onClick ? (
-                actionButton.onClick(actionButton)
-              ) : (
-                <Button
-                  key={index}
-                  variant={actionButton.variant}
-                  label={actionButton.label}
-                  tooltip={actionButton.tooltip}
-                  onClick={actionButton.onClick}
-                  className={actionButton.className}
-                />
-              )
+            {actionButtons.map(
+              (actionButton, index) =>
+                actionButton &&
+                !actionButton.hidden && (
+                  <Button
+                    key={index}
+                    variant={actionButton.variant}
+                    label={actionButton.label}
+                    className={actionButton.className}
+                    onClick={actionButton.onClick}
+                  />
+                )
             )}
 
             <RoundedIcon tooltipText="Refresh" onClick={() => refresh(formState)} id="refresh">
@@ -214,8 +185,6 @@ function ArtifactsActionBar({
 ArtifactsActionBar.defaultProps = {
   actionButtons: [],
   cancelRequest: null,
-  iteration: true,
-  removeSelectedItem: null,
   tab: ''
 }
 
@@ -233,9 +202,8 @@ ArtifactsActionBar.propTypes = {
   cancelRequest: PropTypes.func,
   filterMenuName: PropTypes.string.isRequired,
   handleRefresh: PropTypes.func.isRequired,
-  iteration: PropTypes.bool,
   page: PropTypes.string.isRequired,
-  removeSelectedItem: PropTypes.func,
+  removeSelectedItem: PropTypes.func.isRequired,
   setContent: PropTypes.func.isRequired,
   setSelectedRowData: PropTypes.func.isRequired,
   tab: PropTypes.string

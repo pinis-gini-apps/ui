@@ -20,11 +20,11 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import ArtifactsActionBar from '../../ArtifactsActionBar/ArtifactsActionBar'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
 import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
 import FeatureStoreTabs from '../FeatureStoreTabs/FeaturePageTabs'
+import FeatureActionBar from '../../FeatureActionBar/FeatureActionBar'
 
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { featuresFilters } from './features.util'
@@ -57,7 +57,7 @@ const FeaturesView = React.forwardRef(
         <div className="content__action-bar-wrapper">
           <FeatureStoreTabs />
           <div className="content__action-bar-wrapper">
-            <ArtifactsActionBar
+            <FeatureActionBar
               actionButtons={[
                 {
                   className: 'action-button',
@@ -67,10 +67,9 @@ const FeaturesView = React.forwardRef(
                   variant: SECONDARY_BUTTON
                 }
               ]}
-              artifacts={features}
+              features={features}
               filterMenuName={FEATURE_FILTERS}
               handleRefresh={handleRefresh}
-              iteration={false}
               page={FEATURE_STORE_PAGE}
               setContent={setFeatures}
               setSelectedRowData={setSelectedRowData}
