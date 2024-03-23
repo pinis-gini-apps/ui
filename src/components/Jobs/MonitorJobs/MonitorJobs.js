@@ -70,6 +70,7 @@ import { showErrorNotification } from '../../../utils/notifications.util'
 import { useMode } from '../../../hooks/mode.hook'
 import { usePods } from '../../../hooks/usePods.hook'
 import { useYaml } from '../../../hooks/yaml.hook'
+import JobsPageTabs from '../JobsStoreTabs/JobsStoreTab'
 
 const MonitorJobs = ({
   abortJob,
@@ -120,7 +121,7 @@ const MonitorJobs = ({
     'content__action-bar-wrapper',
     params.jobId && 'content__action-bar-wrapper_hidden'
   )
-
+  console.log(filters)
   usePods(fetchJobPods, removePods, selectedJob)
 
   const tableContent = useMemo(
@@ -589,6 +590,9 @@ const MonitorJobs = ({
         />
       )}
       <div className={filterMenuClassNames}>
+        <div className="content__action-bar-wrapper">
+          <JobsPageTabs />
+        </div>
         <div className="action-bar">
           <FilterMenu
             actionButton={{

@@ -22,7 +22,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { find, isEmpty } from 'lodash'
 
-import FilterMenu from '../../FilterMenu/FilterMenu'
+// import FilterMenu from '../../FilterMenu/FilterMenu'
 import JobWizard from '../../JobWizard/JobWizard'
 import JobsTableRow from '../../../elements/JobsTableRow/JobsTableRow'
 import NoData from '../../../common/NoData/NoData'
@@ -39,6 +39,7 @@ import {
   MONITOR_WORKFLOWS_TAB,
   PANEL_RERUN_MODE,
   REQUEST_CANCELED,
+  SCHEDULE_FILTER,
   WORKFLOW_GRAPH_VIEW
 } from '../../../constants'
 import { DANGER_BUTTON } from 'igz-controls/constants'
@@ -76,6 +77,8 @@ import { useSortTable } from '../../../hooks/useSortTable.hook'
 import { useYaml } from '../../../hooks/yaml.hook'
 
 import './MonitorWorkflows.scss'
+import JobsPageTabs from '../JobsStoreTabs/JobsStoreTab'
+import JobsActionBar from '../../JobsActionBar/JobsActionBar'
 
 const MonitorWorkflows = ({
   abortJob,
@@ -654,14 +657,22 @@ const MonitorWorkflows = ({
             View running workflows and previously executed workflows
           </p>
           <div className="content__action-bar-wrapper">
-            <div className="action-bar">
-              <FilterMenu
-                filters={filters}
-                onChange={getWorkflows}
-                page={JOBS_PAGE}
-                withoutExpandButton
-              />
-            </div>
+            <JobsPageTabs />
+            {/*<FilterMenu*/}
+            {/*  filters={filters}*/}
+            {/*  onChange={getWorkflows}*/}
+            {/*  page={JOBS_PAGE}*/}
+            {/*  withoutExpandButton*/}
+            {/*  enableRefresh={false}*/}
+            {/*/>*/}
+            <JobsActionBar
+              // features={jobs}
+              filterMenuName={SCHEDULE_FILTER}
+              handleRefresh={refreshJobs}
+              page={JOBS_PAGE}
+              // setContent={setJobs}
+              tab={MONITOR_WORKFLOWS_TAB}
+            />
           </div>
         </div>
       )}

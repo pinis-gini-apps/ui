@@ -65,6 +65,7 @@ import './filterMenu.scss'
 const FilterMenu = ({
   actionButton,
   cancelRequest,
+  enableRefresh,
   enableAutoRefresh,
   expand,
   filters,
@@ -290,6 +291,8 @@ const FilterMenu = ({
       })
     }
   }
+  console.log(selectOptions)
+  console.log(filters)
 
   const handleShowUntagged = async showUntagged => {
     const showUntaggedValue = filtersStore.showUntagged === showUntagged ? '' : showUntagged
@@ -472,13 +475,16 @@ const FilterMenu = ({
               selectedId={autoRefresh}
             />
           )}
-          <RoundedIcon
-            tooltipText="Refresh"
-            onClick={() => applyChanges(filtersStore, true)}
-            id="refresh"
-          >
-            <RefreshIcon />
-          </RoundedIcon>
+          {enableRefresh && (
+            <RoundedIcon
+              tooltipText="Refresh"
+              onClick={() => applyChanges(filtersStore, true)}
+              id="refresh"
+            >
+              <RefreshIcon />
+            </RoundedIcon>
+          )}
+
           {!withoutExpandButton && filtersStore.groupBy !== GROUP_BY_NONE && (
             <RoundedIcon
               id="toggle-collapse"
@@ -499,6 +505,7 @@ FilterMenu.defaultProps = {
   cancelRequest: () => {},
   changes: {},
   enableAutoRefresh: false,
+  enableRefresh: true,
   expand: false,
   handleExpandAll: () => {},
   hidden: false,
@@ -511,6 +518,7 @@ FilterMenu.propTypes = {
   cancelRequest: PropTypes.func,
   changes: PropTypes.shape({}),
   enableAutoRefresh: PropTypes.bool,
+  enableRefresh: PropTypes.bool,
   expand: PropTypes.bool,
   filters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleExpandAll: PropTypes.func,

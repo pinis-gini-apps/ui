@@ -37,6 +37,7 @@ import {
   PANEL_EDIT_MODE,
   SCHEDULE_TAB,
   REQUEST_CANCELED
+  // SCHEDULE_FILTER
 } from '../../../constants'
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { JobsContext } from '../Jobs'
@@ -55,6 +56,8 @@ import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
 import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
+import JobsPageTabs from '../JobsStoreTabs/JobsStoreTab'
+// import JobsActionBar from '../../JobsActionBar/JobsActionBar'
 
 const ScheduledJobs = ({
   fetchFunctionTemplate,
@@ -153,7 +156,7 @@ const ScheduledJobs = ({
 
   const handleRemoveScheduledJob = useCallback(
     schedule => {
-      removeScheduledJob(params.projectName, schedule.name).then((response) => {
+      removeScheduledJob(params.projectName, schedule.name).then(response => {
         refreshJobs(filtersStore)
         dispatch(
           setNotification({
@@ -293,6 +296,15 @@ const ScheduledJobs = ({
   return (
     <>
       <div className="content__action-bar-wrapper">
+        <JobsPageTabs />
+        {/*<JobsActionBar*/}
+        {/*  features={jobs}*/}
+        {/*  filterMenuName={SCHEDULE_FILTER}*/}
+        {/*  handleRefresh={refreshJobs}*/}
+        {/*  page={JOBS_PAGE}*/}
+        {/*  setContent={setJobs}*/}
+        {/*  tab={SCHEDULE_TAB}*/}
+        {/*/>*/}
         <div className="action-bar">
           <FilterMenu
             filters={filters}

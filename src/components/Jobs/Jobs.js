@@ -22,23 +22,29 @@ import { connect, useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams, Outlet, useLocation } from 'react-router-dom'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import ContentMenu from '../../elements/ContentMenu/ContentMenu'
+// import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import Loader from '../../common/Loader/Loader'
-import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
+// import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import { ConfirmDialog } from 'igz-controls/components'
 
 import {
   INACTIVE_JOBS_TAB,
-  JOBS_PAGE,
+  // JOBS_PAGE,
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB,
-  PANEL_CREATE_MODE,
+  // PANEL_CREATE_MODE,
   PROJECTS_PAGE_PATH,
   SCHEDULE_TAB
 } from '../../constants'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
-import { actionCreator, actionsMenuHeader, monitorJob, rerunJob, tabs } from './jobs.util'
+import {
+  actionCreator,
+  // actionsMenuHeader,
+  monitorJob,
+  rerunJob,
+  tabs
+} from './jobs.util'
 import { isPageTabValid } from '../../utils/handleRedirect'
 
 export const JobsContext = React.createContext({})
@@ -58,9 +64,9 @@ const Jobs = ({ fetchJobFunction }) => {
   const appStore = useSelector(store => store.appStore)
   const artifactsStore = useSelector(store => store.artifactsStore)
 
-  const handleActionsMenuClick = () => {
-    setJobWizardMode(PANEL_CREATE_MODE)
-  }
+  // const handleActionsMenuClick = () => {
+  //   setJobWizardMode(PANEL_CREATE_MODE)
+  // }
 
   const handleRerunJob = useCallback(
     async job => await rerunJob(job, fetchJobFunction, setEditableItem, setJobWizardMode, dispatch),
@@ -103,24 +109,24 @@ const Jobs = ({ fetchJobFunction }) => {
       <div className="content-wrapper">
         <div className="content__header">
           <Breadcrumbs />
-          <PageActionsMenu
-            actionsMenuHeader={actionsMenuHeader}
-            onClick={handleActionsMenuClick}
-            showActionsMenu={true}
-          />
+          {/*<PageActionsMenu*/}
+          {/*  actionsMenuHeader={actionsMenuHeader}*/}
+          {/*  onClick={handleActionsMenuClick}*/}
+          {/*  showActionsMenu={true}*/}
+          {/*/>*/}
         </div>
         <div className="content">
-          <ContentMenu
-            activeTab={
-              location.pathname.includes(MONITOR_JOBS_TAB)
-                ? MONITOR_JOBS_TAB
-                : location.pathname.includes(SCHEDULE_TAB)
-                ? SCHEDULE_TAB
-                : MONITOR_WORKFLOWS_TAB
-            }
-            screen={JOBS_PAGE}
-            tabs={tabs}
-          />
+          {/*<ContentMenu*/}
+          {/*  activeTab={*/}
+          {/*    location.pathname.includes(MONITOR_JOBS_TAB)*/}
+          {/*      ? MONITOR_JOBS_TAB*/}
+          {/*      : location.pathname.includes(SCHEDULE_TAB)*/}
+          {/*      ? SCHEDULE_TAB*/}
+          {/*      : MONITOR_WORKFLOWS_TAB*/}
+          {/*  }*/}
+          {/*  screen={JOBS_PAGE}*/}
+          {/*  tabs={tabs}*/}
+          {/*/>*/}
           <div className="table-container">
             <JobsContext.Provider
               value={{

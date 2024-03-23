@@ -30,6 +30,9 @@ import {
   GROUP_BY_NAME,
   MODEL_TYPE,
   MODELS_FILTERS,
+  MONITOR_JOBS_FILTER,
+  MONITOR_WORKFLOWS_FILTER,
+  SCHEDULE_FILTER,
   SHOW_ITERATIONS,
   STATE_FILTER_ALL_ITEMS,
   TAG_FILTER_LATEST
@@ -69,6 +72,18 @@ const initialState = {
     [FEATURE_FILTERS]: {
       initialValues: { tag: TAG_FILTER_LATEST, labels: '' },
       values: { tag: TAG_FILTER_LATEST, labels: '' }
+    },
+    [MONITOR_JOBS_FILTER]: {
+      initialValues: { status: STATE_FILTER_ALL_ITEMS, labels: '' },
+      values: { status: STATE_FILTER_ALL_ITEMS, labels: '' }
+    },
+    [MONITOR_WORKFLOWS_FILTER]: {
+      initialValues: { status: STATE_FILTER_ALL_ITEMS },
+      values: { status: STATE_FILTER_ALL_ITEMS }
+    },
+    [SCHEDULE_FILTER]: {
+      initialValues: { labels: '' },
+      values: { labels: '' }
     }
   }
 }

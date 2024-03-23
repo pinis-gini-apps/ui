@@ -83,3 +83,34 @@ export const applyFeatureChanges = async (
   setSelectedRowData({})
   handleRefresh({ name, ...filterMenuModal })
 }
+
+export const applyScheduleChanges = async (
+  name,
+  filterMenuModal,
+  changes,
+  dispatch,
+  setSelectedRowData,
+  handleRefresh,
+  params,
+  navigate,
+  page,
+  tab,
+  filtersStore,
+  setContent
+) => {
+  const filtersHelperResult = await filtersHelper(changes, dispatch)
+
+  if (filtersHelperResult) {
+    if (navigateToPage(navigate, params, page, tab)) return
+
+    if (filterMenuModal.tag === TAG_FILTER_ALL_ITEMS && filtersStore.groupBy === GROUP_BY_NONE) {
+      dispatch(setFilters({ groupBy: GROUP_BY_NAME, tag: TAG_FILTER_ALL_ITEMS }))
+    } else if (
+      filterMenuModal.tag !== TAG_FILTER_ALL_ITEMS &&
+      filtersStore.groupBy === GROUP_BY_NAME
+    ) {
+      dispatch(setFilters({ groupBy: GROUP_BY_NONE, tag: TAG_LATEST }))
+    }
+  }
+  handleRefresh({ name, ...filterMenuModal })
+}
