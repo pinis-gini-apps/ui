@@ -22,7 +22,9 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { find, isEmpty } from 'lodash'
 
-// import FilterMenu from '../../FilterMenu/FilterMenu'
+import FilterMenu from '../../FilterMenu/FilterMenu'
+import JobsActionBar from '../../JobsActionBar/JobsActionBar'
+import JobsPageTabs from '../JobsStoreTabs/JobsStoreTab'
 import JobWizard from '../../JobWizard/JobWizard'
 import JobsTableRow from '../../../elements/JobsTableRow/JobsTableRow'
 import NoData from '../../../common/NoData/NoData'
@@ -36,13 +38,13 @@ import {
   JOB_KIND_JOB,
   JOBS_PAGE,
   MONITOR_JOBS_TAB,
+  MONITOR_WORKFLOWS_FILTER,
   MONITOR_WORKFLOWS_TAB,
   PANEL_RERUN_MODE,
   REQUEST_CANCELED,
-  SCHEDULE_FILTER,
   WORKFLOW_GRAPH_VIEW
 } from '../../../constants'
-import { DANGER_BUTTON } from 'igz-controls/constants'
+import { DANGER_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 import {
   generateActionsMenu,
   generateFilters,
@@ -52,6 +54,7 @@ import {
 import { JobsContext } from '../Jobs'
 import { createJobsWorkflowsTabContent } from '../../../utils/createJobsContent'
 import {
+  actionsMenuHeader,
   enrichRunWithFunctionFields,
   handleAbortJob,
   handleDeleteJob,
@@ -77,8 +80,6 @@ import { useSortTable } from '../../../hooks/useSortTable.hook'
 import { useYaml } from '../../../hooks/yaml.hook'
 
 import './MonitorWorkflows.scss'
-import JobsPageTabs from '../JobsStoreTabs/JobsStoreTab'
-import JobsActionBar from '../../JobsActionBar/JobsActionBar'
 
 const MonitorWorkflows = ({
   abortJob,
@@ -113,6 +114,7 @@ const MonitorWorkflows = ({
   const abortJobRef = useRef(null)
   const {
     editableItem,
+    handleActionsMenuClick,
     handleMonitoring,
     handleRerunJob,
     jobWizardIsOpened,
@@ -128,7 +130,8 @@ const MonitorWorkflows = ({
 
   usePods(fetchJobPods, removePods, selectedJob)
 
-  const filters = useMemo(() => generateFilters(), [])
+  const filters = useMemo(() => generateFilters(false), [])
+  const dateRangeFilter = useMemo(() => generateFilters(true), [])
 
   const tableContent = useMemo(
     () =>
@@ -658,20 +661,29 @@ const MonitorWorkflows = ({
           </p>
           <div className="content__action-bar-wrapper">
             <JobsPageTabs />
-            {/*<FilterMenu*/}
-            {/*  filters={filters}*/}
-            {/*  onChange={getWorkflows}*/}
-            {/*  page={JOBS_PAGE}*/}
-            {/*  withoutExpandButton*/}
-            {/*  enableRefresh={false}*/}
-            {/*/>*/}
-            <JobsActionBar
-              // features={jobs}
-              filterMenuName={SCHEDULE_FILTER}
-              handleRefresh={refreshJobs}
+            <FilterMenu
+              filters={dateRangeFilter}
+              onChange={getWorkflows}
               page={JOBS_PAGE}
-              // setContent={setJobs}
+              withoutExpandButton
+              enableRefresh={false}
+            />
+            <JobsActionBar
+              actionButtons={[
+                {
+                  variant: PRIMARY_BUTTON,
+                  label: actionsMenuHeader,
+                  className: 'action-button',
+                  popupButton: false,
+                  onClick: handleActionsMenuClick
+                }
+              ]}
+              filterMenuName={MONITOR_WORKFLOWS_FILTER}
+              handleRefresh={getWorkflows}
+              options
+              page={JOBS_PAGE}
               tab={MONITOR_WORKFLOWS_TAB}
+              useFailedStatus={true}
             />
           </div>
         </div>

@@ -291,8 +291,6 @@ const FilterMenu = ({
       })
     }
   }
-  console.log(selectOptions)
-  console.log(filters)
 
   const handleShowUntagged = async showUntagged => {
     const showUntaggedValue = filtersStore.showUntagged === showUntagged ? '' : showUntagged
@@ -466,35 +464,37 @@ const FilterMenu = ({
             />
           ))}
 
-        <div className="actions">
-          {enableAutoRefresh && (
-            <CheckBox
-              key={AUTO_REFRESH_ID}
-              item={{ label: AUTO_REFRESH, id: AUTO_REFRESH_ID }}
-              onChange={handleAutoRefresh}
-              selectedId={autoRefresh}
-            />
-          )}
-          {enableRefresh && (
-            <RoundedIcon
-              tooltipText="Refresh"
-              onClick={() => applyChanges(filtersStore, true)}
-              id="refresh"
-            >
-              <RefreshIcon />
-            </RoundedIcon>
-          )}
+        {(enableAutoRefresh || enableRefresh) && (
+          <div className="actions">
+            {enableAutoRefresh && (
+              <CheckBox
+                key={AUTO_REFRESH_ID}
+                item={{ label: AUTO_REFRESH, id: AUTO_REFRESH_ID }}
+                onChange={handleAutoRefresh}
+                selectedId={autoRefresh}
+              />
+            )}
+            {enableRefresh && (
+              <RoundedIcon
+                tooltipText="Refresh"
+                onClick={() => applyChanges(filtersStore, true)}
+                id="refresh"
+              >
+                <RefreshIcon />
+              </RoundedIcon>
+            )}
 
-          {!withoutExpandButton && filtersStore.groupBy !== GROUP_BY_NONE && (
-            <RoundedIcon
-              id="toggle-collapse"
-              tooltipText={expand ? 'Collapse' : 'Expand all'}
-              onClick={() => handleExpandAll()}
-            >
-              {expand ? <CollapseIcon /> : <ExpandIcon />}
-            </RoundedIcon>
-          )}
-        </div>
+            {!withoutExpandButton && filtersStore.groupBy !== GROUP_BY_NONE && (
+              <RoundedIcon
+                id="toggle-collapse"
+                tooltipText={expand ? 'Collapse' : 'Expand all'}
+                onClick={() => handleExpandAll()}
+              >
+                {expand ? <CollapseIcon /> : <ExpandIcon />}
+              </RoundedIcon>
+            )}
+          </div>
+        )}
       </>
     )
   )

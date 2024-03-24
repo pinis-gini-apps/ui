@@ -26,17 +26,20 @@ import { isEmpty } from 'lodash'
 import JobWizard from '../../JobWizard/JobWizard'
 import Details from '../../Details/Details'
 import FilterMenu from '../../FilterMenu/FilterMenu'
+import JobsActionBar from '../../JobsActionBar/JobsActionBar'
+import JobsPageTabs from '../JobsStoreTabs/JobsStoreTab'
 import JobsTableRow from '../../../elements/JobsTableRow/JobsTableRow'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
 import TableTop from '../../../elements/TableTop/TableTop'
 import YamlModal from '../../../common/YamlModal/YamlModal'
 
-import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import { DANGER_BUTTON, TERTIARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 import {
   GROUP_BY_NONE,
   JOB_KIND_JOB,
   JOBS_PAGE,
+  MONITOR_JOBS_FILTER,
   MONITOR_JOBS_TAB,
   PANEL_RERUN_MODE,
   REQUEST_CANCELED
@@ -51,6 +54,7 @@ import { JobsContext } from '../Jobs'
 import { createJobsMonitorTabContent } from '../../../utils/createJobsContent'
 import { datePickerOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
 import {
+  actionsMenuHeader,
   enrichRunWithFunctionFields,
   handleAbortJob,
   handleDeleteJob,
@@ -70,7 +74,6 @@ import { showErrorNotification } from '../../../utils/notifications.util'
 import { useMode } from '../../../hooks/mode.hook'
 import { usePods } from '../../../hooks/usePods.hook'
 import { useYaml } from '../../../hooks/yaml.hook'
-import JobsPageTabs from '../JobsStoreTabs/JobsStoreTab'
 
 const MonitorJobs = ({
   abortJob,
@@ -106,6 +109,7 @@ const MonitorJobs = ({
   const {
     editableItem,
     handleMonitoring,
+    handleActionsMenuClick,
     handleRerunJob,
     jobWizardIsOpened,
     jobWizardMode,
@@ -115,13 +119,14 @@ const MonitorJobs = ({
     setJobWizardMode
   } = React.useContext(JobsContext)
   const filters = useMemo(() => {
-    return generateFilters(params.jobName)
+    return generateFilters(params.jobName, false)
   }, [params.jobName])
+  const dateRangeFilter = useMemo(() => generateFilters(params.jobName, true))
   const filterMenuClassNames = classnames(
     'content__action-bar-wrapper',
     params.jobId && 'content__action-bar-wrapper_hidden'
   )
-  console.log(filters)
+
   usePods(fetchJobPods, removePods, selectedJob)
 
   const tableContent = useMemo(
@@ -592,24 +597,43 @@ const MonitorJobs = ({
       <div className={filterMenuClassNames}>
         <div className="content__action-bar-wrapper">
           <JobsPageTabs />
-        </div>
-        <div className="action-bar">
           <FilterMenu
-            actionButton={{
-              label: 'Resource monitoring',
-              tooltip: !appStore.frontendSpec.jobs_dashboard_url
-                ? 'Grafana service unavailable'
-                : '',
-              variant: TERTIARY_BUTTON,
-              disabled: !appStore.frontendSpec.jobs_dashboard_url,
-              onClick: () => handleMonitoring()
-            }}
-            filters={filters}
+            enableAutoRefresh={false}
+            enableRefresh={false}
+            filters={dateRangeFilter}
             hidden={Boolean(params.jobId)}
             onChange={refreshJobs}
             page={JOBS_PAGE}
             withoutExpandButton
+          />
+          <JobsActionBar
+            actionButtons={[
+              {
+                label: 'Resource monitoring',
+                tooltip: !appStore.frontendSpec.jobs_dashboard_url
+                  ? 'Grafana service unavailable'
+                  : '',
+                variant: TERTIARY_BUTTON,
+                disabled: !appStore.frontendSpec.jobs_dashboard_url,
+                onClick: () => handleMonitoring()
+              },
+              {
+                variant: PRIMARY_BUTTON,
+                label: actionsMenuHeader,
+                className: 'action-button',
+                popupButton: false,
+                onClick: handleActionsMenuClick
+              }
+            ]}
             enableAutoRefresh
+            filterMenuName={MONITOR_JOBS_FILTER}
+            handleRefresh={refreshJobs}
+            isNameFilterHidden={filters[2].hidden}
+            labels
+            options
+            page={JOBS_PAGE}
+            tab={MONITOR_JOBS_TAB}
+            useFailedStatus={false}
           />
         </div>
       </div>

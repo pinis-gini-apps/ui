@@ -21,13 +21,15 @@ import React, { useCallback, useState, useMemo, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
 
-import FilterMenu from '../../FilterMenu/FilterMenu'
+import JobsPageTabs from '../JobsStoreTabs/JobsStoreTab'
+import JobsActionBar from '../../JobsActionBar/JobsActionBar'
 import JobWizard from '../../JobWizard/JobWizard'
 import JobsTableRow from '../../../elements/JobsTableRow/JobsTableRow'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
 import YamlModal from '../../../common/YamlModal/YamlModal'
 
+import { actionsMenuHeader } from '../jobs.util'
 import {
   GROUP_BY_NONE,
   JOB_KIND_WORKFLOW,
@@ -36,10 +38,10 @@ import {
   NAME_FILTER,
   PANEL_EDIT_MODE,
   SCHEDULE_TAB,
-  REQUEST_CANCELED
-  // SCHEDULE_FILTER
+  REQUEST_CANCELED,
+  SCHEDULE_FILTER
 } from '../../../constants'
-import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE, PRIMARY_BUTTON } from 'igz-controls/constants'
 import { JobsContext } from '../Jobs'
 import { createJobsScheduleTabContent } from '../../../utils/createJobsContent'
 import { getErrorMsg, openPopUp } from 'igz-controls/utils/common.util'
@@ -56,8 +58,6 @@ import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
 import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
-import JobsPageTabs from '../JobsStoreTabs/JobsStoreTab'
-// import JobsActionBar from '../../JobsActionBar/JobsActionBar'
 
 const ScheduledJobs = ({
   fetchFunctionTemplate,
@@ -80,6 +80,7 @@ const ScheduledJobs = ({
   const {
     jobWizardIsOpened,
     jobWizardMode,
+    handleActionsMenuClick,
     setConfirmData,
     setJobWizardIsOpened,
     setJobWizardMode
@@ -297,22 +298,24 @@ const ScheduledJobs = ({
     <>
       <div className="content__action-bar-wrapper">
         <JobsPageTabs />
-        {/*<JobsActionBar*/}
-        {/*  features={jobs}*/}
-        {/*  filterMenuName={SCHEDULE_FILTER}*/}
-        {/*  handleRefresh={refreshJobs}*/}
-        {/*  page={JOBS_PAGE}*/}
-        {/*  setContent={setJobs}*/}
-        {/*  tab={SCHEDULE_TAB}*/}
-        {/*/>*/}
-        <div className="action-bar">
-          <FilterMenu
-            filters={filters}
-            onChange={refreshJobs}
-            page={JOBS_PAGE}
-            withoutExpandButton
-          />
-        </div>
+        <JobsActionBar
+          actionButtons={[
+            {
+              variant: PRIMARY_BUTTON,
+              label: actionsMenuHeader,
+              className: 'action-button',
+              popupButton: false,
+              onClick: handleActionsMenuClick
+            }
+          ]}
+          features={jobs}
+          filterMenuName={SCHEDULE_FILTER}
+          handleRefresh={refreshJobs}
+          labels
+          page={JOBS_PAGE}
+          setContent={setJobs}
+          tab={SCHEDULE_TAB}
+        />
       </div>
       {jobsStore.loading ? null : jobs.length === 0 ? (
         <NoData

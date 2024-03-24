@@ -93,7 +93,8 @@ const FilterMenuModal = ({
 
   useEffect(() => {
     window.addEventListener('click', hideFiltersWizard)
-    window.addEventListener('scroll', hideFiltersWizard, true)
+
+    // window.addEventListener('scroll', hideFiltersWizard, true)
 
     return () => {
       window.removeEventListener('click', hideFiltersWizard)

@@ -19,27 +19,54 @@ such restriction.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
+import { OnChange } from 'react-final-form-listeners'
+import { useForm } from 'react-final-form'
+
+import { FormInput, FormSelect } from 'igz-controls/components'
+
+import { generateStatusFilter } from '../../components/FilterMenu/filterMenu.settings'
+
+import { LABELS_FILTER } from '../../constants'
 
 import '../ArtifactsActionBar/artifactsFilters.scss'
-// import { STATUS_FILTER } from '../../constants'
-// import FormStatusFilter from '../../common/FormStatusFilter/FormStatusFilter'
-// import { FormSelect } from 'igz-controls/components'
 
-const JobsFilters = ({ artifacts }) => {
+const JobsFilters = ({ labels, options, useFailedStatus }) => {
+  const { change } = useForm()
+
+  const handleLabelsChange = value => {
+    change(LABELS_FILTER, value || '')
+  }
+
   return (
     <div className="artifacts-filters">
-      <div className="form-row">
-        {/*<FormSelect label={'Status'} name={STATUS_FILTER} />*/}
-        {/*<FormStatusFilter label="Status" name={STATUS_FILTER} />*/}
-      </div>
+      {labels && (
+        <div className="form-row">
+          <FormInput label="Labels" name={LABELS_FILTER} placeholder="key1,key2=value,..." />
+          <OnChange name={LABELS_FILTER}>{handleLabelsChange}</OnChange>
+        </div>
+      )}
+      {options && (
+        <div className="form-row">
+          <FormSelect
+            label="Status"
+            options={generateStatusFilter(useFailedStatus)}
+            name={'status'}
+          />
+        </div>
+      )}
     </div>
   )
 }
 
-JobsFilters.defaultProps = {}
+JobsFilters.defaultProps = {
+  labels: false,
+  options: false
+}
 
 JobsFilters.propTypes = {
-  artifacts: PropTypes.arrayOf(PropTypes.object)
+  labels: PropTypes.bool,
+  options: PropTypes.bool,
+  useFailedStatus: PropTypes.bool
 }
 
 export default JobsFilters

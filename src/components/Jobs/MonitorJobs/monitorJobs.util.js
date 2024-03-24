@@ -48,13 +48,16 @@ import { ReactComponent as Cancel } from 'igz-controls/images/close.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
-export const generateFilters = jobName => [
-  { type: PERIOD_FILTER, label: 'Period:' },
-  { type: STATUS_FILTER, label: 'Status:' },
-  { type: NAME_FILTER, label: 'Name:', hidden: Boolean(jobName) },
-  { type: LABELS_FILTER, label: 'Labels:' },
-  { type: DATE_RANGE_TIME_FILTER, label: 'Start time:' }
-]
+export const generateFilters = (jobName, dateRangeOnly) => {
+  if (dateRangeOnly) return [{ type: DATE_RANGE_TIME_FILTER, label: 'Start time:' }]
+  return [
+    { type: PERIOD_FILTER, label: 'Period:' },
+    { type: STATUS_FILTER, label: 'Status:' },
+    { type: NAME_FILTER, label: 'Name:', hidden: Boolean(jobName) },
+    { type: LABELS_FILTER, label: 'Labels:' },
+    { type: DATE_RANGE_TIME_FILTER, label: 'Start time:' }
+  ]
+}
 
 export const generatePageData = (
   handleFetchJobLogs,

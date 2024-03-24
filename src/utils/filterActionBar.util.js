@@ -17,7 +17,16 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { GROUP_BY_NAME, GROUP_BY_NONE, TAG_FILTER_ALL_ITEMS, TAG_LATEST } from '../constants'
+import {
+  GROUP_BY_NAME,
+  GROUP_BY_NONE,
+  MONITOR_JOBS_TAB,
+  MONITOR_WORKFLOWS_TAB,
+  SCHEDULE_TAB,
+  TAG_FILTER_ALL_ITEMS,
+  TAG_LATEST
+} from '../constants'
+
 import { setFilters } from '../reducers/filtersReducer'
 
 export const filtersHelper = async (changes, dispatch, detailsActions) => {
@@ -84,7 +93,33 @@ export const applyFeatureChanges = async (
   handleRefresh({ name, ...filterMenuModal })
 }
 
-export const applyScheduleChanges = async (
+const handleMonitorJobsChanges = (dispatch, filterMenuModal, filtersStore, handleRefresh, name) => {
+  dispatch(setFilters({ state: filterMenuModal.status, labels: filterMenuModal.labels }))
+  handleRefresh({
+    ...filtersStore,
+    labels: filterMenuModal.labels,
+    state: filterMenuModal.status,
+    name
+  })
+}
+
+const handleMonitorWorkflowChanges = (
+  dispatch,
+  filterMenuModal,
+  filtersStore,
+  handleRefresh,
+  name
+) => {
+  dispatch(setFilters({ state: filterMenuModal.status }))
+  handleRefresh({ ...filtersStore, state: filterMenuModal.status, name })
+}
+
+const handleScheduleChanges = (dispatch, filterMenuModal, handleRefresh, name) => {
+  dispatch(setFilters({ labels: filterMenuModal.labels }))
+  handleRefresh({ name, ...filterMenuModal })
+}
+
+export const applyMonitorWorkflowChanges = async (
   name,
   filterMenuModal,
   changes,
@@ -95,22 +130,20 @@ export const applyScheduleChanges = async (
   navigate,
   page,
   tab,
-  filtersStore,
-  setContent
+  filtersStore
 ) => {
   const filtersHelperResult = await filtersHelper(changes, dispatch)
-
   if (filtersHelperResult) {
     if (navigateToPage(navigate, params, page, tab)) return
-
-    if (filterMenuModal.tag === TAG_FILTER_ALL_ITEMS && filtersStore.groupBy === GROUP_BY_NONE) {
-      dispatch(setFilters({ groupBy: GROUP_BY_NAME, tag: TAG_FILTER_ALL_ITEMS }))
-    } else if (
-      filterMenuModal.tag !== TAG_FILTER_ALL_ITEMS &&
-      filtersStore.groupBy === GROUP_BY_NAME
-    ) {
-      dispatch(setFilters({ groupBy: GROUP_BY_NONE, tag: TAG_LATEST }))
+    if (tab === MONITOR_WORKFLOWS_TAB) {
+      handleMonitorWorkflowChanges(dispatch, filterMenuModal, filtersStore, handleRefresh, name)
+      return
+    }
+    if (tab === SCHEDULE_TAB) {
+      handleScheduleChanges(dispatch, filterMenuModal, handleRefresh, name)
+    }
+    if (tab === MONITOR_JOBS_TAB) {
+      handleMonitorJobsChanges(dispatch, filterMenuModal, filtersStore, handleRefresh, name)
     }
   }
-  handleRefresh({ name, ...filterMenuModal })
 }

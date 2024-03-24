@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 import { REQUEST_CANCELED } from '../constants'
 
 function useCustomHook(
@@ -31,12 +31,6 @@ function useCustomHook(
   handleRefresh,
   removeFilters
 ) {
-  useEffect(() => {
-    return () => {
-      dispatch(removeFilters())
-    }
-  }, [page, dispatch, removeFilters])
-
   const filtersInitialState = useMemo(() => {
     return {
       ...filterMenuModal.initialValues

@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useState } from 'react'
 import { createForm } from 'final-form'
 import { Form } from 'react-final-form'
 import { useDispatch, useSelector } from 'react-redux'
@@ -26,12 +26,11 @@ import PropTypes from 'prop-types'
 
 import { RoundedIcon, Button } from 'igz-controls/components'
 import FilterMenuModal from '../FilterMenuModal/FilterMenuModal'
-// import ArtifactsFilters from '../ArtifactsActionBar/ArtifactsFilters'
-// import NameFilter from '../../common/NameFilter/NameFilter'
-
-import { GROUP_BY_NONE } from '../../constants'
+import NameFilter from '../../common/NameFilter/NameFilter'
+import CheckBox from '../../common/CheckBox/CheckBox'
+import { GROUP_BY_NONE, AUTO_REFRESH_ID, AUTO_REFRESH } from '../../constants'
 import { removeFilters } from '../../reducers/filtersReducer'
-import { applyScheduleChanges } from '../../utils/filterActionBar.util'
+import { applyMonitorWorkflowChanges } from '../../utils/filterActionBar.util'
 import useCustomHook from '../../hooks/filterActionBar.hook'
 
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
@@ -42,16 +41,21 @@ import JobsFilters from './JobsFilters'
 function JobsActionBar({
   actionButtons,
   cancelRequest,
+  enableAutoRefresh,
   expand,
-  features,
   filterMenuName,
   handleExpandAll,
   handleRefresh,
+  isNameFilterHidden,
+  labels,
+  options,
   page,
   tab,
   setSelectedRowData,
-  withoutExpandButton
+  withoutExpandButton,
+  useFailedStatus
 }) {
+  const [autoRefresh, setAutoRefresh] = useState(AUTO_REFRESH_ID)
   const filtersStore = useSelector(store => store.filtersStore)
   const filterMenuModal = useSelector(store => store.filtersStore.filterMenuModal[filterMenuName])
   const changes = useSelector(store => store.detailsStore.changes)
@@ -73,34 +77,41 @@ function JobsActionBar({
     cancelRequest,
     filtersStore,
     handleRefresh,
+    labels,
     removeFilters
   )
+
+  const handleAutoRefresh = itemId => {
+    setAutoRefresh(prevAutoRefresh => (prevAutoRefresh === itemId ? '' : AUTO_REFRESH_ID))
+  }
 
   return (
     <Form form={formRef.current} onSubmit={() => {}}>
       {formState => (
         <div className="action-bar">
           <div className="action-bar__filters">
-            {/*<NameFilter*/}
-            {/*  applyChanges={value =>*/}
-            {/*    applyScheduleChanges(*/}
-            {/*      value,*/}
-            {/*      filterMenuModal.values,*/}
-            {/*      changes,*/}
-            {/*      dispatch,*/}
-            {/*      setSelectedRowData,*/}
-            {/*      handleRefresh,*/}
-            {/*      params,*/}
-            {/*      navigate,*/}
-            {/*      page,*/}
-            {/*      tab,*/}
-            {/*      filtersStore*/}
-            {/*    )*/}
-            {/*  }*/}
-            {/*/>*/}
+            {!isNameFilterHidden && (
+              <NameFilter
+                applyChanges={value =>
+                  applyMonitorWorkflowChanges(
+                    value,
+                    filterMenuModal.values,
+                    changes,
+                    dispatch,
+                    setSelectedRowData,
+                    handleRefresh,
+                    params,
+                    navigate,
+                    page,
+                    tab,
+                    filtersStore
+                  )
+                }
+              />
+            )}
             <FilterMenuModal
               applyChanges={filterMenuModal =>
-                applyScheduleChanges(
+                applyMonitorWorkflowChanges(
                   formState.values.name,
                   filterMenuModal,
                   changes,
@@ -120,7 +131,7 @@ function JobsActionBar({
               values={filterMenuModal.values}
               wizardClassName="artifacts-filters__wrapper"
             >
-              <JobsFilters />
+              <JobsFilters labels={labels} options={options} useFailedStatus={useFailedStatus} />
             </FilterMenuModal>
           </div>
           <div className="action-bar__actions">
@@ -133,6 +144,7 @@ function JobsActionBar({
               ) : (
                 <Button
                   key={index}
+                  disabled={actionButton.disabled}
                   variant={actionButton.variant}
                   label={actionButton.label}
                   tooltip={actionButton.tooltip}
@@ -142,9 +154,19 @@ function JobsActionBar({
               )
             )}
 
+            {enableAutoRefresh && (
+              <CheckBox
+                key={AUTO_REFRESH_ID}
+                item={{ label: AUTO_REFRESH, id: AUTO_REFRESH_ID }}
+                onChange={handleAutoRefresh}
+                selectedId={autoRefresh}
+              />
+            )}
+
             <RoundedIcon tooltipText="Refresh" onClick={() => refresh(formState)} id="refresh">
               <RefreshIcon />
             </RoundedIcon>
+
             {!withoutExpandButton && filtersStore.groupBy !== GROUP_BY_NONE && (
               <RoundedIcon
                 id="toggle-collapse"
@@ -164,6 +186,11 @@ function JobsActionBar({
 JobsActionBar.defaultProps = {
   actionButtons: [],
   cancelRequest: null,
+  enableAutoRefresh: false,
+  isNameFilterHidden: false,
+  labels: false,
+  options: false,
+  useFailedStatus: false,
   withoutExpandButton: true
 }
 
@@ -178,15 +205,20 @@ JobsActionBar.propTypes = {
     })
   ),
   cancelRequest: PropTypes.func,
+  enableAutoRefresh: PropTypes.bool,
   expand: PropTypes.bool,
-  features: PropTypes.arrayOf(PropTypes.object).isRequired,
+  features: PropTypes.arrayOf(PropTypes.object),
   filterMenuName: PropTypes.string.isRequired,
+  handleAutoRefresh: PropTypes.func,
   handleExpandAll: PropTypes.func,
   handleRefresh: PropTypes.func.isRequired,
+  isNameFilterHidden: PropTypes.bool,
+  labels: PropTypes.bool,
   page: PropTypes.string.isRequired,
-  setContent: PropTypes.func.isRequired,
+  setContent: PropTypes.func,
   setSelectedRowData: PropTypes.func,
   tab: PropTypes.string,
+  useFailedStatus: PropTypes.bool,
   withoutExpandButton: PropTypes.bool
 }
 

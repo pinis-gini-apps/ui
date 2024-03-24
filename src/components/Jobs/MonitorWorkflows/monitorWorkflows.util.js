@@ -54,16 +54,22 @@ import { ReactComponent as Cancel } from 'igz-controls/images/close.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
-export const generateFilters = () => [
-  { type: PERIOD_FILTER, label: 'Period:' },
-  {
-    type: STATUS_FILTER,
-    label: 'Status:',
-    options: generateStatusFilter(true)
-  },
-  { type: NAME_FILTER, label: 'Name:' },
-  { type: DATE_RANGE_TIME_FILTER, label: 'Created at:' }
-]
+export const generateFilters = dateRangeOnly => {
+  if (dateRangeOnly) {
+    return [{ type: DATE_RANGE_TIME_FILTER, label: 'Created at:' }]
+  }
+
+  return [
+    { type: PERIOD_FILTER, label: 'Period:' },
+    {
+      type: STATUS_FILTER,
+      label: 'Status:',
+      options: generateStatusFilter(true)
+    },
+    { type: NAME_FILTER, label: 'Name:' },
+    { type: DATE_RANGE_TIME_FILTER, label: 'Created at:' }
+  ]
+}
 
 export const generatePageData = (
   selectedFunction,
