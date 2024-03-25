@@ -121,7 +121,7 @@ const MonitorJobs = ({
   const filters = useMemo(() => {
     return generateFilters(params.jobName, false)
   }, [params.jobName])
-  const dateRangeFilter = useMemo(() => generateFilters(params.jobName, true))
+  const dateRangeFilter = useMemo(() => generateFilters(params.jobName, true), [params.jobName])
   const filterMenuClassNames = classnames(
     'content__action-bar-wrapper',
     params.jobId && 'content__action-bar-wrapper_hidden'
