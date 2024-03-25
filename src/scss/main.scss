@@ -791,6 +791,15 @@ main {
       &:not(:last-of-type) {
         margin-right: 10px;
       }
+
+      &:not(:first-of-type) {
+        margin-left: 20px;
+        margin-right: 10px;
+      }
+    }
+
+    .checkbox-max-content{
+      width: max-content;
     }
   }
 

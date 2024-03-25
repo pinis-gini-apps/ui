@@ -156,6 +156,7 @@ function JobsActionBar({
 
             {enableAutoRefresh && (
               <CheckBox
+                className="checkbox-max-content"
                 key={AUTO_REFRESH_ID}
                 item={{ label: AUTO_REFRESH, id: AUTO_REFRESH_ID }}
                 onChange={handleAutoRefresh}

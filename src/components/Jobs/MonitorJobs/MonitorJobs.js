@@ -595,47 +595,45 @@ const MonitorJobs = ({
         />
       )}
       <div className={filterMenuClassNames}>
-        <div className="content__action-bar-wrapper">
-          <JobsPageTabs />
-          <FilterMenu
-            enableAutoRefresh={false}
-            enableRefresh={false}
-            filters={dateRangeFilter}
-            hidden={Boolean(params.jobId)}
-            onChange={refreshJobs}
-            page={JOBS_PAGE}
-            withoutExpandButton
-          />
-          <JobsActionBar
-            actionButtons={[
-              {
-                label: 'Resource monitoring',
-                tooltip: !appStore.frontendSpec.jobs_dashboard_url
-                  ? 'Grafana service unavailable'
-                  : '',
-                variant: TERTIARY_BUTTON,
-                disabled: !appStore.frontendSpec.jobs_dashboard_url,
-                onClick: () => handleMonitoring()
-              },
-              {
-                variant: PRIMARY_BUTTON,
-                label: actionsMenuHeader,
-                className: 'action-button',
-                popupButton: false,
-                onClick: handleActionsMenuClick
-              }
-            ]}
-            enableAutoRefresh
-            filterMenuName={MONITOR_JOBS_FILTER}
-            handleRefresh={refreshJobs}
-            isNameFilterHidden={filters[2].hidden}
-            labels
-            options
-            page={JOBS_PAGE}
-            tab={MONITOR_JOBS_TAB}
-            useFailedStatus={false}
-          />
-        </div>
+        <JobsPageTabs />
+        <FilterMenu
+          enableAutoRefresh={false}
+          enableRefresh={false}
+          filters={dateRangeFilter}
+          hidden={Boolean(params.jobId)}
+          onChange={refreshJobs}
+          page={JOBS_PAGE}
+          withoutExpandButton
+        />
+        <JobsActionBar
+          actionButtons={[
+            {
+              label: 'Resource monitoring',
+              tooltip: !appStore.frontendSpec.jobs_dashboard_url
+                ? 'Grafana service unavailable'
+                : '',
+              variant: TERTIARY_BUTTON,
+              disabled: !appStore.frontendSpec.jobs_dashboard_url,
+              onClick: () => handleMonitoring()
+            },
+            {
+              variant: PRIMARY_BUTTON,
+              label: actionsMenuHeader,
+              className: 'action-button',
+              popupButton: false,
+              onClick: handleActionsMenuClick
+            }
+          ]}
+          enableAutoRefresh
+          filterMenuName={MONITOR_JOBS_FILTER}
+          handleRefresh={refreshJobs}
+          isNameFilterHidden={filters[2].hidden}
+          labels
+          options
+          page={JOBS_PAGE}
+          tab={MONITOR_JOBS_TAB}
+          useFailedStatus={false}
+        />
       </div>
 
       {jobsStore.loading ? null : (params.jobName && jobRuns.length === 0) ||
