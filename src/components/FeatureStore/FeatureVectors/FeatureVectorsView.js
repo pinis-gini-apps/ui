@@ -64,26 +64,24 @@ const FeatureVectorsView = React.forwardRef(
       <div className="feature-store" ref={ref}>
         <div className="content__action-bar-wrapper">
           <FeatureStoreTabs />
-          <div className="content__action-bar-wrapper">
-            <FeatureActionBar
-              actionButtons={[
-                {
-                  variant: PRIMARY_BUTTON,
-                  label: createFeatureVectorTitle,
-                  className: 'action-button',
-                  onClick: handleActionsMenuClick
-                }
-              ]}
-              features={featureVectors}
-              filterMenuName={FEATURE_FILTERS}
-              handleRefresh={handleRefresh}
-              page={FEATURE_STORE_PAGE}
-              setContent={setFeatureVectors}
-              setSelectedRowData={setSelectedRowData}
-              tab={FEATURE_VECTORS_TAB}
-              urlTagOption={urlTagOption}
-            />
-          </div>
+          <FeatureActionBar
+            actionButtons={[
+              {
+                variant: PRIMARY_BUTTON,
+                label: createFeatureVectorTitle,
+                className: 'action-button',
+                onClick: handleActionsMenuClick
+              }
+            ]}
+            features={featureVectors}
+            filterMenuName={FEATURE_FILTERS}
+            handleRefresh={handleRefresh}
+            page={FEATURE_STORE_PAGE}
+            setContent={setFeatureVectors}
+            setSelectedRowData={setSelectedRowData}
+            tab={FEATURE_VECTORS_TAB}
+            urlTagOption={urlTagOption}
+          />
         </div>
         {featureStore.loading ? null : featureVectors.length === 0 ? (
           <NoData

@@ -68,26 +68,24 @@ const FeatureSetsView = React.forwardRef(
       <div className="feature-store" ref={ref}>
         <div className="content__action-bar-wrapper">
           <FeatureStoreTabs />
-          <div className="content__action-bar-wrapper">
-            <FeatureActionBar
-              actionButtons={[
-                {
-                  variant: PRIMARY_BUTTON,
-                  label: createFeatureSetTitle,
-                  className: 'action-button',
-                  onClick: handleActionsMenuClick
-                }
-              ]}
-              features={featureSets}
-              filterMenuName={FEATURE_FILTERS}
-              handleRefresh={handleRefresh}
-              page={FEATURE_STORE_PAGE}
-              setContent={setFeatureSets}
-              setSelectedRowData={setSelectedRowData}
-              tab={FEATURE_SETS_TAB}
-              urlTagOption={urlTagOption}
-            />
-          </div>
+          <FeatureActionBar
+            actionButtons={[
+              {
+                variant: PRIMARY_BUTTON,
+                label: createFeatureSetTitle,
+                className: 'action-button',
+                onClick: handleActionsMenuClick
+              }
+            ]}
+            features={featureSets}
+            filterMenuName={FEATURE_FILTERS}
+            handleRefresh={handleRefresh}
+            page={FEATURE_STORE_PAGE}
+            setContent={setFeatureSets}
+            setSelectedRowData={setSelectedRowData}
+            tab={FEATURE_SETS_TAB}
+            urlTagOption={urlTagOption}
+          />
         </div>
         {featureStore.loading ? null : featureSets.length === 0 ? (
           <NoData

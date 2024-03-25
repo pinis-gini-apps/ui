@@ -56,27 +56,25 @@ const FeaturesView = React.forwardRef(
       <div className="feature-store" ref={ref}>
         <div className="content__action-bar-wrapper">
           <FeatureStoreTabs />
-          <div className="content__action-bar-wrapper">
-            <FeatureActionBar
-              actionButtons={[
-                {
-                  className: 'action-button',
-                  label: 'Add to feature vector',
-                  onClick: getPopUpTemplate,
-                  popupButton: true,
-                  variant: SECONDARY_BUTTON
-                }
-              ]}
-              features={features}
-              filterMenuName={FEATURE_FILTERS}
-              handleRefresh={handleRefresh}
-              page={FEATURE_STORE_PAGE}
-              setContent={setFeatures}
-              setSelectedRowData={setSelectedRowData}
-              tab={FEATURES_TAB}
-              urlTagOption={urlTagOption}
-            />
-          </div>
+          <FeatureActionBar
+            actionButtons={[
+              {
+                className: 'action-button',
+                label: 'Add to feature vector',
+                onClick: getPopUpTemplate,
+                popupButton: true,
+                variant: SECONDARY_BUTTON
+              }
+            ]}
+            features={features}
+            filterMenuName={FEATURE_FILTERS}
+            handleRefresh={handleRefresh}
+            page={FEATURE_STORE_PAGE}
+            setContent={setFeatures}
+            setSelectedRowData={setSelectedRowData}
+            tab={FEATURES_TAB}
+            urlTagOption={urlTagOption}
+          />
         </div>
         {featureStore.features.loading || featureStore.entities.loading ? null : features.length ===
           0 ? (
