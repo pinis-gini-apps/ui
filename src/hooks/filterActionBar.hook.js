@@ -29,13 +29,15 @@ function useCustomHook(
   cancelRequest,
   filtersStore,
   handleRefresh,
-  removeFilters
+  removeFilters,
+  params,
+  tab
 ) {
   useEffect(() => {
     return () => {
       dispatch(removeFilters())
     }
-  }, [page, dispatch, removeFilters])
+  }, [dispatch, params.pageTab, params.projectName, page, removeFilters, tab])
 
   const filtersInitialState = useMemo(() => {
     return {

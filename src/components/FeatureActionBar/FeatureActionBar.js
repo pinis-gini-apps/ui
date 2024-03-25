@@ -73,7 +73,9 @@ function FeatureActionBar({
     cancelRequest,
     filtersStore,
     handleRefresh,
-    removeFilters
+    removeFilters,
+    params,
+    tab
   )
 
   return (
@@ -122,12 +124,7 @@ function FeatureActionBar({
               values={filterMenuModal.values}
               wizardClassName="artifacts-filters__wrapper"
             >
-              <ArtifactsFilters
-                iteration={false}
-                artifacts={features}
-                filterMenuName={filterMenuName}
-                page={page}
-              />
+              <ArtifactsFilters iteration={false} artifacts={features} />
             </FilterMenuModal>
           </div>
           <div className="action-bar__actions">

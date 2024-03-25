@@ -17,7 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { GROUP_BY_NAME, GROUP_BY_NONE, TAG_FILTER_ALL_ITEMS, TAG_LATEST } from '../constants'
 import { setFilters } from '../reducers/filtersReducer'
 
 export const filtersHelper = async (changes, dispatch, detailsActions) => {
@@ -66,18 +65,9 @@ export const applyFeatureChanges = async (
   setContent
 ) => {
   const filtersHelperResult = await filtersHelper(changes, dispatch)
-
   if (filtersHelperResult) {
-    if (navigateToPage(navigate, params, page, tab)) return
-
-    if (filterMenuModal.tag === TAG_FILTER_ALL_ITEMS && filtersStore.groupBy === GROUP_BY_NONE) {
-      dispatch(setFilters({ groupBy: GROUP_BY_NAME, tag: TAG_FILTER_ALL_ITEMS }))
-    } else if (
-      filterMenuModal.tag !== TAG_FILTER_ALL_ITEMS &&
-      filtersStore.groupBy === GROUP_BY_NAME
-    ) {
-      dispatch(setFilters({ groupBy: GROUP_BY_NONE, tag: TAG_LATEST }))
-    }
+    if (navigateToPage(navigate, params, page, tab))
+      dispatch(setFilters({ labels: filterMenuModal.labels, tag: filterMenuModal.tag }))
   }
   setContent([])
   setSelectedRowData({})
