@@ -378,7 +378,7 @@ const FeatureVectors = ({
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
       dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
     }
-  }, [filtersStore.groupBy, filtersStore.tag, dispatch])
+  }, [filtersStore.groupBy, filtersStore.filterMenuModal, filtersStore.tag, dispatch])
 
   useEffect(() => {
     const content = cloneDeep(featureStore.featureVectors?.allData)
