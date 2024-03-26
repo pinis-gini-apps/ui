@@ -27,6 +27,7 @@ import { FeatureStoreContext } from '../FeatureStore'
 
 import {
   DETAILS_OVERVIEW_TAB,
+  FEATURE_FILTERS,
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
   GROUP_BY_NAME,
@@ -293,7 +294,7 @@ const FeatureSets = ({
   }, [fetchData, urlTagOption])
 
   useEffect(() => {
-    if (filtersStore.tag === TAG_FILTER_ALL_ITEMS) {
+    if (filtersStore.filterMenuModal[FEATURE_FILTERS].values.tag === TAG_FILTER_ALL_ITEMS) {
       dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
       dispatch(setFilters({ groupBy: GROUP_BY_NONE }))

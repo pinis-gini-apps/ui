@@ -84,7 +84,8 @@ const FeaturesView = React.forwardRef(
               featuresFilters,
               largeRequestErrorMessage,
               FEATURE_STORE_PAGE,
-              FEATURES_TAB
+              FEATURES_TAB,
+              FEATURE_FILTERS
             )}
           />
         ) : (

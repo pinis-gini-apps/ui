@@ -90,7 +90,8 @@ const FeatureVectorsView = React.forwardRef(
               featureVectorsFilters,
               largeRequestErrorMessage,
               FEATURE_STORE_PAGE,
-              FEATURE_VECTORS_TAB
+              FEATURE_VECTORS_TAB,
+              FEATURE_FILTERS
             )}
           />
         ) : (

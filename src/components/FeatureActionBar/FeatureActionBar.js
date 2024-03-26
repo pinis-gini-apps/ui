@@ -26,7 +26,7 @@ import PropTypes from 'prop-types'
 
 import { RoundedIcon, Button } from 'igz-controls/components'
 import FilterMenuModal from '../FilterMenuModal/FilterMenuModal'
-import ArtifactsFilters from '../ArtifactsActionBar/ArtifactsFilters'
+import FeatureFilters from './FeatureFilters'
 import NameFilter from '../../common/NameFilter/NameFilter'
 
 import { GROUP_BY_NONE } from '../../constants'
@@ -124,7 +124,7 @@ function FeatureActionBar({
               values={filterMenuModal.values}
               wizardClassName="artifacts-filters__wrapper"
             >
-              <ArtifactsFilters iteration={false} artifacts={features} />
+              <FeatureFilters features={features} />
             </FilterMenuModal>
           </div>
           <div className="action-bar__actions">
