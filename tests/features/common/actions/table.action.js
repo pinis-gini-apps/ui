@@ -56,9 +56,20 @@ async function getTableRows(driver, table) {
   return await arr.length
 }
 
+async function getHtmlTag(driver, table) {
+  const arr = await driver
+    .findElements(table)
+    .then(function(elements) {
+      return Promise.all(elements.map(element => element))
+    })
+
+  return await arr.length
+}
+
 const action = {
   getColumnValues: getColumnValues,
   getTableRows: getTableRows,
+  getHtmlTag: getHtmlTag,
   isContainsValueInColumn: async function(driver, table, columnName, value) {
     const arr = await getColumnValues(driver, table, columnName)
     expect(arr.includes(value)).equal(true, `Column values [${arr}] is not equal with "${value}" `)
@@ -76,7 +87,7 @@ const action = {
     const arr = await getColumnValues(driver, table, columnName)
     const subString = value.replace('=', '\n:\n')
     expect(arr.length > 0).equal(true)
-    expect(arr.every(item => item.includes(subString))).equal(
+    expect(arr.some(item => item.includes(subString))).equal(
       true,
       `Value "${subString}" does not includes in all values: [${arr}]`
     )

@@ -20,7 +20,6 @@ such restriction.
 import projectsApi from '../api/projects-api'
 import workflowsApi from '../api/workflow-api'
 import {
-  ADD_PROJECT_LABEL,
   CHANGE_PROJECT_STATE_BEGIN,
   CHANGE_PROJECT_STATE_FAILURE,
   CHANGE_PROJECT_STATE_SUCCESS,
@@ -76,17 +75,15 @@ import {
   REMOVE_PROJECT_SUMMARY,
   REMOVE_PROJECT_DATA,
   REMOVE_PROJECTS,
-  SET_PROJECT_DATA,
-  SET_PROJECT_LABELS,
   FETCH_PROJECTS_NAMES_BEGIN,
   FETCH_PROJECTS_NAMES_FAILURE,
   FETCH_PROJECTS_NAMES_SUCCESS,
-  SET_PROJECT_SETTINGS,
-  SET_PROJECT_PARAMS,
   FETCH_PROJECT_SECRETS_BEGIN,
   FETCH_PROJECT_SECRETS_FAILURE,
   FETCH_PROJECT_SECRETS_SUCCESS,
-  SET_PROJECT_SECRETS
+  SET_PROJECT_SECRETS,
+  SET_JOBS_MONITORING_DATA,
+  REMOVE_JOBS_MONITORING_DATA_FILTERS
 } from '../constants'
 import {
   CONFLICT_ERROR_STATUS_CODE,
@@ -97,10 +94,6 @@ import { parseSummaryData } from '../utils/parseSummaryData'
 import { showErrorNotification } from '../utils/notifications.util'
 
 const projectsAction = {
-  addProjectLabel: (label, labels) => ({
-    type: ADD_PROJECT_LABEL,
-    payload: { ...labels, ...label }
-  }),
   changeProjectState: (project, status) => dispatch => {
     dispatch(projectsAction.changeProjectStateBegin())
 
@@ -168,11 +161,6 @@ const projectsAction = {
   deleteProjectSuccess: () => ({
     type: DELETE_PROJECT_SUCCESS
   }),
-  editProjectLabels: (projectName, data, labels) => dispatch => {
-    dispatch(projectsAction.setProjectLabels(labels))
-
-    return projectsApi.editProject(projectName, { ...data })
-  },
   fetchProject: project => dispatch => {
     dispatch(projectsAction.fetchProjectBegin())
 
@@ -589,29 +577,20 @@ const projectsAction = {
     type: FETCH_PROJECT_WORKFLOWS_SUCCESS,
     payload: workflows
   }),
+  removeJobsMonitoringFilters: () => ({
+    type: REMOVE_JOBS_MONITORING_DATA_FILTERS
+  }),
   removeNewProjectError: () => ({ type: REMOVE_NEW_PROJECT_ERROR }),
   removeProjectData: () => ({ type: REMOVE_PROJECT_DATA }),
   removeProjectSummary: () => ({ type: REMOVE_PROJECT_SUMMARY }),
   removeProjects: () => ({ type: REMOVE_PROJECTS }),
-  setProjectData: data => ({
-    type: SET_PROJECT_DATA,
-    payload: data
-  }),
-  setProjectLabels: labels => ({
-    type: SET_PROJECT_LABELS,
-    payload: { ...labels }
-  }),
-  setProjectParams: params => ({
-    type: SET_PROJECT_PARAMS,
-    payload: params
-  }),
   setProjectSecrets: secrets => ({
     type: SET_PROJECT_SECRETS,
     payload: secrets
   }),
-  setProjectSettings: settings => ({
-    type: SET_PROJECT_SETTINGS,
-    payload: settings
+  setJobsMonitoringData: data => ({
+    type: SET_JOBS_MONITORING_DATA,
+    payload: data
   })
 }
 

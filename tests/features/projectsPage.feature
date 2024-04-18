@@ -4,7 +4,6 @@ Feature: MLRun Projects Page
 
     @MLPr
     @passive
-    @FAILED_TODO
     #TODO: last two steps are unstable on small screen extensions because scroll change the screen coordinates, it needs another solution
     Scenario: MLPr001 - Check all mandatory components
         Given open url
@@ -118,10 +117,14 @@ Feature: MLRun Projects Page
         Then type into "Description_Input" on "Create_New_Project" popup dialog "automation test description" value
         Then verify "New_Project_Labels_Table" element visibility on "Create_New_Project" wizard
         And click on "Add_Label_Button" element on "Create_New_Project" wizard
-        Then type value "/" to "Run_Details_Labels_Key" field on "Create_New_Project" wizard
+        Then type value "/" to "Labels_Key" field on "Create_New_Project" wizard
         Then verify labels warning should display options "Input_Hint"."Projects_Labels_Warning_Key"
-        Then type value "/" to "Run_Details_Labels_Value" field on "Create_New_Project" wizard without inputgroup
-        Then verify labels warning should display options "Input_Hint"."Labels_Warning_Value"
+        Then verify "Labels_Key" options rules on "Create_New_Project" wizard with labels
+        Then type value "/" to "Labels_Value" field on "Create_New_Project" wizard
+        Then verify labels warning should display options "Input_Hint"."Projects_Labels_Warning_Value"
+        Then verify "Labels_Value" options rules on "Create_New_Project" wizard with labels
+        Then type value "/" to "Labels_Key" field on "Create_New_Project" wizard
+        Then type value "/" to "Labels_Value" field on "Create_New_Project" wizard
         When click on "Title" element on "Create_New_Project" wizard
         And click on "Close_Label_Button" element on "Create_New_Project" wizard
         Then click on "Create_Button" element on "Create_New_Project" wizard
@@ -154,7 +157,21 @@ Feature: MLRun Projects Page
         Then select "Delete" option in action menu on "Projects" wizard in "Projects_Table" table at row with "automation-test-name2" value in "name" column
         Then verify if "Common_Popup" popup dialog appears
         Then click on "Delete_Button" element on "Common_Popup" wizard
+        And wait load page
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Project deletion in progress" value
+        And wait load page
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        And wait load page
+        Then verify if "Notification_Popup" popup dialog appears
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Project \"automation-test-name2\" was deleted successfully" value
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
         Then check "automation-test-name2" value not in "name" column in "Projects_Table" table on "Projects" wizard
+        Then verify "New_Project_Button" element visibility on "Projects" wizard
+        Then "New_Project_Button" element on "Projects" should contains "New Project" value
     
     @MLPr
     @passive

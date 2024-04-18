@@ -114,9 +114,18 @@ const ProjectSettings = ({ frontendSpec }) => {
   }
   const fetchActiveUser = () => {
     projectsIguazioApi.getActiveUser().then(response => {
+      const activeUser = response.data
+      activeUser.data.attributes.user_policies_collection = new Set([
+        ...activeUser.data.attributes.assigned_policies,
+        ...(activeUser.included?.reduce?.(
+          (policies, group) => [...policies, ...group.attributes.assigned_policies],
+          []
+        ) || [])
+      ])
+      
       membersDispatch({
         type: membersActions.SET_ACTIVE_USER,
-        payload: response.data.data
+        payload: activeUser
       })
     })
   }
@@ -187,7 +196,7 @@ const ProjectSettings = ({ frontendSpec }) => {
     const prevOwner = membersState.projectInfo.owner.id
 
     return fetchProjectIdAndOwner().then(() => {
-      if (!membersState.members.some(member => member.id === prevOwner)) {
+      if (!membersState.users.some(member => member.id === prevOwner)) {
         navigate('/projects/')
       }
     })
@@ -235,7 +244,6 @@ const ProjectSettings = ({ frontendSpec }) => {
             membersState={membersState}
             membersDispatch={membersDispatch}
             projectMembersIsShown={projectMembersIsShown}
-            setNotification={setNotification}
           />
         ) : params.pageTab === PROJECTS_SETTINGS_SECRETS_TAB ? (
           <ProjectSettingsSecrets setNotification={setNotification} />

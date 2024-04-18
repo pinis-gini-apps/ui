@@ -47,8 +47,8 @@ import { createFeatureVectorsRowData } from '../../../utils/createFeatureStoreCo
 import { getFeatureVectorIdentifier } from '../../../utils/getUniqueIdentifier'
 import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
-import { parseFeatureTemplate } from '../../../utils/parseFeatureTemplate'
 import { parseChipsData } from '../../../utils/convertChipsData'
+import { parseFeatureTemplate } from '../../../utils/parseFeatureTemplate'
 import { parseFeatureVectors } from '../../../utils/parseFeatureVectors'
 import { setFeaturesPanelData } from '../../../reducers/tableReducer'
 import { setNotification } from '../../../reducers/notificationReducer'
@@ -56,6 +56,9 @@ import { showErrorNotification } from '../../../utils/notifications.util'
 import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { useOpenPanel } from '../../../hooks/openPanel.hook'
+import { useVirtualization } from '../../../hooks/useVirtualization.hook'
+
+import cssVariables from './featureVectors.scss'
 
 const FeatureVectors = ({
   deleteFeatureVector,
@@ -71,13 +74,14 @@ const FeatureVectors = ({
   const [selectedRowData, setSelectedRowData] = useState({})
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [createVectorPopUpIsOpen, setCreateVectorPopUpIsOpen] = useState(false)
-
   const openPanelByDefault = useOpenPanel()
   const [urlTagOption] = useGetTagOptions(fetchFeatureVectorsTags, featureVectorsFilters)
   const params = useParams()
   const featureStore = useSelector(store => store.featureStore)
   const filtersStore = useSelector(store => store.filtersStore)
-  const featureVectorsRef = useRef(null)
+  const featureStoreRef = useRef(null)
+  const tableBodyRef = useRef(null)
+  const tableRef = useRef(null)
   const abortControllerRef = useRef(new AbortController())
   const navigate = useNavigate()
   const location = useLocation()
@@ -430,6 +434,21 @@ const FeatureVectors = ({
     }
   }, [removeFeatureVector, removeFeatureVectors, setCreateVectorPopUpIsOpen, params.projectName])
 
+  const virtualizationConfig = useVirtualization({
+    tableRef,
+    tableBodyRef,
+    rowsData: {
+      content: tableContent,
+      expandedRowsData: selectedRowData,
+      selectedItem: selectedFeatureVector
+    },
+    heightData: {
+      headerRowHeight: cssVariables.featureVectorsHeaderRowHeight,
+      rowHeight: cssVariables.featureVectorsRowHeight,
+      rowHeightExtended: cssVariables.featureVectorsRowHeightExtended
+    }
+  })
+
   return (
     <FeatureVectorsView
       actionsMenu={actionsMenu}
@@ -445,7 +464,7 @@ const FeatureVectors = ({
       handleRefresh={handleRefresh}
       largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
-      ref={featureVectorsRef}
+      ref={{ featureStoreRef, tableRef, tableBodyRef }}
       selectedFeatureVector={selectedFeatureVector}
       selectedRowData={selectedRowData}
       setCreateVectorPopUpIsOpen={setCreateVectorPopUpIsOpen}
@@ -454,6 +473,7 @@ const FeatureVectors = ({
       setSelectedRowData={setSelectedRowData}
       tableContent={tableContent}
       urlTagOption={urlTagOption}
+      virtualizationConfig={virtualizationConfig}
     />
   )
 }

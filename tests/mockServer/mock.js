@@ -21,8 +21,20 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import yaml from 'js-yaml'
 import fs from 'fs'
-import crypto from 'crypto'
-import { cloneDeep, remove, omit } from 'lodash'
+import crypto from 'node:crypto'
+import {
+  cloneDeep,
+  remove,
+  defaults,
+  noop,
+  get,
+  random,
+  isFunction,
+  clamp,
+  find,
+  set,
+  omit
+} from 'lodash'
 
 import frontendSpec from './data/frontendSpec.json'
 import projects from './data/projects.json'
@@ -62,6 +74,24 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 // MLRun object Templates
+const projectBackgroundTasks = {}
+const backgroundTasks = {}
+const backgroundTaskTemplate = {
+  kind: 'BackgroundTask',
+  metadata: {
+    name: '',
+    project: null,
+    kind: null,
+    created: '',
+    updated: '',
+    timeout: 600
+  },
+  spec: {},
+  status: {
+    state: 'created',
+    error: null
+  }
+}
 const projectTemplate = {
   kind: 'project',
   metadata: { name: '', created: '', labels: null, annotations: null },
@@ -132,6 +162,95 @@ const iguazioApiUrl = '/platform-api.default-tenant.app.vmdev36.lab.iguazeng.com
 const port = 30000
 
 // Support function
+function createTask(projectName, config) {
+  const newTask = cloneDeep(backgroundTaskTemplate)
+  const now = new Date().toISOString()
+
+  config = defaults({}, config, {
+    timeout: newTask.metadata.timeout,
+    durationMin: 10000,
+    durationMax: 15000,
+    successRate: 100,
+    onAfterSuccess: noop,
+    onAfterFail: noop
+  })
+
+  newTask.metadata.name = makeUID(36)
+  newTask.metadata['project'] = projectName
+  newTask.metadata['updated'] = now
+  newTask.metadata['created'] = now
+
+  if (config.kind) {
+    newTask.metadata.kind = config.kind
+  }
+
+  if (projectName) {
+    set(projectBackgroundTasks, [projectName, newTask.metadata.name], newTask)
+  } else {
+    set(backgroundTasks, newTask.metadata.name, newTask)
+  }
+
+  if (newTask.status.state === 'created') {
+    newTask.status.state = 'running'
+
+    setTimeout(() => {
+      newTask.metadata.updated = new Date().toISOString()
+
+      if (isFunction(config.taskFunc)) {
+        config
+          .taskFunc(newTask.metadata.name)
+          .then(() => {
+            newTask.metadata['updated'] = new Date().toISOString()
+            newTask.status.state = 'succeeded'
+
+            config.onAfterSuccess()
+          })
+          .catch(error => {
+            newTask.metadata['updated'] = new Date().toISOString()
+            newTask.status.state = 'failed'
+            newTask.status.error = get(error, 'message', '')
+
+            config.onAfterFail()
+          })
+      } else {
+        let randomDuration = random(config.durationMin, config.durationMax)
+
+        setTimeout(() => {
+          if (newTask.status.state === 'running') {
+            // make sure it wasn't canceled
+            let isSuccessful = random(1, 100) <= clamp(config.successRate, 0, 100)
+
+            newTask.metadata['updated'] = new Date().toISOString()
+            newTask.status.state = isSuccessful ? 'succeeded' : 'failed'
+
+            if (isSuccessful) {
+              config.onAfterSuccess()
+            } else {
+              config.onAfterFail()
+            }
+          }
+        }, randomDuration)
+      }
+    }, config.timeout)
+  }
+
+  return newTask
+}
+
+function generateHash(txt) {
+  return crypto.createHash('sha1').update(JSON.stringify(txt)).digest('hex')
+}
+
+function getGraphById(targetId) {
+  let foundGraph = null
+
+  find(pipelineIDs, item => {
+    return (foundGraph = find(item.graph, element => element.run_uid === targetId))
+  })
+
+  return foundGraph
+}
+
 function makeUID(length) {
   let result = ''
   const characters = 'abcdef0123456789'
@@ -144,13 +263,56 @@ function makeUID(length) {
   return result
 }
 
-function generateHash(txt) {
-  return crypto.createHash('sha1').update(JSON.stringify(txt)).digest('hex')
+function deleteProjectHandler(req, res, omitResponse) {
+  //todo: Improve this handler according to the real roles of deleting. Add 412 response (if project has resources)
+
+  const collectedProject = projects.projects.filter(
+    project => project.metadata.name === req.params['project']
+  )
+  if (collectedProject.length) {
+    remove(projects.projects, project => project.metadata.name === req.params['project'])
+    remove(projectsSummary.projects, project => project.name === req.params['project'])
+    remove(
+      featureSets.feature_sets,
+      featureSet => featureSet.metadata.project === req.params['project']
+    )
+    remove(artifacts.artifacts, artifact => artifact.project === req.params['project'])
+    remove(run.data, artifact => artifact.metadata.project === req.params['project'])
+    remove(run.data, artifact => artifact.metadata.project === req.params['project'])
+    delete secretKeys[req.params.project]
+    res.statusCode = 204
+  } else {
+    res.statusCode = 500
+  }
+
+  if (!omitResponse) {
+    res.send({})
+  }
 }
 
 // Request Handlers
 function getFrontendSpec(req, res) {
   res.send(frontendSpec)
+}
+
+function getProjectTask(req, res) {
+  res.send(get(projectBackgroundTasks, [req.params.project, req.params.taskId], {}))
+}
+
+function getProjectTasks(req, res) {
+  res.send({
+    background_tasks: Object.values(get(projectBackgroundTasks, req.params.project, []))
+  })
+}
+
+function getTask(req, res) {
+  res.send(get(backgroundTasks, req.params.taskId, {}))
+}
+
+function getTasks(req, res) {
+  res.send({
+    background_tasks: Object.values(backgroundTasks) ?? []
+  })
 }
 
 function getFeatureSet(req, res) {
@@ -266,27 +428,27 @@ function createNewProject(req, res) {
 }
 
 function deleteProject(req, res) {
-  // TODO: improve that hendler acording to the real rooles of deleting
-  const collectedProject = projects.projects.filter(
-    project => project.metadata.name === req.params['project']
-  )
-  if (collectedProject.length) {
-    remove(projects.projects, project => project.metadata.name === req.params['project'])
-    remove(projectsSummary.projects, project => project.name === req.params['project'])
-    remove(
-      featureSets.feature_sets,
-      featureSet => featureSet.metadata.project === req.params['project']
-    )
-    remove(artifacts.artifacts, artifact => artifact.project === req.params['project'])
-    remove(run.data, artifact => artifact.metadata.project === req.params['project'])
-    remove(run.data, artifact => artifact.metadata.project === req.params['project'])
-    delete secretKeys[req.params.project]
-    res.statusCode = 204
-  } else {
-    res.statusCode = 500
-  }
+  deleteProjectHandler(req, res)
+}
 
-  res.send({})
+function deleteProjectV2(req, res) {
+  const taskFunc = () => {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        deleteProjectHandler(req, res, true)
+
+        resolve()
+      }, random(5000, 10000))
+    })
+  }
+  const task = createTask(null, {
+    taskFunc,
+    kind: `project.deletion.wrapper.${req.params.project}`
+  })
+
+  res.status = 202
+
+  res.send(task)
 }
 
 function patchProject(req, res) {
@@ -375,7 +537,25 @@ function getProjectSummary(req, res) {
 }
 
 function getRuns(req, res) {
-  let collectedRuns = runs.runs.filter(run => run.metadata.project === req.query['project'])
+  //get runs for Projects Monitoring page
+  if (req.params['project'] === '*') {
+    let collectedMonitoringRuns = runs.runs
+
+    if (req.query['start_time_from']) {
+      collectedMonitoringRuns = collectedMonitoringRuns.filter(
+        run => Date.parse(run.status.start_time) >= Date.parse(req.query['start_time_from'])
+      )
+    }
+    if (req.query['start_time_to']) {
+      collectedMonitoringRuns = collectedMonitoringRuns.filter(
+        run => Date.parse(run.status.start_time) <= Date.parse(req.query['start_time_to'])
+      )
+    }
+
+    res.send({ runs: collectedMonitoringRuns })
+  }
+  //get runs for Jobs and workflows page
+  let collectedRuns = runs.runs.filter(run => run.metadata.project === req.params['project'])
 
   if (req.query['start_time_from']) {
     collectedRuns = collectedRuns.filter(
@@ -418,7 +598,7 @@ function getRuns(req, res) {
 }
 
 function getRun(req, res) {
-  const run_prj_uid = run.data.find(
+  const run_prj_uid = runs.runs.find(
     item =>
       item.metadata.project === req.params['project'] && item.metadata.uid === req.params['uid']
   )
@@ -434,6 +614,38 @@ function patchRun(req, res) {
   collectedRun[0].status.state = req.body['status.state']
 
   res.send()
+}
+
+function abortRun(req, res) {
+  const currentRun = runs.runs.find(run => run.metadata.uid === req.params.uid)
+
+  currentRun.status.state = 'aborting'
+
+  const taskFunc = id => {
+    currentRun.status.abort_task_id = id
+
+    return new Promise(resolve => {
+      setTimeout(() => {
+        const collectedPipeline = getGraphById(req.params.uid)
+
+        currentRun.status.state = 'aborted'
+
+        if (collectedPipeline) {
+          collectedPipeline.phase = 'Error'
+        }
+
+        delete currentRun.status.abort_task_id
+
+        resolve()
+      }, random(3000, 10000))
+    })
+  }
+
+  const task = createTask(req.params['project'], { taskFunc })
+
+  res.status = 202
+
+  res.send(task)
 }
 
 function deleteRun(req, res) {
@@ -475,6 +687,13 @@ function getFunctionTemplate(req, res) {
 }
 
 function getProjectsSchedules(req, res) {
+  //get schedules for Projects Monitoring page  
+  if (req.params['project'] === '*') {
+    let collectedSchedules = schedules.schedules
+
+    res.send({ schedules: collectedSchedules })
+  }
+  //get schedules for Jobs and workflows page Schedules tab
   let collectedSchedules = schedules.schedules.filter(
     schedule => schedule.scheduled_object.task.metadata.project === req.params['project']
   )
@@ -614,7 +833,7 @@ function invokeSchedule(req, res) {
     job.status.state = 'completed'
     scheduleObject.last_run.status.state = 'completed'
     delete job.status.error
-  }, 5000)
+  }, 2000)
 
   res.send(respTemplate)
 }
@@ -919,6 +1138,27 @@ function deleteProjectsFeatureVectors(req, res) {
 }
 
 function getPipelines(req, res) {
+  //get pipelines for Projects Monitoring page
+  if (req.params['project'] === '*') {
+    let collectedMonitoringPipelines = pipelineIDs.map(pipeline => {
+      return pipeline.run
+    })
+    if (JSON.parse(req.query.filter).predicates.length >= 1) {
+      if (JSON.parse(req.query.filter).predicates[0]) {
+        collectedMonitoringPipelines = collectedMonitoringPipelines.filter(
+          pipeline => Date.parse(pipeline.created_at) >= Date.parse(JSON.parse(req.query.filter).predicates[0].timestamp_value)  //start time from
+        )
+      }
+      if (JSON.parse(req.query.filter).predicates[1]) {
+        collectedMonitoringPipelines = collectedMonitoringPipelines.filter(
+          pipeline => Date.parse(pipeline.created_at) <= Date.parse(JSON.parse(req.query.filter).predicates[1].timestamp_value)  //start time to
+        )
+      }
+    } 
+
+    res.send({ runs: collectedMonitoringPipelines, total_size : collectedMonitoringPipelines.length, next_page_token : null })
+  }
+  //get pipelines for Jobs and workflows page Monitor Workflows tab
   const collectedPipelines = { ...pipelines[req.params.project] }
 
   if (req.query.filter) {
@@ -1286,6 +1526,11 @@ function postSubmitJob(req, res) {
     runs.runs.push(job)
     funcs.funcs.push(funcObject)
     logs.push(jobLogs)
+
+    setTimeout(() => {
+      job.status.state = 'completed'
+      delete job.status.error
+    }, 5000)
   }
 
   res.send(respTemplate)
@@ -1294,6 +1539,9 @@ function postSubmitJob(req, res) {
 function putTags(req, res) {
   const tagName = req.params.tag
   const projectName = req.params.project
+  const tagObject = artifactTags.find(
+    artifact => artifact.metadata?.project === projectName || artifact.project === projectName
+  )
 
   const collectedArtifacts = artifacts.artifacts.filter(artifact => {
     const artifactMetaData = artifact.metadata ?? artifact
@@ -1312,6 +1560,15 @@ function putTags(req, res) {
     let editedTag = cloneDeep(collectedArtifacts[0])
     editedTag.metadata ? (editedTag.metadata.tag = tagName) : (editedTag.tag = tagName)
     artifacts.artifacts.push(editedTag)
+  }
+
+  if (tagObject) {
+    tagObject.tags.push(tagName)
+  } else {
+    artifactTags.push({
+      project: req.body.metadata.project,
+      tags: [tagName]
+    })
   }
 
   res.send({
@@ -1407,6 +1664,30 @@ function postArtifact(req, res) {
   }
 
   res.send()
+}
+
+function putArtifact(req, res) {
+  const collectedArtifacts = artifacts.artifacts
+    .filter (artifact => {
+      const artifactMetaData = artifact.metadata ?? artifact
+      const artifactSpecData = artifact.spec ?? artifact
+      const artifactBodyData = req.body.metadata ?? req.body
+
+      return artifactMetaData?.project === req.params.project
+        && artifactMetaData?.tree === artifactBodyData?.tree
+        && artifactSpecData?.db_key === req.params.key
+    }
+  )
+  if (collectedArtifacts?.length > 0) {
+    collectedArtifacts.forEach (collectedArtifact => {
+      const artifactMetaData = collectedArtifact.metadata ?? collectedArtifact
+      const artifactBodyData = req.body.metadata ?? req.body
+
+      artifactMetaData.labels = artifactBodyData?.labels
+    })
+  }
+
+  res.send(collectedArtifacts)
 }
 
 function deleteArtifact(req, res) {
@@ -1699,10 +1980,14 @@ function getIguazioJob(req, res) {
 
 // REQUESTS
 app.get(`${mlrunAPIIngress}/frontend-spec`, getFrontendSpec)
+app.get(`${mlrunAPIIngress}/projects/:project/background-tasks/:taskId`, getProjectTask)
+app.get(`${mlrunAPIIngress}/projects/:project/background-tasks`, getProjectTasks)
+app.get(`${mlrunAPIIngress}/background-tasks/:taskId`, getTask)
+app.get(`${mlrunAPIIngress}/background-tasks`, getTasks)
 
 app.get(`${mlrunAPIIngress}/projects/:project/feature-sets`, getFeatureSet)
 
-// POST request after ferification should be deleted
+// POST request after verification should be deleted
 app.post(`${mlrunAPIIngress}/projects/:project/feature-sets`, createProjectsFeatureSet)
 app.put(
   `${mlrunAPIIngress}/projects/:project/feature-sets/:name/references/:tag`,
@@ -1714,6 +1999,7 @@ app.get(`${mlrunAPIIngress}/projects`, getProjects)
 app.post(`${mlrunAPIIngress}/projects`, createNewProject)
 app.get(`${mlrunAPIIngress}/projects/:project`, getProject)
 app.delete(`${mlrunAPIIngress}/projects/:project`, deleteProject)
+app.delete(`${mlrunAPIIngressV2}/projects/:project`, deleteProjectV2)
 app.patch(`${mlrunAPIIngress}/projects/:project`, patchProject)
 app.put(`${mlrunAPIIngress}/projects/:project`, putProject)
 app.get(`${mlrunAPIIngress}/projects/:project/secret-keys`, getSecretKeys)
@@ -1723,11 +2009,14 @@ app.delete(`${mlrunAPIIngress}/projects/:project/secrets`, deleteSecretKeys)
 app.get(`${mlrunAPIIngress}/project-summaries`, getProjectsSummaries)
 app.get(`${mlrunAPIIngress}/project-summaries/:project`, getProjectSummary)
 
-app.get(`${mlrunAPIIngress}/runs`, getRuns)
+app.get(`${mlrunAPIIngress}/projects/:project/runs`, getRuns)
+app.get(`${mlrunAPIIngress}/projects/*/runs`, getRuns)
 app.get(`${mlrunAPIIngress}/run/:project/:uid`, getRun)
 app.patch(`${mlrunAPIIngress}/run/:project/:uid`, patchRun)
 app.delete(`${mlrunAPIIngress}/projects/:project/runs/:uid`, deleteRun)
 app.delete(`${mlrunAPIIngress}/projects/:project/runs`, deleteRuns)
+app.post(`${mlrunAPIIngress}/projects/:project/runs/:uid/abort`, abortRun)
+
 app.get(`${mlrunIngress}/catalog.json`, getFunctionCatalog)
 app.get(`${mlrunAPIIngress}/hub/sources/:project/items`, getFunctionCatalog)
 app.get(`${mlrunAPIIngress}/hub/sources/:project/items/:uid`, getFunctionItem)
@@ -1735,16 +2024,19 @@ app.get(`${mlrunAPIIngress}/hub/sources/:project/item-object`, getFunctionObject
 app.get(`${mlrunIngress}/:function/function.yaml`, getFunctionTemplate)
 
 app.get(`${mlrunAPIIngress}/projects/:project/schedules`, getProjectsSchedules)
+app.get(`${mlrunAPIIngress}/projects/*/schedules`, getProjectsSchedules)
 app.get(`${mlrunAPIIngress}/projects/:project/schedules/:schedule`, getProjectsSchedule)
 app.delete(`${mlrunAPIIngress}/projects/:project/schedules/:schedule`, deleteSchedule)
 app.post(`${mlrunAPIIngress}/projects/:project/schedules/:schedule/invoke`, invokeSchedule)
 
 app.get(`${mlrunAPIIngress}/projects/:project/pipelines`, getPipelines)
+app.get(`${mlrunAPIIngress}/projects/*/pipelines`, getPipelines)
 app.get(`${mlrunAPIIngress}/projects/:project/pipelines/:pipelineID`, getPipeline)
 
 app.get(`${mlrunAPIIngress}/projects/:project/artifact-tags`, getProjectsArtifactTags)
 app.get(`${mlrunAPIIngressV2}/projects/:project/artifacts`, getArtifacts)
 app.post(`${mlrunAPIIngressV2}/projects/:project/artifacts`, postArtifact)
+app.put(`${mlrunAPIIngressV2}/projects/:project/artifacts/:key`, putArtifact)
 app.delete(`${mlrunAPIIngressV2}/projects/:project/artifacts/:key`, deleteArtifact)
 
 app.put(`${mlrunAPIIngress}/projects/:project/tags/:tag`, putTags)

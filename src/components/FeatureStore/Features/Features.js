@@ -17,9 +17,10 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
+import { mapValues, map } from 'lodash'
 
 import AddToFeatureVectorPopUp from '../../../elements/AddToFeatureVectorPopUp/AddToFeatureVectorPopUp'
 import FeaturesTablePanel from '../../../elements/FeaturesTablePanel/FeaturesTablePanel'
@@ -43,11 +44,14 @@ import { getFeatureIdentifier } from '../../../utils/getUniqueIdentifier'
 import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
 import { parseFeatures } from '../../../utils/parseFeatures'
 import { setTablePanelOpen } from '../../../reducers/tableReducer'
+import { showLargeResponsePopUp } from '../../../httpClient'
 import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
-import { showLargeResponsePopUp } from '../../../httpClient'
+import { useVirtualization } from '../../../hooks/useVirtualization.hook'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
+
+import cssVariables from './features.scss'
 
 const Features = ({
   fetchEntity,
@@ -70,6 +74,8 @@ const Features = ({
   const filtersStore = useSelector(store => store.filtersStore)
   const tableStore = useSelector(store => store.tableStore)
   const featureStoreRef = useRef(null)
+  const tableBodyRef = useRef(null)
+  const tableRef = useRef(null)
   const abortControllerRef = useRef(new AbortController())
   const dispatch = useDispatch()
 
@@ -92,6 +98,17 @@ const Features = ({
     ],
     [toggleConvertedYaml]
   )
+
+  useLayoutEffect(() => {
+    setSelectedRowData(prevSelectedRowData => {
+      return mapValues(prevSelectedRowData, feature => ({
+        ...feature,
+        content: map(feature.content, contentItem =>
+          createFeaturesRowData(contentItem.data, tableStore.isTablePanelOpen)
+        )
+      }))
+    })
+  }, [tableStore.isTablePanelOpen, setSelectedRowData])
 
   const fetchData = useCallback(
     filters => {
@@ -281,23 +298,38 @@ const Features = ({
     }
   }, [removeEntities, removeEntity, removeFeature, removeFeatures, params.projectName])
 
+  const virtualizationConfig = useVirtualization({
+    tableRef,
+    tableBodyRef,
+    rowsData: {
+      content: tableContent,
+      expandedRowsData: selectedRowData
+    },
+    heightData: {
+      headerRowHeight: cssVariables.featuresHeaderRowHeight,
+      rowHeight: cssVariables.featuresRowHeight,
+      rowHeightExtended: cssVariables.featuresRowHeightExtended
+    }
+  })
+
   return (
     <FeaturesView
       actionsMenu={actionsMenu}
-      features={features}
       featureStore={featureStore}
+      features={features}
       filtersStore={filtersStore}
       getPopUpTemplate={getPopUpTemplate}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
       largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
-      ref={featureStoreRef}
+      ref={{ featureStoreRef, tableRef, tableBodyRef }}
       selectedRowData={selectedRowData}
       setFeatures={setFeatures}
       setSelectedRowData={setSelectedRowData}
       tableContent={tableContent}
       tableStore={tableStore}
+      virtualizationConfig={virtualizationConfig}
       urlTagOption={urlTagOption}
     />
   )

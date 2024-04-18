@@ -50,7 +50,7 @@ const TableLinkCell = ({
   const { value: stateValue, label: stateLabel, className: stateClassName } = item.state ?? {}
 
   return (
-    <td className={tableCellClassNames}>
+    <td data-testid={data.headerId} className={tableCellClassNames}>
       {data.linkIsExternal ? (
         <span className="data-ellipsis">
           <a href={link} className="link" target="blank">
@@ -91,7 +91,7 @@ const TableLinkCell = ({
               </Tooltip>
             )}
           </div>
-          {(link.match(/jobs/) ||
+          {(data.showUidRow ||
             ((link.match(/functions/) ||
               link.match(/models/) ||
               link.match(/files/) ||

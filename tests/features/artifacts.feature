@@ -119,6 +119,8 @@ Feature: Files Page
   @MLA
   @passive
   @inProgress
+  @FAILED_TODO
+  #TODO: bug #2339 Fix [Artifacts] refine UI text for Register Artifact
   Scenario: MLA005 - Check all mandatory components on Register Artifacts Popup
     Given open url
     And wait load page
@@ -201,6 +203,7 @@ Feature: Files Page
     Given open url
     And wait load page
     And click on row root with value "automation-test" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
@@ -583,8 +586,6 @@ Feature: Files Page
     Then verify "Cross_Close_Button" element visibility on "Files_Info_Pane" wizard
 
   @MLA
-  @FAILED_TODO
-  #TODO: tag edit implementation on mock
   Scenario: MLA010 - Check that version tag dropdown shows all tags on filters wizard on Artifacts page
     Given open url
     And wait load page
@@ -639,8 +640,6 @@ Feature: Files Page
     Then "Version_Tag_Input_Placeholder" element on "Files_Info_Pane" should contains "Click to add" value
 
   @MLA
-  @FAILED_TODO
-  #TODO: tag edit implementation on mock
   Scenario: MLA012 - Check filter by "All" tag is performed when version tag was edited
     Given open url
     And wait load page

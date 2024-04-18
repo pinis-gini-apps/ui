@@ -22,7 +22,7 @@ import prettyBytes from 'pretty-bytes'
 
 import CopyToClipboard from '../../common/CopyToClipboard/CopyToClipboard'
 import Download from '../../common/Download/Download'
-import { DATASETS, MODELS_TAB, TAG_FILTER_LATEST } from '../../constants'
+import { DATASETS_TAB, MODELS_TAB, TAG_FILTER_LATEST } from '../../constants'
 import { RoundedIcon, TextTooltipTemplate, Tooltip } from 'igz-controls/components'
 import { formatDatetime, parseKeyValues } from '../../utils'
 import { generateArtifactPreviewData } from '../../utils/generateArtifactPreviewData'
@@ -73,9 +73,11 @@ export const generateArtifactsTabContent = (artifacts, params, iteration, showAr
     const artifactScreenLinks = {
       model: `/projects/${params.projectName}/models/${MODELS_TAB}/${
         artifact.db_key || artifact.key
-      }/${artifact.tag ?? TAG_FILTER_LATEST}${iteration ? `/${iteration}` : ''}/overview`,
-      dataset: `/projects/${params.projectName}/${DATASETS}/${artifact.db_key || artifact.key}/${
-        artifact.tag ?? TAG_FILTER_LATEST
+      }/${artifact.tag ? artifact.tag : artifact.tree ?? TAG_FILTER_LATEST}${
+        iteration ? `/${iteration}` : ''
+      }/overview`,
+      dataset: `/projects/${params.projectName}/${DATASETS_TAB}/${artifact.db_key || artifact.key}/${
+        artifact.tag ? artifact.tag : artifact.tree ?? TAG_FILTER_LATEST
       }${iteration ? `/${iteration}` : ''}/overview`
     }
 
@@ -124,7 +126,7 @@ export const generateArtifactsTabContent = (artifacts, params, iteration, showAr
                 to={
                   artifactScreenLinks[artifact.kind] ??
                   `/projects/${params.projectName}/files/${artifact.db_key || artifact.key}/${
-                    artifact.tag ?? TAG_FILTER_LATEST
+                    artifact.tag ? artifact.tag : artifact.tree ?? TAG_FILTER_LATEST
                   }${iteration ? `/${iteration}` : ''}/overview`
                 }
               >

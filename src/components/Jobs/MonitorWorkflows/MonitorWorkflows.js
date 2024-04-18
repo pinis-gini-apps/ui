@@ -58,24 +58,28 @@ import {
   pollAbortingJobs
 } from '../jobs.util'
 import getState from '../../../utils/getState'
+import { datePickerPastOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
 import { getFunctionLogs } from '../../../utils/getFunctionLogs'
 import { getJobLogs } from '../../../utils/getJobLogs.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
+import { isRowRendered, useVirtualization } from '../../../hooks/useVirtualization.hook'
 import { isWorkflowStepExecutable } from '../../Workflow/workflow.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
-import { showErrorNotification } from '../../../utils/notifications.util'
 import { parseFunction } from '../../../utils/parseFunction'
 import { parseJob } from '../../../utils/parseJob'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { setNotification } from '../../../reducers/notificationReducer'
-import { datePickerOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
+import { showErrorNotification } from '../../../utils/notifications.util'
 import { useMode } from '../../../hooks/mode.hook'
 import { usePods } from '../../../hooks/usePods.hook'
 import { useSortTable } from '../../../hooks/useSortTable.hook'
 import { useYaml } from '../../../hooks/yaml.hook'
+import detailsActions from '../../../actions/details'
+import jobsActions from '../../../actions/jobs'
 
-import './MonitorWorkflows.scss'
+import './monitorWorkflows.scss'
+import cssVariables from './monitorWorkflows.scss'
 
 const MonitorWorkflows = ({
   abortJob,
@@ -83,12 +87,9 @@ const MonitorWorkflows = ({
   fetchFunctionLogs,
   fetchJob,
   fetchJobFunctions,
-  fetchJobLogs,
-  fetchJobPods,
   fetchWorkflow,
   fetchWorkflows,
   getFunction,
-  removePods,
   resetWorkflow
 }) => {
   const [selectedFunction, setSelectedFunction] = useState({})
@@ -107,7 +108,6 @@ const MonitorWorkflows = ({
   const location = useLocation()
   const dispatch = useDispatch()
   const { isStagingMode } = useMode()
-  const abortJobRef = useRef(null)
   const {
     editableItem,
     handleMonitoring,
@@ -119,11 +119,14 @@ const MonitorWorkflows = ({
     setJobWizardIsOpened,
     setJobWizardMode
   } = React.useContext(JobsContext)
-  let fetchFunctionLogsTimeout = useRef(null)
-  const fetchJobFunctionsPromiseRef = useRef()
   const abortControllerRef = useRef(new AbortController())
+  const abortJobRef = useRef(null)
+  const fetchJobFunctionsPromiseRef = useRef()
+  const tableBodyRef = useRef(null)
+  const tableRef = useRef(null)
+  let fetchFunctionLogsTimeout = useRef(null)
 
-  usePods(fetchJobPods, removePods, selectedJob)
+  usePods(dispatch, detailsActions.fetchJobPods, detailsActions.removePods, selectedJob)
 
   const filters = useMemo(() => generateFilters(), [])
 
@@ -160,9 +163,16 @@ const MonitorWorkflows = ({
 
   const handleFetchJobLogs = useCallback(
     (item, projectName, setDetailsLogs, streamLogsRef) => {
-      return getJobLogs(item.uid, projectName, streamLogsRef, setDetailsLogs, fetchJobLogs)
+      return getJobLogs(
+        item.uid,
+        projectName,
+        streamLogsRef,
+        setDetailsLogs,
+        jobsActions.fetchJobLogs,
+        dispatch
+      )
     },
-    [fetchJobLogs]
+    [dispatch]
   )
 
   const handleRemoveFunctionLogs = useCallback(() => {
@@ -567,8 +577,8 @@ const MonitorWorkflows = ({
 
           getWorkflows(filters)
           dispatch(setFilters(filters))
-        } else {
-          const pastWeekOption = datePickerOptions.find(
+        } else if (workflowsStore.workflows.data.length === 0) {
+          const pastWeekOption = datePickerPastOptions.find(
             option => option.id === PAST_WEEK_DATE_OPTION
           )
           const generatedDates = [...pastWeekOption.handler()]
@@ -586,6 +596,9 @@ const MonitorWorkflows = ({
 
           dispatch(setFilters({ ...filters }))
           getWorkflows({ ...filtersStore, ...filters })
+        } else {
+          getWorkflows({ ...filtersStore, groupBy: GROUP_BY_WORKFLOW })
+          dispatch(setFilters({ groupBy: GROUP_BY_WORKFLOW }))
         }
 
         setWorkflowsAreLoaded(true)
@@ -597,7 +610,8 @@ const MonitorWorkflows = ({
     params.workflowId,
     params.projectName,
     filtersStore,
-    workflowsAreLoaded
+    workflowsAreLoaded,
+    workflowsStore.workflows.data.length
   ])
 
   useEffect(() => {
@@ -630,7 +644,8 @@ const MonitorWorkflows = ({
           setJobWizardIsOpened(false)
         },
         defaultData: jobWizardMode === PANEL_RERUN_MODE ? editableItem?.rerun_object : {},
-        mode: jobWizardMode
+        mode: jobWizardMode,
+        wizardTitle: jobWizardMode === PANEL_RERUN_MODE ? 'Batch re-run' : undefined
       })
 
       setJobWizardIsOpened(true)
@@ -645,6 +660,19 @@ const MonitorWorkflows = ({
     setJobWizardIsOpened,
     setJobWizardMode
   ])
+
+  const virtualizationConfig = useVirtualization({
+    tableRef,
+    tableBodyRef,
+    rowsData: {
+      content: tableContent
+    },
+    heightData: {
+      headerRowHeight: cssVariables.monitorWorkflowsHeaderRowHeight,
+      rowHeight: cssVariables.monitorWorkflowsRowHeight,
+      rowHeightExtended: cssVariables.monitorWorkflowsRowHeightExtended
+    }
+  })
 
   return (
     <>
@@ -700,20 +728,26 @@ const MonitorWorkflows = ({
               handleCancel={handleCancel}
               handleSelectItem={handleSelectRun}
               pageData={pageData}
+              ref={{ tableRef, tableBodyRef }}
               retryRequest={getWorkflows}
               selectedItem={selectedJob}
               tab={MONITOR_JOBS_TAB}
+              tableClassName="monitor-workflows-table"
               tableHeaders={sortedTableContent[0]?.content ?? []}
+              virtualizationConfig={virtualizationConfig}
             >
-              {sortedTableContent.map((tableItem, index) => (
-                <JobsTableRow
-                  actionsMenu={actionsMenu}
-                  handleSelectJob={handleSelectRun}
-                  key={index}
-                  rowItem={tableItem}
-                  selectedJob={selectedJob}
-                />
-              ))}
+              {sortedTableContent.map(
+                (tableItem, index) =>
+                  isRowRendered(virtualizationConfig, index) && (
+                    <JobsTableRow
+                      actionsMenu={actionsMenu}
+                      handleSelectJob={handleSelectRun}
+                      key={index}
+                      rowItem={tableItem}
+                      selectedJob={selectedJob}
+                    />
+                  )
+              )}
             </Table>
           )}
         </>

@@ -23,8 +23,8 @@ import JobWizard from '../JobWizard/JobWizard'
 
 import {
   DATASET_TYPE,
-  DATASETS,
   DATASETS_PAGE,
+  DATASETS_TAB,
   FULL_VIEW_MODE,
   ITERATIONS_FILTER,
   LABELS_FILTER,
@@ -109,7 +109,7 @@ export const generatePageData = (selectedItem, viewMode, params) => ({
   details: {
     menu: generateDataSetsDetailsMenu(selectedItem),
     infoHeaders,
-    type: DATASETS,
+    type: DATASETS_TAB,
     hideBackBtn: viewMode === FULL_VIEW_MODE,
     withToggleViewBtn: true,
     actionButton: {
@@ -271,7 +271,7 @@ export const generateActionsMenu = (
       {
         label: 'Copy URI',
         icon: <Copy />,
-        onClick: dataset => copyToClipboard(generateUri(dataset, DATASETS_PAGE), dispatch)
+        onClick: dataset => copyToClipboard(generateUri(dataset, DATASETS_TAB), dispatch)
       },
       {
         label: 'View YAML',
@@ -282,7 +282,9 @@ export const generateActionsMenu = (
         label: 'Delete',
         icon: <Delete />,
         disabled: !dataset?.tag,
-        tooltip: !dataset?.tag && 'A tag is required to delete a dataset. Open the dataset, click on the edit icon, and assign a tag before proceeding with the deletion',
+        tooltip: !dataset?.tag
+          ? 'A tag is required to delete a dataset. Open the dataset, click on the edit icon, and assign a tag before proceeding with the deletion'
+          : '',
         className: 'danger',
         onClick: () =>
           openDeleteConfirmPopUp(

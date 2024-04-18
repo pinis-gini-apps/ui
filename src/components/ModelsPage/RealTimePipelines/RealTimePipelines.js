@@ -23,28 +23,31 @@ import { useNavigate, useParams } from 'react-router-dom'
 import classnames from 'classnames'
 
 import FilterMenu from '../../FilterMenu/FilterMenu'
-import RealTimePipelinesTableRow from '../../../elements/RealTimePipelinesTableRow/RealTimePipelinesTableRow'
 import Loader from '../../../common/Loader/Loader'
 import ModelsPageTabs from '../ModelsPageTabs/ModelsPageTabs'
 import NoData from '../../../common/NoData/NoData'
 import Pipeline from '../../Pipeline/Pipeline'
+import RealTimePipelinesTableRow from '../../../elements/RealTimePipelinesTableRow/RealTimePipelinesTableRow'
 import Table from '../../Table/Table'
-import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 
-import createRealTimePiplelinesContent from '../../../utils/createRealTimePipelinesContent'
 import {
   GROUP_BY_NAME,
   MODELS_PAGE,
   REAL_TIME_PIPELINES_TAB,
   REQUEST_CANCELED
 } from '../../../constants'
+import createRealTimePipelinesContent from '../../../utils/createRealTimePipelinesContent'
 import { fetchArtifactsFunctions, removePipelines } from '../../../reducers/artifactsReducer'
 import { filters, generatePageData } from './realTimePipelines.util'
+import { getNoDataMessage } from '../../../utils/getNoDataMessage'
+import { isRowRendered, useVirtualization } from '../../../hooks/useVirtualization.hook'
 import { largeResponseCatchHandler } from '../../../utils/largeResponseCatchHandler'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { useModelsPage } from '../ModelsPage.context'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
+
+import cssVariables from './realTimePipelines.scss'
 
 const RealTimePipelines = () => {
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
@@ -54,8 +57,10 @@ const RealTimePipelines = () => {
   const params = useParams()
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const pipelinesRef = useRef(null)
   const abortControllerRef = useRef(new AbortController())
+  const pipelinesRef = useRef(null)
+  const tableBodyRef = useRef(null)
+  const tableRef = useRef(null)
   const pageData = useMemo(() => generatePageData(params.pipelineId), [params.pipelineId])
   const { toggleConvertedYaml } = useModelsPage()
 
@@ -119,7 +124,7 @@ const RealTimePipelines = () => {
   )
 
   const tableContent = useMemo(() => {
-    return createRealTimePiplelinesContent(pipelines, params.projectName)
+    return createRealTimePipelinesContent(pipelines, params.projectName)
   }, [pipelines, params.projectName])
 
   useEffect(() => {
@@ -144,6 +149,19 @@ const RealTimePipelines = () => {
       }
     }
   }, [navigate, params.pipelineId, params.projectName, pipelines])
+
+  const virtualizationConfig = useVirtualization({
+    tableRef,
+    tableBodyRef,
+    rowsData: {
+      content: tableContent
+    },
+    heightData: {
+      headerRowHeight: cssVariables.pipelinesHeaderRowHeight,
+      rowHeight: cssVariables.pipelinesRowHeight,
+      rowHeightExtended: cssVariables.pipelinesRowHeightExtended
+    }
+  })
 
   return (
     <>
@@ -180,20 +198,24 @@ const RealTimePipelines = () => {
               <Table
                 actionsMenu={actionsMenu}
                 pageData={pageData}
+                ref={{ tableRef, tableBodyRef }}
                 retryRequest={fetchData}
                 selectedItem={{}}
                 tab={REAL_TIME_PIPELINES_TAB}
+                tableClassName="pipelines-table"
                 tableHeaders={tableContent[0]?.content ?? []}
+                virtualizationConfig={virtualizationConfig}
               >
-                {tableContent.map((tableItem, index) => {
-                  return (
-                    <RealTimePipelinesTableRow
-                      actionsMenu={actionsMenu}
-                      key={index}
-                      rowItem={tableItem}
-                    />
-                  )
-                })}
+                {tableContent.map(
+                  (tableItem, index) =>
+                    isRowRendered(virtualizationConfig, index) && (
+                      <RealTimePipelinesTableRow
+                        actionsMenu={actionsMenu}
+                        key={index}
+                        rowItem={tableItem}
+                      />
+                    )
+                )}
               </Table>
             </>
           )}

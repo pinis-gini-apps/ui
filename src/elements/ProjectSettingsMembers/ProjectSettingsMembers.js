@@ -32,13 +32,14 @@ const ProjectSettingsMembers = ({
   loading,
   membersDispatch,
   membersState,
-  projectMembersIsShown,
-  setNotification
+  projectMembersIsShown
 }) => {
-  const totalMembersInProject = membersState.users.length + membersState.userGroups.length
 
   const generateMembersTitle = () => {
     const ownerId = membersState.projectInfo?.owner?.id
+    const totalMembersInProject = ownerId
+      ? membersState.members.length - 1
+      : membersState.members.length
 
     if (totalMembersInProject === 0) {
       if (ownerId) {
@@ -90,7 +91,6 @@ const ProjectSettingsMembers = ({
                 changeMembersCallback={changeMembersCallback}
                 membersState={membersState}
                 membersDispatch={membersDispatch}
-                setNotification={setNotification}
               />
             )}
           </div>

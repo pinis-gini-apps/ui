@@ -18,18 +18,18 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { OnChange } from 'react-final-form-listeners'
 import { useForm } from 'react-final-form'
 import PropTypes from 'prop-types'
 
 import { FormInput, FormCheckBox } from 'igz-controls/components'
 import FormTagFilter from '../../common/FormTagFilter/FormTagFilter'
+import FormOnChange from '../../common/FormOnChange/FormOnChange'
 
 import { ITERATIONS_FILTER, LABELS_FILTER, SHOW_ITERATIONS, TAG_FILTER } from '../../constants'
 
 import './artifactsFilters.scss'
 
-const ArtifactsFilters = ({ artifacts, iteration }) => {
+const ArtifactsFilters = ({ artifacts }) => {
   const form = useForm()
 
   const handleIter = value => {
@@ -44,32 +44,25 @@ const ArtifactsFilters = ({ artifacts, iteration }) => {
     <div className="artifacts-filters">
       <div className="form-row">
         <FormInput label="Labels" name={LABELS_FILTER} placeholder="key1,key2=value,..." />
-        <OnChange name={LABELS_FILTER}>{handleLabelsChange}</OnChange>
+        <FormOnChange name={LABELS_FILTER}  handler={handleLabelsChange}/>
       </div>
       <div className="form-row">
         <FormTagFilter content={artifacts} label="Version tag" name={TAG_FILTER} />
       </div>
-      {iteration && (
-        <div className="form-row">
-          <FormCheckBox
-            className="artifacts-filters__iter"
-            label="Show best iteration only"
-            name={ITERATIONS_FILTER}
-          />
-          <OnChange name={ITERATIONS_FILTER}>{handleIter}</OnChange>
-        </div>
-      )}
+      <div className="form-row">
+        <FormCheckBox
+          className="artifacts-filters__iter"
+          label="Show best iteration only"
+          name={ITERATIONS_FILTER}
+        />
+        <FormOnChange name={ITERATIONS_FILTER} handler={handleIter}/>
+      </div>
     </div>
   )
 }
 
-ArtifactsFilters.defaultProps = {
-  iteration: true
-}
-
 ArtifactsFilters.propTypes = {
-  artifacts: PropTypes.arrayOf(PropTypes.object).isRequired,
-  iteration: PropTypes.bool
+  artifacts: PropTypes.arrayOf(PropTypes.object).isRequired
 }
 
 export default ArtifactsFilters

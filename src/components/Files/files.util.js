@@ -20,8 +20,10 @@ such restriction.
 import React from 'react'
 
 import {
+  ARTIFACTS_TAB,
   ARTIFACT_TYPE,
   FILES_PAGE,
+  FILES_TAB,
   FULL_VIEW_MODE,
   ITERATIONS_FILTER,
   LABELS_FILTER,
@@ -94,7 +96,7 @@ export const generatePageData = viewMode => {
   return {
     page: FILES_PAGE,
     details: {
-      type: FILES_PAGE,
+      type: FILES_TAB,
       menu: detailsMenu,
       infoHeaders,
       hideBackBtn: viewMode === FULL_VIEW_MODE,
@@ -247,7 +249,7 @@ export const generateActionsMenu = (
       {
         label: 'Copy URI',
         icon: <Copy />,
-        onClick: file => copyToClipboard(generateUri(file, FILES_PAGE), dispatch)
+        onClick: file => copyToClipboard(generateUri(file, ARTIFACTS_TAB), dispatch)
       },
       {
         label: 'View YAML',
@@ -258,7 +260,9 @@ export const generateActionsMenu = (
         label: 'Delete',
         icon: <Delete />,
         disabled: !file?.tag,
-        tooltip: !file?.tag && 'A tag is required to delete an artifact. Open the artifact, click on the edit icon, and assign a tag before proceeding with the deletion',
+        tooltip: !file?.tag
+          ? 'A tag is required to delete an artifact. Open the artifact, click on the edit icon, and assign a tag before proceeding with the deletion'
+          : '',
         className: 'danger',
         onClick: () =>
           openDeleteConfirmPopUp(

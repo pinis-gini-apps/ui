@@ -20,11 +20,11 @@ such restriction.
 module.exports = {
   Project: {
     Create_New_Options: [
-      'Job',
-      'ML Function',
+      'Batch run',
+      //'ML Function', - demo mode
       'Feature Set',
       'Register Artifact',
-      'Register Model',
+      //'Register Model', - demo mode
       'Register Dataset'
     ],
     Online_Status: 'online',
@@ -96,7 +96,7 @@ module.exports = {
     ]
   },
   Common_Lists: {
-    Action_Menu_List: ['Download', 'Copy URI', 'View YAML', 'Add a tag', 'Delete'],
+    Action_Menu_List: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete'],
     Handler_List: ['train'],
     Pods_Priority_List: ['Low','Medium', 'High'],
     Ranking_Criteria_List: ['Min','Max']
@@ -130,7 +130,7 @@ module.exports = {
   },
   ML_Functions_Tab: {
     Common_Action_Menu_Options: ['Edit', 'Delete', 'View YAML'],
-    Serving_Action_Menu_Options: ['View YAML', 'Delete']
+    Serving_Action_Menu_Options: ['Edit', 'Delete', 'View YAML']
   },
   ML_Function_Info_Pane: {
     Tab_List: ['Overview', 'Code', 'Build Log'],
@@ -209,18 +209,25 @@ module.exports = {
   Models_Endpoints_Info_Pane: {
     Tab_List: ['Overview', 'Features Analysis'],
     Overview_General_Headers: [
-      'UID',
-      'Model class',
-      'Model artifact',
-      'Function URI',
-      'Function Tag',
-      'Feature set',
-      'Last prediction',
-      'Error count',
-      'Accuracy',
-      'Stream path'
+      'UID:',
+      'Model class:',
+      'Model artifact:',
+      'Function URI:',
+      'Function Tag:',
+      'Feature set:',
+      'Last prediction:',
+      'Error count:',
+      'Accuracy:',
+      'Stream path:'
     ],
-    Overview_Drift_Headers: ['Mean TVD', 'Mean Hellinger', 'Mean KLD']
+    Overview_Drift_Headers: [
+      'Mean TVD:', 
+      'Mean Hellinger:', 
+      'Mean KLD:', 
+      'Drift Actual Value:', 
+      'Drift Detected Threshold:',
+      'Possible Drift Threshold:'
+    ]
   },
   New_Feature_Store: {
     Kind_Options: ['HTTP', 'CSV', 'PARQUET'],
@@ -248,16 +255,25 @@ module.exports = {
       'Google storage'
     ]
   },
-  Batch_Run: {
+  Modal_Wizard_Form:{
     Tab_List: ['Functions', 'Hub'],
+    Hub_Filter_Category: [
+      'Data Analysis',
+      'Data Preparation',
+      'Data Validation',
+      'ETL',
+      'Feature Store',
+      'Machine Learning',
+      'Model Serving',
+      'Model Testing',
+      'Model Training',
+      'Monitoring',
+      'Utilities'
+    ],
     Data_Inputs_Table_Header: ['Input name', 'Path'],
     Parameters_Table_Header: ['Name', 'Type', 'Value'],
     Parameters_Table_Header_Hyper: ['Hyper','Name', 'Type', 'Value'],
-    Image_Name_Text: 'The image must include all the software packages that are required to run the function. For example, for an XGBoost model, ensure that the image includes the correct XGboost package and version',
-    Hub_Filter_Category: ['Data Preparation', 'Machine Learning', 'Other', 'Data Analysis', 'Feature Store', 'Model Serving', 'Model Training', 'Monitoring', 'Model Testing', 'ETL', 'Data Validation'],
-  },
-  Batch_Inference: {
-    Model_Path_Type_Store: ['MLRun store']
+    Image_Name_Text: 'The image must include all the software packages that are required to run the function. For example, for an XGBoost model, ensure that the image includes the correct XGboost package and version'
   },
   Register_Artifact: {
     Type_Options: ['General', 'Chart', 'Plot', 'Table'],
@@ -299,7 +315,6 @@ module.exports = {
   },
   Input_Hint: {
     Artifact_Names_Unique: 'Artifact names in the same project must be unique',
-    Artifacts_Names_Unique: 'Artifacts names in the same project must be unique.',
     Dataset_Names_Unique: 'Dataset names in the same project must be unique',
     Artifact_Name_Hint_Deploy_Model:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 253\n' +
@@ -310,13 +325,15 @@ module.exports = {
     Project_Name_Hint:
       'Valid characters: a–z, 0–9, –\nMust begin with: a–z\nMust end with: a–z, 0–9\nLength – max: 63\n' +
       'This field is required',
-    Function_Name_Batch_Run_Hint:
+    Run_Name_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 63\n' +
       'This field is required',
     Labels_Warning_Key: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 75\n' +
     'Key must be unique',
-    Projects_Labels_Warning_Key: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56\n' +
-    'Key must be unique',
+    Projects_Labels_Warning_Key: '[Name] Valid characters : a–z, A–Z, 0–9, –, _, .\n[Name] Must begin and end with: a–z, A–Z, 0–9\n[Name] Max length - 63 characters\n' +
+    '[Prefix] Valid characters: a–z, 0–9, –, .\n[Prefix] Must begin and end with: a–z, 0–9\n[Prefix] Max length - 253 characters\n' +
+    '[Prefix] Must not start with \'kubernetes.io\', \'k8s.io\'\nKey must be unique',
+    Projects_Labels_Warning_Value: '[Value] Must begin and end with : a–z, A–Z, 0–9\n[Value] Max length - 63 characters\n[Value] Valid characters: a–z, A–Z, 0–9, –, _, .',
     Labels_Warning_Value: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56',
     Feature_Set_Name_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56\n' +
@@ -328,7 +345,7 @@ module.exports = {
       'This field is required',
     Input_Field_Require: 'This field is required',
     Input_Field_Invalid: 'This field is invalid',
-    Input_Field_Unique: 'Name should be unique',
+    Input_Field_Unique: 'Name must be unique',
     URL_Field_Require: 'URL is required',
     Key_Bucketing_Number_Hint:
       'If you partition by key and the number of unique keys is very high it is recommended to use buckets for ' +
@@ -352,7 +369,7 @@ module.exports = {
     Request_Number_Warning: 'Request must be less than or equal to Limit and not be less than 1',
     CPU_Request_Number_Warning:
       'Request must be less than or equal to Limit and not be less than 0.001',
-    GPU_Minimum_Value_Warning: 'The minimum value should be 1',
+    GPU_Minimum_Value_Warning: 'The minimum value must be 1',
     Mount_Path_Hint: 'A mount path for referencing the data from the function',
     Data_Container_Hint: 'The name of the data container that contains the data',
     DataAccess_Key_Hint: 'A platform data-access key',
@@ -366,7 +383,7 @@ module.exports = {
     Add_Feature_Vector_Hint: 'Add features from the list on the left to this feature vector',
     Deploy_Model_Name_Hint:
       'After the function is deployed, it will have a URL for calling the model that is based upon this name.',
-    MLRun_Store_Path_Hint: 'Field must be in "models/my-project/my-model:my-tag" or "models/my-project/my-model@my-uid" format',
+    MLRun_Store_Path_Hint: 'Field must be in "<artifact type>/<project>/<artifact name>:<artifact tag>" or "<artifact type>/<project>/<artifact name>@<artifact uid>" format',
     Jobs_MLRun_Store_Path_Hint:
       'Field must be in "artifacts/my-project/my-artifact:my-tag" or "artifacts/my-project/my-artifact@my-uid" format',
     V3IO_Path_Hint: 'Invalid URL. Field must be in "container-name/file" format',
@@ -420,6 +437,10 @@ module.exports = {
     Delete_Feature:
       /You try to delete feature "[^"]+[$"] from vector "[^"]+[$"]\. The feature could be added back later./
   },
+  Messages: {
+    How_To_Create:
+    'See how to create a serving function in https://docs.mlrun.org/en/stable/serving/built-in-model-serving.html and https://docs.mlrun.org/en/stable/tutorials/03-model-serving.html'
+  },
   Jobs_And_Workflows: {
     Tab_List: ['Monitor Jobs', 'Monitor Workflows', 'Schedule'],
     Job_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'View YAML', 'Delete'],
@@ -428,7 +449,7 @@ module.exports = {
     Workflows_Action_Menu_Options: ['View YAML'],
     Workflows_Info_Pane_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'View YAML', 'Delete'],
     Pending_Job_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'Abort', 'View YAML'],
-    Schedule_Action_Menu_Options: ['View YAML', 'Run now', 'Edit', 'Delete']
+    Schedule_Action_Menu_Options: ['Run now', 'Edit', 'Delete', 'View YAML']
   },
   Jobs_Monitor_Tab_Info_Pane: {
     Tab_List: ['Overview', 'Inputs', 'Artifacts', 'Results', 'Logs', 'Pods'],
@@ -455,7 +476,8 @@ module.exports = {
     'Past 24 hours': 86400000,
     'Past week': 604800000,
     'Past month': { min: 2419200000, max: 2678400000 },
-    'Past year': 31536000000
+    'Past non-leap year': 31536000000,
+    'Past leap year': 31622400000
   },
   Date_Time_Picker: {
     Error_Message: '“To” must be later than “From”'
@@ -510,16 +532,16 @@ module.exports = {
     Schedule_Hours_Variants: ['1', '2', '3', '4', '6', '12']
   },
   No_Data_Message: {
-    Common_Message: 'There is no Features data to show for "Version Tag: latest, Name: ccccc"',
-    Common_Message_Feature: 'There is no Features data to show for "Version Tag: latest"',
-    Common_Message_Feature_Vector_Tab: 'There is no Features data to show for "Tag: latest"',
-    Common_Message_Feature_Vector: 'There is no Feature-Vectors data to show for "Version Tag: latest"',
-    Common_Message_Feature_Sets: 'There is no Feature-Sets data to show for "Version Tag: latest"',
+    Common_Message: 'No data matches the filter: "Version Tag: latest, Name: ccccc"',
+    Common_Message_Feature: 'No data matches the filter: "Version Tag: latest"',
+    Common_Message_Feature_Vector_Tab: 'No data matches the filter: "Tag: latest"',
+    Common_Message_Feature_Vector: 'No data matches the filter: "Version Tag: latest"',
+    Common_Message_Feature_Sets: 'No data matches the filter: "Version Tag: latest"',
     No_Data: 'No data to show',
     No_Features_Yet: 'No features yet. Go to "Feature Sets" tab to create your first Feature Set.',
     No_Consumer_Group_Yet: 'You haven’t created any consumer group yet',
-    No_Datasets_data: 'There is no Datasets data to show for "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
-    No_Files_data: 'There is no Files data to show for "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
-    No_Models_data: 'There is no Models data to show for "Version tag: latest, Labels: MY-KEY, Show best iteration only: true"'
+    No_Datasets_data: 'No data matches the filter: "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
+    No_Files_data: 'No data matches the filter: "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
+    No_Models_data: 'No data matches the filter: "Version tag: latest, Labels: MY-KEY, Show best iteration only: true"'
   }
 }

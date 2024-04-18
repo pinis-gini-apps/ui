@@ -18,11 +18,11 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { OnChange } from 'react-final-form-listeners'
 import { useForm } from 'react-final-form'
 import PropTypes from 'prop-types'
 
 import { FormInput } from 'igz-controls/components'
+import FormOnChange from '../../common/FormOnChange/FormOnChange'
 import FormTagFilter from '../../common/FormTagFilter/FormTagFilter'
 
 import { LABELS_FILTER, TAG_FILTER } from '../../constants'
@@ -40,7 +40,7 @@ const FeatureFilters = ({ features, iteration }) => {
     <div className="feature-filters">
       <div className="form-row">
         <FormInput label="Labels" name={LABELS_FILTER} placeholder="key1,key2=value,..." />
-        <OnChange name={LABELS_FILTER}>{handleLabelsChange}</OnChange>
+        <FormOnChange name={LABELS_FILTER} handler={handleLabelsChange} />
       </div>
       <div className="form-row">
         <FormTagFilter content={features} label="Version tag" name={TAG_FILTER} />

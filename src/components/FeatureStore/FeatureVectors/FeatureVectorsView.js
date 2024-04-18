@@ -20,18 +20,20 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import CreateFeatureVectorPopUp from '../../../elements/CreateFeatureVectorPopUp/CreateFeatureVectorPopUp'
+import FeatureActionBar from '../../FeatureActionBar/FeatureActionBar'
+import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
+import FeatureStoreTabs from '../FeatureStoreTabs/FeaturePageTabs'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
-import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
-import CreateFeatureVectorPopUp from '../../../elements/CreateFeatureVectorPopUp/CreateFeatureVectorPopUp'
-import FeatureStoreTabs from '../FeatureStoreTabs/FeaturePageTabs'
-import FeatureActionBar from '../../FeatureActionBar/FeatureActionBar'
 
-import { getNoDataMessage } from '../../../utils/getNoDataMessage'
-import { featureVectorsFilters } from './featureVectors.util'
-import { createFeatureVectorTitle } from '../featureStore.util'
-import { PRIMARY_BUTTON } from 'igz-controls/constants'
 import { FEATURE_FILTERS, FEATURE_STORE_PAGE, FEATURE_VECTORS_TAB } from '../../../constants'
+import { PRIMARY_BUTTON } from 'igz-controls/constants'
+import { VIRTUALIZATION_CONFIG } from '../../../types'
+import { featureVectorsFilters } from './featureVectors.util'
+import { getNoDataMessage } from '../../../utils/getNoDataMessage'
+import { isRowRendered } from '../../../hooks/useVirtualization.hook'
+import { createFeatureVectorTitle } from '../featureStore.util'
 
 const FeatureVectorsView = React.forwardRef(
   (
@@ -56,12 +58,13 @@ const FeatureVectorsView = React.forwardRef(
       setSelectedFeatureVector,
       setSelectedRowData,
       tableContent,
+      virtualizationConfig,
       urlTagOption
     },
-    ref
+    { featureStoreRef, tableRef, tableBodyRef }
   ) => {
     return (
-      <div className="feature-store" ref={ref}>
+      <div className="feature-store" ref={featureStoreRef}>
         <div className="content__action-bar-wrapper">
           <FeatureStoreTabs />
           <FeatureActionBar
@@ -102,23 +105,29 @@ const FeatureVectorsView = React.forwardRef(
               detailsFormInitialValues={detailsFormInitialValues}
               handleCancel={() => setSelectedFeatureVector({})}
               pageData={pageData}
+              ref={{ tableRef, tableBodyRef }}
               retryRequest={handleRefresh}
               selectedItem={selectedFeatureVector}
               tab={FEATURE_VECTORS_TAB}
+              tableClassName="feature-vectors-table"
               tableHeaders={tableContent[0]?.content ?? []}
+              virtualizationConfig={virtualizationConfig}
             >
-              {tableContent.map((tableItem, index) => (
-                <FeatureStoreTableRow
-                  actionsMenu={actionsMenu}
-                  handleExpandRow={handleExpandRow}
-                  key={index}
-                  pageTab={FEATURE_VECTORS_TAB}
-                  rowIndex={index}
-                  rowItem={tableItem}
-                  selectedItem={selectedFeatureVector}
-                  selectedRowData={selectedRowData}
-                />
-              ))}
+              {tableContent.map(
+                (tableItem, index) =>
+                  isRowRendered(virtualizationConfig, index) && (
+                    <FeatureStoreTableRow
+                      actionsMenu={actionsMenu}
+                      handleExpandRow={handleExpandRow}
+                      key={index}
+                      pageTab={FEATURE_VECTORS_TAB}
+                      rowIndex={index}
+                      rowItem={tableItem}
+                      selectedItem={selectedFeatureVector}
+                      selectedRowData={selectedRowData}
+                    />
+                  )
+              )}
             </Table>
           </>
         )}
@@ -155,7 +164,8 @@ FeatureVectorsView.propTypes = {
   setSelectedFeatureVector: PropTypes.func.isRequired,
   setSelectedRowData: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
-  urlTagOption: PropTypes.string
+  urlTagOption: PropTypes.string,
+  virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }
 
 export default FeatureVectorsView

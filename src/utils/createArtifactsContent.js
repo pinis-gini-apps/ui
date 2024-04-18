@@ -143,6 +143,7 @@ export const createModelsRowData = (
             )
           : '',
       expandedCellContent: {
+        headerId: 'name',
         className: 'table-cell-name',
         showTag: true,
         tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`,
@@ -168,7 +169,7 @@ export const createModelsRowData = (
       headerId: 'producer',
       headerLabel: 'Producer',
       value: artifact.producer?.name || '',
-      template: <TableProducerCell className="table-cell-1" producer={artifact.producer} />,
+      template: <TableProducerCell bodyCellClassName="table-cell-1" id="producer" producer={artifact.producer} />,
       className: 'table-cell-1',
       type: 'producer'
     },
@@ -215,7 +216,7 @@ export const createModelsRowData = (
         ) : (
           ''
         ),
-      className: 'table-cell-1'
+      className: 'table-cell-2'
     },
     {
       id: `version.${artifact.ui.identifierUnique}`,
@@ -293,6 +294,7 @@ export const createFilesRowData = (artifact, project, frontendSpec, showExpandBu
               )
             : '',
         expandedCellContent: {
+          headerId: 'name',
           className: 'table-cell-name',
           showTag: true,
           tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`,
@@ -332,7 +334,9 @@ export const createFilesRowData = (artifact, project, frontendSpec, showExpandBu
         headerId: 'producer',
         headerLabel: 'Producer',
         value: artifact.producer?.name || '',
-        template: <TableProducerCell className="table-cell-1" producer={artifact.producer} />,
+        template: (
+          <TableProducerCell bodyCellClassName="table-cell-1" id="producer" producer={artifact.producer} />
+        ),
         className: 'table-cell-1',
         type: 'producer'
       },
@@ -349,7 +353,7 @@ export const createFilesRowData = (artifact, project, frontendSpec, showExpandBu
         headerId: 'updated',
         headerLabel: 'Updated',
         value: formatDatetime(artifact.updated, 'N/A'),
-        className: 'table-cell-1'
+        className: 'table-cell-2'
       },
       {
         id: `size.${artifact.ui.identifierUnique}`,
@@ -385,6 +389,8 @@ export const createModelEndpointsRowData = (artifact, project) => {
     : ''
   const { key: functionName } = parseUri(functionUri)
   const averageLatency = artifact.status?.metrics?.real_time?.latency_avg_1h?.[0]?.[1]
+
+  const isEndpointTypeRouter = artifact?.status?.endpoint_type === 2
 
   return {
     data: {
@@ -431,7 +437,7 @@ export const createModelEndpointsRowData = (artifact, project) => {
         id: `version.${artifact.ui.identifierUnique}`,
         headerId: 'version',
         headerLabel: 'Version',
-        value: artifact?.status?.children?.length > 0 ? 'Router' : tag,
+        value: isEndpointTypeRouter ? '' : artifact?.status?.children?.length > 0 ? 'Router' : tag,
         className: 'table-cell-small'
       },
       {
@@ -517,6 +523,7 @@ export const createDatasetsRowData = (artifact, project, frontendSpec, showExpan
               )
             : '',
         expandedCellContent: {
+          headerId: 'name',
           className: 'table-cell-name',
           showTag: true,
           tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`,
@@ -542,7 +549,9 @@ export const createDatasetsRowData = (artifact, project, frontendSpec, showExpan
         headerId: 'producer',
         headerLabel: 'Producer',
         value: artifact.producer?.name || '',
-        template: <TableProducerCell className="table-cell-1" producer={artifact.producer} />,
+        template: (
+          <TableProducerCell bodyCellClassName="table-cell-1"  id="producer" producer={artifact.producer} />
+        ),
         className: 'table-cell-1',
         type: 'producer'
       },
