@@ -81,7 +81,8 @@ import {
   FETCH_PROJECT_SECRETS_SUCCESS,
   SET_PROJECT_SECRETS,
   SET_JOBS_MONITORING_DATA,
-  REMOVE_JOBS_MONITORING_DATA_FILTERS
+  SET_MLRUN_IS_UNHEALTHY,
+  SET_MLRUN_UNHEALTHY_RETRYING
 } from '../constants'
 
 const initialState = {
@@ -89,14 +90,15 @@ const initialState = {
   jobsMonitoringData: {
     jobs: {},
     workflows: {},
-    scheduled: {},
-    filters: {
-      status: ''
-    }
+    scheduled: {}
   },
   loading: false,
   newProject: {
     error: null
+  },
+  mlrunUnhealthy: {
+    isUnhealthy: false,
+    retrying: false
   },
   project: {
     data: null,
@@ -659,7 +661,8 @@ const projectReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         projects: payload,
-        loading: false
+        loading: false,
+        error: null
       }
     case FETCH_PROJECTS_SUMMARY_BEGIN:
       return {
@@ -751,16 +754,6 @@ const projectReducer = (state = initialState, { type, payload }) => {
           }
         }
       }
-    case REMOVE_JOBS_MONITORING_DATA_FILTERS:
-      return {
-        ...state,
-        jobsMonitoringData: {
-          ...state.jobsMonitoringData,
-          filters: {
-            ...initialState.jobsMonitoringData.filters
-          }
-        }
-      }
     case REMOVE_PROJECT_SUMMARY:
       return {
         ...state,
@@ -795,6 +788,22 @@ const projectReducer = (state = initialState, { type, payload }) => {
         jobsMonitoringData: {
           ...state.jobsMonitoringData,
           ...payload
+        }
+      }
+    case SET_MLRUN_IS_UNHEALTHY:
+      return {
+        ...state,
+        mlrunUnhealthy: {
+          ...state.mlrunUnhealthy,
+          isUnhealthy: payload
+        }
+      }
+    case SET_MLRUN_UNHEALTHY_RETRYING:
+      return {
+        ...state,
+        mlrunUnhealthy: {
+          ...state.mlrunUnhealthy,
+          retrying: payload
         }
       }
     case SET_PROJECT_SECRETS: {
