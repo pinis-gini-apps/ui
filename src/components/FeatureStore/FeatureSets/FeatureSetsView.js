@@ -21,7 +21,8 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
-import FeatureActionBar from '../../FeatureActionBar/FeatureActionBar'
+import ActionBar from '../../ActionBar/ActionBar'
+import FeatureFilters from '../../FeatureActionBar/FeatureFilters'
 import FeatureSetsPanel from '../../FeatureSetsPanel/FeatureSetsPanel'
 import FeatureStoreTabs from '../FeatureStoreTabs/FeaturePageTabs'
 import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
@@ -71,24 +72,24 @@ const FeatureSetsView = React.forwardRef(
       <div className="feature-store" ref={featureStoreRef}>
         <div className="content__action-bar-wrapper">
           <FeatureStoreTabs />
-          <FeatureActionBar
+          <ActionBar
             actionButtons={[
               {
-                variant: PRIMARY_BUTTON,
-                label: createFeatureSetTitle,
                 className: 'action-button',
-                onClick: handleActionsMenuClick
+                hidden: false,
+                onClick: handleActionsMenuClick,
+                label: createFeatureSetTitle,
+                variant: PRIMARY_BUTTON
               }
             ]}
-            features={featureSets}
+            filters={featureSetsFilters}
             filterMenuName={FEATURE_FILTERS}
             handleRefresh={handleRefresh}
             page={FEATURE_STORE_PAGE}
-            setContent={setFeatureSets}
-            setSelectedRowData={setSelectedRowData}
             tab={FEATURE_SETS_TAB}
-            urlTagOption={urlTagOption}
-          />
+          >
+            <FeatureFilters features={featureSets} />
+          </ActionBar>
         </div>
         {featureStore.loading ? null : featureSets.length === 0 ? (
           <NoData

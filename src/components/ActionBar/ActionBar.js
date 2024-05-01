@@ -218,7 +218,11 @@ const ActionBar = ({
                               date={input.value.value[0]}
                               dateTo={input.value.value[1]}
                               hasFutureOptions={filter.isFuture}
-                              selectedOptionId={filter.isFuture ? NEXT_24_HOUR_DATE_OPTION : PAST_24_HOUR_DATE_OPTION}
+                              selectedOptionId={
+                                filter.isFuture
+                                  ? NEXT_24_HOUR_DATE_OPTION
+                                  : PAST_24_HOUR_DATE_OPTION
+                              }
                               label=""
                               onChange={(dates, isPredefined) =>
                                 handleDateChange(dates, isPredefined, input, formState)
@@ -282,6 +286,7 @@ ActionBar.defaultProps = {
   removeSelectedItem: null,
   setSelectedRowData: null,
   tab: '',
+  withoutExpandButton: true,
   withRefreshButton: true
 }
 
@@ -304,6 +309,7 @@ ActionBar.propTypes = {
   setContent: PropTypes.func.isRequired,
   setSelectedRowData: PropTypes.func,
   tab: PropTypes.string,
+  withoutExpandButton: PropTypes.bool,
   withRefreshButton: PropTypes.bool
 }
 
