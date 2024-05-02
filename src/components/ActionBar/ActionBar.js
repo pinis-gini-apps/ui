@@ -253,18 +253,22 @@ const ActionBar = ({
           </div>
           {(withRefreshButton || !isEmpty(actionButtons)) && (
             <div className="action-bar__actions">
-              {actionButtons.map(
-                (actionButton, index) =>
-                  actionButton &&
-                  !actionButton.hidden && (
-                    <Button
-                      key={index}
-                      variant={actionButton.variant}
-                      label={actionButton.label}
-                      className={actionButton.className}
-                      onClick={actionButton.onClick}
-                    />
-                  )
+              {actionButtons.map((actionButton, index) =>
+                actionButton &&
+                !actionButton.hidden &&
+                actionButton.popupButton &&
+                actionButton.onClick ? (
+                  actionButton.onClick(actionButton)
+                ) : (
+                  <Button
+                    key={index}
+                    variant={actionButton.variant}
+                    label={actionButton.label}
+                    className={actionButton.className}
+                    onClick={actionButton.onClick}
+                    tooltip={actionButton.tooltip}
+                  />
+                )
               )}
 
               {withRefreshButton && (

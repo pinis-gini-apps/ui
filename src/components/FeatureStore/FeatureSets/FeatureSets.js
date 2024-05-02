@@ -165,7 +165,11 @@ const FeatureSets = ({
         }
       }))
 
-      fetchFeatureSet(item.project, item.name, filtersStore.tag)
+      fetchFeatureSet(
+        item.project,
+        item.name,
+        filtersStore.filterMenuModal[FEATURE_FILTERS].values.tag
+      )
         .then(result => {
           const content = [...parseFeatureSets(result)].map(contentItem =>
             createFeatureSetsRowData(contentItem, FEATURE_SETS_TAB, params.projectName, true)
@@ -190,7 +194,7 @@ const FeatureSets = ({
           }))
         })
     },
-    [fetchFeatureSet, filtersStore.tag, params.projectName]
+    [fetchFeatureSet, filtersStore.filterMenuModal, params.projectName]
   )
 
   const { latestItems, handleExpandRow } = useGroupContent(
@@ -304,7 +308,7 @@ const FeatureSets = ({
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
       dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
     }
-  }, [filtersStore.groupBy, filtersStore.filterMenuModal, filtersStore.tag, dispatch])
+  }, [filtersStore.groupBy, filtersStore.filterMenuModal, dispatch])
 
   useEffect(() => {
     const content = cloneDeep(featureStore.featureSets?.allData)
