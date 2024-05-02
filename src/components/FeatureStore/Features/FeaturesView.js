@@ -20,7 +20,8 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import FeatureActionBar from '../../FeatureActionBar/FeatureActionBar'
+import ActionBar from '../../ActionBar/ActionBar'
+import FeatureFilters from '../../FeatureActionBar/FeatureFilters'
 import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
 import FeatureStoreTabs from '../FeatureStoreTabs/FeaturePageTabs'
 import NoData from '../../../common/NoData/NoData'
@@ -59,25 +60,25 @@ const FeaturesView = React.forwardRef(
       <div className="feature-store" ref={featureStoreRef}>
         <div className="content__action-bar-wrapper">
           <FeatureStoreTabs />
-          <FeatureActionBar
+          <ActionBar
             actionButtons={[
               {
                 className: 'action-button',
+                hidden: false,
                 label: 'Add to feature vector',
                 onClick: getPopUpTemplate,
                 popupButton: true,
                 variant: SECONDARY_BUTTON
               }
             ]}
-            features={features}
+            filters={featuresFilters}
             filterMenuName={FEATURE_FILTERS}
             handleRefresh={handleRefresh}
             page={FEATURE_STORE_PAGE}
-            setContent={setFeatures}
-            setSelectedRowData={setSelectedRowData}
             tab={FEATURES_TAB}
-            urlTagOption={urlTagOption}
-          />
+          >
+            <FeatureFilters features={features} />
+          </ActionBar>
         </div>
         {featureStore.features.loading || featureStore.entities.loading ? null : features.length ===
           0 ? (
