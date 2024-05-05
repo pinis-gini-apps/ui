@@ -21,7 +21,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import ActionBar from '../../ActionBar/ActionBar'
-import FeatureFilters from '../../FeatureActionBar/FeatureFilters'
+import FeatureFilters from '../FeatureFilters'
 import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
 import FeatureStoreTabs from '../FeatureStoreTabs/FeaturePageTabs'
 import NoData from '../../../common/NoData/NoData'

@@ -22,7 +22,7 @@ import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import ActionBar from '../../ActionBar/ActionBar'
-import FeatureFilters from '../../FeatureActionBar/FeatureFilters'
+import FeatureFilters from '../FeatureFilters'
 import FeatureSetsPanel from '../../FeatureSetsPanel/FeatureSetsPanel'
 import FeatureStoreTabs from '../FeatureStoreTabs/FeaturePageTabs'
 import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'

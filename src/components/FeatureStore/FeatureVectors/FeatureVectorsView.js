@@ -20,8 +20,9 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import ActionBar from '../../ActionBar/ActionBar'
+import FeatureFilters from '../FeatureFilters'
 import CreateFeatureVectorPopUp from '../../../elements/CreateFeatureVectorPopUp/CreateFeatureVectorPopUp'
-import FeatureActionBar from '../../FeatureActionBar/FeatureActionBar'
 import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
 import FeatureStoreTabs from '../FeatureStoreTabs/FeaturePageTabs'
 import NoData from '../../../common/NoData/NoData'
@@ -67,24 +68,24 @@ const FeatureVectorsView = React.forwardRef(
       <div className="feature-store" ref={featureStoreRef}>
         <div className="content__action-bar-wrapper">
           <FeatureStoreTabs />
-          <FeatureActionBar
+          <ActionBar
             actionButtons={[
               {
-                variant: PRIMARY_BUTTON,
-                label: createFeatureVectorTitle,
                 className: 'action-button',
-                onClick: handleActionsMenuClick
+                hidden: false,
+                label: createFeatureVectorTitle,
+                onClick: handleActionsMenuClick,
+                variant: PRIMARY_BUTTON
               }
             ]}
-            features={featureVectors}
+            filters={featureVectorsFilters}
             filterMenuName={FEATURE_FILTERS}
             handleRefresh={handleRefresh}
             page={FEATURE_STORE_PAGE}
-            setContent={setFeatureVectors}
-            setSelectedRowData={setSelectedRowData}
             tab={FEATURE_VECTORS_TAB}
-            urlTagOption={urlTagOption}
-          />
+          >
+            <FeatureFilters features={featureVectors} />
+          </ActionBar>
         </div>
         {featureStore.loading ? null : featureVectors.length === 0 ? (
           <NoData

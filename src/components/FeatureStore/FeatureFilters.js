@@ -27,7 +27,7 @@ import FormTagFilter from '../../common/FormTagFilter/FormTagFilter'
 
 import { LABELS_FILTER, TAG_FILTER } from '../../constants'
 
-import './featureFilters.scss'
+// import '../FeatureActionBar/featureFilters.scss'
 
 const FeatureFilters = ({ features, iteration }) => {
   const form = useForm()
@@ -37,7 +37,7 @@ const FeatureFilters = ({ features, iteration }) => {
   }
 
   return (
-    <div className="feature-filters">
+    <>
       <div className="form-row">
         <FormInput label="Labels" name={LABELS_FILTER} placeholder="key1,key2=value,..." />
         <FormOnChange name={LABELS_FILTER} handler={handleLabelsChange} />
@@ -45,7 +45,7 @@ const FeatureFilters = ({ features, iteration }) => {
       <div className="form-row">
         <FormTagFilter content={features} label="Version tag" name={TAG_FILTER} />
       </div>
-    </div>
+    </>
   )
 }
 
