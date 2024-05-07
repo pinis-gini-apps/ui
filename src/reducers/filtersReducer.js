@@ -24,6 +24,7 @@ import {
   DATASET_TYPE,
   DATASETS_FILTERS,
   DATE_FILTER_ANY_TIME,
+  FEATURE_FILTERS,
   FILES_FILTERS,
   FILTER_MENU_MODAL,
   FUNCTION_FILTERS,
@@ -62,6 +63,10 @@ const initialState = {
     [DATASETS_FILTERS]: {
       initialValues: { tag: TAG_FILTER_LATEST, labels: '', iter: SHOW_ITERATIONS },
       values: { tag: TAG_FILTER_LATEST, labels: '', iter: SHOW_ITERATIONS }
+    },
+    [FEATURE_FILTERS]: {
+      initialValues: { tag: TAG_FILTER_LATEST, labels: '' },
+      values: { tag: TAG_FILTER_LATEST, labels: '' }
     },
     [FILES_FILTERS]: {
       initialValues: { tag: TAG_FILTER_LATEST, labels: '', iter: SHOW_ITERATIONS },

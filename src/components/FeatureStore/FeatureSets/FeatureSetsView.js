@@ -21,15 +21,19 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
+import ActionBar from '../../ActionBar/ActionBar'
+import FeatureFilters from '../FeatureFilters'
 import FeatureSetsPanel from '../../FeatureSetsPanel/FeatureSetsPanel'
+import FeatureStoreTabs from '../FeatureStoreTabs/FeaturePageTabs'
 import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
-import FilterMenu from '../../FilterMenu/FilterMenu'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
 
-import { FEATURE_SETS_TAB, FEATURE_STORE_PAGE } from '../../../constants'
+import { FEATURE_FILTERS, FEATURE_SETS_TAB, FEATURE_STORE_PAGE } from '../../../constants'
+import { PRIMARY_BUTTON } from 'igz-controls/constants'
 import { VIRTUALIZATION_CONFIG } from '../../../types'
 import { featureSetsFilters } from './featureSets.util'
+import { createFeatureSetTitle } from '../featureStore.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isRowRendered } from '../../../hooks/useVirtualization.hook'
 
@@ -46,15 +50,19 @@ const FeatureSetsView = React.forwardRef(
       featureSetsPanelIsOpen,
       featureStore,
       filtersStore,
+      handleActionsMenuClick,
       handleExpandRow,
       handleRefresh,
       largeRequestErrorMessage,
       pageData,
       selectedFeatureSet,
       selectedRowData,
+      setFeatureSets,
       setSelectedFeatureSet,
+      setSelectedRowData,
       tableContent,
-      virtualizationConfig
+      virtualizationConfig,
+      urlTagOption
     },
     { featureStoreRef, tableRef, tableBodyRef }
   ) => {
@@ -63,15 +71,25 @@ const FeatureSetsView = React.forwardRef(
     return (
       <div className="feature-store" ref={featureStoreRef}>
         <div className="content__action-bar-wrapper">
-          <div className="action-bar">
-            <FilterMenu
-              filters={featureSetsFilters}
-              onChange={handleRefresh}
-              page={FEATURE_STORE_PAGE}
-              tab={FEATURE_SETS_TAB}
-              withoutExpandButton
-            />
-          </div>
+          <FeatureStoreTabs />
+          <ActionBar
+            actionButtons={[
+              {
+                className: 'action-button',
+                hidden: false,
+                onClick: handleActionsMenuClick,
+                label: createFeatureSetTitle,
+                variant: PRIMARY_BUTTON
+              }
+            ]}
+            filters={featureSetsFilters}
+            filterMenuName={FEATURE_FILTERS}
+            handleRefresh={handleRefresh}
+            page={FEATURE_STORE_PAGE}
+            tab={FEATURE_SETS_TAB}
+          >
+            <FeatureFilters features={featureSets} />
+          </ActionBar>
         </div>
         {featureStore.loading ? null : featureSets.length === 0 ? (
           <NoData
@@ -80,7 +98,8 @@ const FeatureSetsView = React.forwardRef(
               featureSetsFilters,
               largeRequestErrorMessage,
               FEATURE_STORE_PAGE,
-              FEATURE_SETS_TAB
+              FEATURE_SETS_TAB,
+              FEATURE_FILTERS
             )}
           />
         ) : (
@@ -141,14 +160,18 @@ FeatureSetsView.propTypes = {
   featureSetsPanelIsOpen: PropTypes.bool.isRequired,
   featureStore: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
+  handleActionsMenuClick: PropTypes.func.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
   largeRequestErrorMessage: PropTypes.string.isRequired,
   pageData: PropTypes.object.isRequired,
   selectedFeatureSet: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
+  setFeatureSets: PropTypes.func.isRequired,
   setSelectedFeatureSet: PropTypes.func.isRequired,
+  setSelectedRowData: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
+  urlTagOption: PropTypes.string,
   virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }
 

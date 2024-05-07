@@ -20,17 +20,21 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import ActionBar from '../../ActionBar/ActionBar'
+import FeatureFilters from '../FeatureFilters'
 import CreateFeatureVectorPopUp from '../../../elements/CreateFeatureVectorPopUp/CreateFeatureVectorPopUp'
 import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
-import FilterMenu from '../../FilterMenu/FilterMenu'
+import FeatureStoreTabs from '../FeatureStoreTabs/FeaturePageTabs'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
 
-import { FEATURE_STORE_PAGE, FEATURE_VECTORS_TAB } from '../../../constants'
+import { FEATURE_FILTERS, FEATURE_STORE_PAGE, FEATURE_VECTORS_TAB } from '../../../constants'
+import { PRIMARY_BUTTON } from 'igz-controls/constants'
 import { VIRTUALIZATION_CONFIG } from '../../../types'
 import { featureVectorsFilters } from './featureVectors.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isRowRendered } from '../../../hooks/useVirtualization.hook'
+import { createFeatureVectorTitle } from '../featureStore.util'
 
 const FeatureVectorsView = React.forwardRef(
   (
@@ -43,6 +47,7 @@ const FeatureVectorsView = React.forwardRef(
       featureStore,
       featureVectors,
       filtersStore,
+      handleActionsMenuClick,
       handleExpandRow,
       handleRefresh,
       largeRequestErrorMessage,
@@ -50,24 +55,37 @@ const FeatureVectorsView = React.forwardRef(
       selectedFeatureVector,
       selectedRowData,
       setCreateVectorPopUpIsOpen,
+      setFeatureVectors,
       setSelectedFeatureVector,
+      setSelectedRowData,
       tableContent,
-      virtualizationConfig
+      virtualizationConfig,
+      urlTagOption
     },
     { featureStoreRef, tableRef, tableBodyRef }
   ) => {
     return (
       <div className="feature-store" ref={featureStoreRef}>
         <div className="content__action-bar-wrapper">
-          <div className="action-bar">
-            <FilterMenu
-              filters={featureVectorsFilters}
-              onChange={handleRefresh}
-              page={FEATURE_STORE_PAGE}
-              tab={FEATURE_VECTORS_TAB}
-              withoutExpandButton
-            />
-          </div>
+          <FeatureStoreTabs />
+          <ActionBar
+            actionButtons={[
+              {
+                className: 'action-button',
+                hidden: false,
+                label: createFeatureVectorTitle,
+                onClick: handleActionsMenuClick,
+                variant: PRIMARY_BUTTON
+              }
+            ]}
+            filters={featureVectorsFilters}
+            filterMenuName={FEATURE_FILTERS}
+            handleRefresh={handleRefresh}
+            page={FEATURE_STORE_PAGE}
+            tab={FEATURE_VECTORS_TAB}
+          >
+            <FeatureFilters features={featureVectors} />
+          </ActionBar>
         </div>
         {featureStore.loading ? null : featureVectors.length === 0 ? (
           <NoData
@@ -76,7 +94,8 @@ const FeatureVectorsView = React.forwardRef(
               featureVectorsFilters,
               largeRequestErrorMessage,
               FEATURE_STORE_PAGE,
-              FEATURE_VECTORS_TAB
+              FEATURE_VECTORS_TAB,
+              FEATURE_FILTERS
             )}
           />
         ) : (
@@ -134,6 +153,7 @@ FeatureVectorsView.propTypes = {
   featureStore: PropTypes.object.isRequired,
   featureVectors: PropTypes.arrayOf(PropTypes.object).isRequired,
   filtersStore: PropTypes.object.isRequired,
+  handleActionsMenuClick: PropTypes.func.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
   largeRequestErrorMessage: PropTypes.string.isRequired,
@@ -141,8 +161,11 @@ FeatureVectorsView.propTypes = {
   selectedFeatureVector: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
   setCreateVectorPopUpIsOpen: PropTypes.func.isRequired,
+  setFeatureVectors: PropTypes.func.isRequired,
   setSelectedFeatureVector: PropTypes.func.isRequired,
+  setSelectedRowData: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
+  urlTagOption: PropTypes.string,
   virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }
 

@@ -20,12 +20,14 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import ActionBar from '../../ActionBar/ActionBar'
+import FeatureFilters from '../FeatureFilters'
 import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
-import FilterMenu from '../../FilterMenu/FilterMenu'
+import FeatureStoreTabs from '../FeatureStoreTabs/FeaturePageTabs'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
 
-import { FEATURE_STORE_PAGE, FEATURES_TAB } from '../../../constants'
+import { FEATURE_FILTERS, FEATURE_STORE_PAGE, FEATURES_TAB } from '../../../constants'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { VIRTUALIZATION_CONFIG } from '../../../types'
 import { featuresFilters } from './features.util'
@@ -45,8 +47,11 @@ const FeaturesView = React.forwardRef(
       largeRequestErrorMessage,
       pageData,
       selectedRowData,
+      setFeatures,
+      setSelectedRowData,
       tableContent,
       tableStore,
+      urlTagOption,
       virtualizationConfig
     },
     { featureStoreRef, tableRef, tableBodyRef }
@@ -54,20 +59,26 @@ const FeaturesView = React.forwardRef(
     return (
       <div className="feature-store" ref={featureStoreRef}>
         <div className="content__action-bar-wrapper">
-          <div className="action-bar">
-            <FilterMenu
-              actionButton={{
+          <FeatureStoreTabs />
+          <ActionBar
+            actionButtons={[
+              {
+                className: 'action-button',
+                hidden: false,
                 label: 'Add to feature vector',
-                variant: SECONDARY_BUTTON,
-                getCustomTemplate: getPopUpTemplate
-              }}
-              filters={featuresFilters}
-              onChange={handleRefresh}
-              page={FEATURE_STORE_PAGE}
-              tab={FEATURES_TAB}
-              withoutExpandButton
-            />
-          </div>
+                onClick: getPopUpTemplate,
+                popupButton: true,
+                variant: SECONDARY_BUTTON
+              }
+            ]}
+            filters={featuresFilters}
+            filterMenuName={FEATURE_FILTERS}
+            handleRefresh={handleRefresh}
+            page={FEATURE_STORE_PAGE}
+            tab={FEATURES_TAB}
+          >
+            <FeatureFilters features={features} />
+          </ActionBar>
         </div>
         {featureStore.features.loading || featureStore.entities.loading ? null : features.length ===
           0 ? (
@@ -77,7 +88,8 @@ const FeaturesView = React.forwardRef(
               featuresFilters,
               largeRequestErrorMessage,
               FEATURE_STORE_PAGE,
-              FEATURES_TAB
+              FEATURES_TAB,
+              FEATURE_FILTERS
             )}
           />
         ) : (
@@ -130,8 +142,11 @@ FeaturesView.propTypes = {
   largeRequestErrorMessage: PropTypes.string.isRequired,
   pageData: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
+  setFeatures: PropTypes.func.isRequired,
+  setSelectedRowData: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableStore: PropTypes.object.isRequired,
+  urlTagOption: PropTypes.string,
   virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }
 

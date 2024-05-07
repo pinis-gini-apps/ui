@@ -224,7 +224,11 @@ const ActionBar = ({
                               date={input.value.value[0]}
                               dateTo={input.value.value[1]}
                               hasFutureOptions={filter.isFuture}
-                              selectedOptionId={filter.isFuture ? NEXT_24_HOUR_DATE_OPTION : PAST_24_HOUR_DATE_OPTION}
+                              selectedOptionId={
+                                filter.isFuture
+                                  ? NEXT_24_HOUR_DATE_OPTION
+                                  : PAST_24_HOUR_DATE_OPTION
+                              }
                               label=""
                               onChange={(dates, isPredefined) =>
                                 handleDateChange(dates, isPredefined, input, formState)
@@ -255,18 +259,22 @@ const ActionBar = ({
           </div>
           {(withRefreshButton || !isEmpty(actionButtons)) && (
             <div className="action-bar__actions">
-              {actionButtons.map(
-                (actionButton, index) =>
-                  actionButton &&
-                  !actionButton.hidden && (
-                    <Button
-                      key={index}
-                      variant={actionButton.variant}
-                      label={actionButton.label}
-                      className={actionButton.className}
-                      onClick={actionButton.onClick}
-                    />
-                  )
+              {actionButtons.map((actionButton, index) =>
+                actionButton &&
+                !actionButton.hidden &&
+                actionButton.popupButton &&
+                actionButton.onClick ? (
+                  actionButton.onClick(actionButton)
+                ) : (
+                  <Button
+                    key={index}
+                    variant={actionButton.variant}
+                    label={actionButton.label}
+                    className={actionButton.className}
+                    onClick={actionButton.onClick}
+                    tooltip={actionButton.tooltip}
+                  />
+                )
               )}
 
               {withRefreshButton && (
@@ -297,6 +305,7 @@ ActionBar.defaultProps = {
   removeSelectedItem: null,
   setSelectedRowData: null,
   tab: '',
+  withoutExpandButton: true,
   withRefreshButton: true
 }
 

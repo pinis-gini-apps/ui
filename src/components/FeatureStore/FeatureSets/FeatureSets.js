@@ -27,6 +27,7 @@ import { FeatureStoreContext } from '../FeatureStore'
 
 import {
   DETAILS_OVERVIEW_TAB,
+  FEATURE_FILTERS,
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
   GROUP_BY_NAME,
@@ -67,6 +68,7 @@ const FeatureSets = ({
   const [selectedFeatureSet, setSelectedFeatureSet] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
+  const [featureSetsPanelIsOpen, setFeatureSetsPanelIsOpen] = useState(false)
 
   const openPanelByDefault = useOpenPanel()
   const [urlTagOption] = useGetTagOptions(fetchFeatureSetsTags, featureSetsFilters)
@@ -88,9 +90,7 @@ const FeatureSets = ({
     }),
     [selectedFeatureSet.description, selectedFeatureSet.labels]
   )
-
-  const { featureSetsPanelIsOpen, setFeatureSetsPanelIsOpen, toggleConvertedYaml } =
-    React.useContext(FeatureStoreContext)
+  const { toggleConvertedYaml } = React.useContext(FeatureStoreContext)
 
   const pageData = useMemo(() => generatePageData(selectedFeatureSet), [selectedFeatureSet])
 
@@ -165,7 +165,11 @@ const FeatureSets = ({
         }
       }))
 
-      fetchFeatureSet(item.project, item.name, filtersStore.tag)
+      fetchFeatureSet(
+        item.project,
+        item.name,
+        filtersStore.filterMenuModal[FEATURE_FILTERS].values.tag
+      )
         .then(result => {
           const content = [...parseFeatureSets(result)].map(contentItem =>
             createFeatureSetsRowData(contentItem, FEATURE_SETS_TAB, params.projectName, true)
@@ -190,7 +194,7 @@ const FeatureSets = ({
           }))
         })
     },
-    [fetchFeatureSet, filtersStore.tag, params.projectName]
+    [fetchFeatureSet, filtersStore.filterMenuModal, params.projectName]
   )
 
   const { latestItems, handleExpandRow } = useGroupContent(
@@ -281,6 +285,10 @@ const FeatureSets = ({
     }
   }
 
+  const handleActionsMenuClick = () => {
+    return setFeatureSetsPanelIsOpen(true)
+  }
+
   useEffect(() => {
     setSelectedRowData({})
   }, [filtersStore.tag])
@@ -295,12 +303,12 @@ const FeatureSets = ({
   }, [fetchData, urlTagOption])
 
   useEffect(() => {
-    if (filtersStore.tag === TAG_FILTER_ALL_ITEMS) {
+    if (filtersStore.filterMenuModal[FEATURE_FILTERS].values.tag === TAG_FILTER_ALL_ITEMS) {
       dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
       dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
     }
-  }, [filtersStore.groupBy, filtersStore.tag, dispatch])
+  }, [filtersStore.groupBy, filtersStore.filterMenuModal, dispatch])
 
   useEffect(() => {
     const content = cloneDeep(featureStore.featureSets?.allData)
@@ -379,6 +387,7 @@ const FeatureSets = ({
       featureSetsPanelIsOpen={featureSetsPanelIsOpen}
       featureStore={featureStore}
       filtersStore={filtersStore}
+      handleActionsMenuClick={handleActionsMenuClick}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
       largeRequestErrorMessage={largeRequestErrorMessage}
@@ -386,8 +395,11 @@ const FeatureSets = ({
       ref={{ featureStoreRef, tableRef, tableBodyRef }}
       selectedFeatureSet={selectedFeatureSet}
       selectedRowData={selectedRowData}
+      setFeatureSets={setFeatureSets}
       setSelectedFeatureSet={handleSelectFeatureSet}
+      setSelectedRowData={setSelectedRowData}
       tableContent={tableContent}
+      urlTagOption={urlTagOption}
       virtualizationConfig={virtualizationConfig}
     />
   )
