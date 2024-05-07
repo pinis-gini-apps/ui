@@ -27,13 +27,16 @@ import {
   FEATURE_FILTERS,
   FILES_FILTERS,
   FILTER_MENU_MODAL,
+  FUNCTION_FILTERS,
   GROUP_BY_NAME,
   JOBS_MONITORING_JOBS_TAB,
   MODEL_TYPE,
   MODELS_FILTERS,
   SHOW_ITERATIONS,
+  SHOW_UNTAGGED_ITEMS,
   FILTER_ALL_ITEMS,
   TAG_FILTER_LATEST,
+  JOBS_MONITORING_WORKFLOWS_TAB,
   JOBS_MONITORING_SCHEDULED_TAB
 } from '../constants'
 
@@ -69,6 +72,10 @@ const initialState = {
       initialValues: { tag: TAG_FILTER_LATEST, labels: '', iter: SHOW_ITERATIONS },
       values: { tag: TAG_FILTER_LATEST, labels: '', iter: SHOW_ITERATIONS }
     },
+    [FUNCTION_FILTERS]: {
+      initialValues: { showUntagged: SHOW_UNTAGGED_ITEMS },
+      values: { showUntagged: SHOW_UNTAGGED_ITEMS }
+    },
     [MODELS_FILTERS]: {
       initialValues: { tag: TAG_FILTER_LATEST, labels: '', iter: SHOW_ITERATIONS },
       values: { tag: TAG_FILTER_LATEST, labels: '', iter: SHOW_ITERATIONS }
@@ -97,6 +104,18 @@ const initialState = {
         labels: '',
         project: '',
         type: FILTER_ALL_ITEMS
+      }
+    },
+    [JOBS_MONITORING_WORKFLOWS_TAB]: {
+      initialValues: {
+        labels: '',
+        project: '',
+        state: FILTER_ALL_ITEMS
+      },
+      values: {
+        labels: '',
+        project: '',
+        state: FILTER_ALL_ITEMS
       }
     }
   }
