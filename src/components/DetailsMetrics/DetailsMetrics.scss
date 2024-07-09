@@ -25,13 +25,16 @@
       z-index: 1;
       align-self: baseline;
       top: 0;
-      position: sticky;
       box-shadow: 0 -10px 0 0 $white;
       border-radius: 12px;
       background: $white;
       padding-top: 12px;
       padding-bottom: 0;
       width: 100%;
+
+      &.invocations-sticky {
+        position: sticky;
+      }
 
       &-header-hidden .stats-card__row {
         height: 0;
