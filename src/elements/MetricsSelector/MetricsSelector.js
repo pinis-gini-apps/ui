@@ -34,6 +34,7 @@ import Accordion from '../../common/Accordion/Accordion'
 
 import { filterMetrics, groupMetricByApplication, metricsTypes } from './metricsSelector.util'
 import { METRICS_SELECTOR_OPTIONS } from '../../types'
+import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'iguazio.dashboard-react-controls/dist/constants'
 
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 import { ReactComponent as SearchIcon } from 'igz-controls/images/search.svg'
@@ -45,7 +46,6 @@ import './metricsSelector.scss'
 const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselectedMetrics }) => {
   const [nameFilter, setNameFilter] = useState('')
   const [isOpen, setIsOpen] = useState(false)
-  const [preAppliedMetrics, setPreAppliedMetrics] = useState([])
   const [appliedMetrics, setAppliedMetrics] = useState([])
   const selectorFieldRef = useRef()
   const formRef = React.useRef(
@@ -84,10 +84,6 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
   }, [metrics])
 
   useEffect(() => {
-    setAppliedMetrics(preselectedMetrics)
-  }, [preselectedMetrics])
-
-  useEffect(() => {
     if (!isOpen) {
       formRef.current.change(
         'metrics',
@@ -101,6 +97,7 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
       formRef.current.reset({
         metrics: preselectedMetrics.map(metricItem => metricItem.full_name)
       })
+      setAppliedMetrics(preselectedMetrics)
     }
   }, [preselectedMetrics])
 
@@ -137,17 +134,18 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
     }
   }, [windowClickHandler, windowScrollHandler, isOpen])
 
-  const handleOnChange = selectedMetrics => {
-    setPreAppliedMetrics(selectedMetrics)
-  }
-
   const handleApply = () => {
-    const newAppliedMetrics = preAppliedMetrics.map(metricFullName => {
+    const newAppliedMetrics = formRef.current?.getFieldState('metrics')?.value?.map(metricFullName => {
       return metrics.find(metric => metric.full_name === metricFullName)
-    })
+    }) || []
+
     onSelect(newAppliedMetrics)
     setAppliedMetrics(newAppliedMetrics)
     setIsOpen(false)
+  }
+
+  const handleClear = () => {
+    formRef.current?.change('metrics', [])
   }
 
   const getSelectValue = () => {
@@ -276,12 +274,14 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
                     }}
                   </FieldArray>
                 </ul>
-                <FormOnChange name={name} handler={handleOnChange} />
                 <div className="metrics-selector__footer">
-                  <div data-testid="metrics-selector-counter" className="metrics-selector-counter">
+                  <div data-testid="metrics-selector-counter" className="metrics-selector__footer-counter">
                     {`${formState.values.metrics?.length ?? 0}/${maxSelectionNumber}`}
                   </div>
-                  <Button variant="secondary" label="Apply" onClick={handleApply} />
+                  <div data-testid="metrics-selector-buttons" className='metrics-selector__footer-buttons'>
+                    <Button variant={TERTIARY_BUTTON} label="Clear" onClick={handleClear} />
+                    <Button variant={SECONDARY_BUTTON} label="Apply" onClick={handleApply} />
+                  </div>
                 </div>
               </PopUpDialog>
             )}
