@@ -414,11 +414,12 @@ const DetailsMetrics = ({ selectedItem }) => {
                     return (
                       <React.Fragment key={metric.id}>
                         <InvocationMetricCard
-                          ref={invocationBodyCardRef}
+                          expandInvocationCard={expandInvocationCard}
                           isInvocationCardExpanded={isInvocationCardExpanded}
                           key={metric.id}
                           metric={metric}
                           previousTotalInvocation={previousTotalInvocation}
+                          ref={invocationBodyCardRef}
                           selectedDate={selectedDate}
                         />
                         {chooseMetricsDataCard}
