@@ -85,6 +85,7 @@ const DetailsMetrics = ({ selectedItem }) => {
       )
     )
   }, [generatedMetrics.length])
+  console.log('tmp')
 
   const calculateHistogram = useCallback((points, metric) => {
     const numberOfBins = 5
