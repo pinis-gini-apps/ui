@@ -96,6 +96,8 @@ jobs:
             echo -e "\033[33mPlease check for changes in the 'dashboard-react-controls' repository.\033[0m"
             echo "::set-output name=igz-controls-import-error::failure"
             echo "::error::Module not found: Error: Can't resolve 'igz-controls"
+            echo "${{ toJson(steps) }}"
+
           else
             echo "::set-output name=igz-controls-import-error::success"
             echo "igz-controls-import-error=success" >> $GITHUB_ENV
