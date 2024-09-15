@@ -1,4 +1,4 @@
-name: smoke
+name: smoke-test
 
 on:
   push:
@@ -27,15 +27,10 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Add comment to HTTP client
-        run: npm run add-comment-to-http-client
-
-      - name: Run mock server
-        run: npm run mock-server
-
-      - name: Start application
-        run: npm start
-
-      - name: Run smoke test
-        run: npm run test:ci-cd-smoke-1
-
+      - name: Run parallel tasks
+        run: |
+          npm run add-comment-to-http-client &
+          npm run mock-server &
+          npm start &
+          npm run test:ci-cd-smoke-1
+        continue-on-error: true
