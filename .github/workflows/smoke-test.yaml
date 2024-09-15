@@ -34,3 +34,9 @@ jobs:
           npm start &
           npm run test:ci-cd-smoke-1
         continue-on-error: true
+
+      - name: Upload test reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-reports
+          path: tests/reports
