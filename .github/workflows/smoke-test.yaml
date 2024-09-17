@@ -32,7 +32,8 @@ jobs:
           npm run add-comment-to-http-client &
           npm run mock-server &
           npm start &
-          npm run test:ci-cd-smoke-1
+          npm run test:regression
+
         continue-on-error: true
 
       - name: Upload test reports
