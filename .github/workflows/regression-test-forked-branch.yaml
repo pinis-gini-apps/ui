@@ -1,0 +1,43 @@
+name: regression-test-forked-branch
+
+on:
+  push:
+    branches:
+      - remote-regression-test-runs
+
+jobs:
+  regression-test-forked:
+    name: Regression Test in forked branch
+    runs-on: ubuntu-latest
+    env:
+      REACT_APP_FUNCTION_CATALOG_URL: ${{ secrets.REACT_APP_FUNCTION_CATALOG_URL }}
+      REACT_APP_MLRUN_API_URL: ${{ secrets.REACT_APP_MLRUN_API_URL }}
+      REACT_APP_NUCLIO_API_URL: ${{ secrets.REACT_APP_NUCLIO_API_URL }}
+      REACT_APP_IGUAZIO_API_URL: ${{ secrets.REACT_APP_IGUAZIO_API_URL }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run parallel tasks
+        run: |
+          npm run add-comment-to-http-client &
+          npm run mock-server &
+          npm start &
+          npm run test:regression
+
+        continue-on-error: true
+
+      - name: Upload test reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-reports
+          path: tests/reports
