@@ -25,7 +25,7 @@ on:
   workflow_dispatch:
     inputs:
       branch:
-        description: 'Trigger remote regression tests workflow on the specified branch'
+        description: 'Run regression tests on branch'
         required: true
 
 jobs:
