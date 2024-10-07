@@ -54,6 +54,7 @@ jobs:
               echo "Untracked changes detected in 'src/components/Jobs'. Running tests..."
               node .github/regressionTestBasedOnPath.js "test-variable"
             else
+              git diff --name-only HEAD~1 HEAD
               echo "No changes detected in 'src/components/Jobs'. Skipping tests."
             fi
           fi
