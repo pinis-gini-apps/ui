@@ -28,7 +28,13 @@ jobs:
           
           # Check if HEAD~1 exists
           if git rev-parse --quiet --verify HEAD~1; then
-            # If HEAD~1 exists, check for changes against it
+            echo "Checking differences between HEAD~1 and HEAD..."
+          
+            # Show the files changed between HEAD~1 and HEAD
+            echo "Running: git diff --name-only HEAD~1 HEAD"
+            git diff --name-only HEAD~1 HEAD
+          
+            # Check for changes in 'src/components/Jobs'
             if [[ $(git diff --name-only HEAD~1 HEAD | grep 'src/components/Jobs/') ]]; then
               echo "Changes detected in 'src/components/Jobs'. Running tests..."
               node .github/regressionTestBasedOnPath.js "test-variable"
@@ -38,6 +44,12 @@ jobs:
           else
             # If HEAD~1 does not exist, assume this is the first commit
             echo "This may be the first commit. Checking for any changes in 'src/components/Jobs'."
+            echo "Running: git ls-files --others --exclude-standard"
+          
+            # Show the untracked files
+            git ls-files --others --exclude-standard
+          
+            # Check for untracked files in 'src/components/Jobs'
             if [[ $(git ls-files --others --exclude-standard | grep 'src/components/Jobs/') ]]; then
               echo "Untracked changes detected in 'src/components/Jobs'. Running tests..."
               node .github/regressionTestBasedOnPath.js "test-variable"
