@@ -47,23 +47,6 @@ async function run() {
     // console.log(core.getInput('github_token', { required: true }))
     // console.log('------github_token----------')
 
-    console.log('------eventPayload.repository.owner.login----------')
-    console.log(eventPayload.repository.owner.login)
-    console.log('------eventPayload.repository.owner.login----------')
-
-    console.log('---------eventPayload.repository.name----------')
-    console.log(eventPayload?.repository?.name)
-    console.log('---------eventPayload.repository.name----------')
-
-    console.log('------------------------')
-    console.log(owner)
-    console.log('-')
-    console.log(repoName)
-    console.log('-')
-    console.log(eventPayload.before)
-    console.log('-')
-    console.log(commitSHA)
-    console.log('------------------------')
     // const { data: changedFiles } = await octokit.repos.compareCommits({
     //   owner,
     //   repoName,
