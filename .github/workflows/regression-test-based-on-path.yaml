@@ -65,10 +65,11 @@ jobs:
 
       - name: Run parallel tasks
         run: |
+          echo "${{ env.custom_output }}"
           npm run add-comment-to-http-client &
           npm run mock-server &
           npm start &
-          MLRUN_VERSION=${{ env.custom_output }} npm run path-test 
+          TEST_TAG=${{ env.custom_output }} npm run path-test 
 
         continue-on-error: true
 
