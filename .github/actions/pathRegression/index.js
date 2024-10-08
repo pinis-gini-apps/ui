@@ -36,9 +36,14 @@ const execute = command => {
 const run = async () => {
   try {
     const ls1 = await execute('ls')
+    console.log('-----')
     console.log(ls1)
-    const appJsPath = await execute('find . -name "package.json" | xargs dirname')
-    console.log(appJsPath)
+    console.log('-----')
+
+    const appJsPath = await execute('npm run path-test" | xargs dirname')
+    // const appJsPath = await execute('find . -name "package.json" | xargs dirname')
+    // console.log(appJsPath)
+
     return
     process.chdir(appJsPath.trim())
 
