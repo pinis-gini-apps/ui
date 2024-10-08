@@ -21,6 +21,9 @@ const core = require('@actions/core')
 const { exec } = require('child_process')
 const { Octokit } = require('@octokit/rest')
 
+const envVariables = {
+  TEST_PATH: 'my test path'
+}
 const execute = command => {
   return new Promise((resolve, reject) => {
     exec(command, (error, stdout, stderr) => {
@@ -39,6 +42,22 @@ const run = async () => {
     console.log('-----')
     console.log(ls1)
     console.log('-----')
+
+    exec(
+      'npm run run-script',
+      { env: { ...process.env, ...envVariables } },
+      (error, stdout, stderr) => {
+        if (error) {
+          console.error(`Error: ${error.message}`)
+          return
+        }
+        if (stderr) {
+          console.error(`stderr: ${stderr}`)
+          return
+        }
+        console.log(`stdout: ${stdout}`)
+      }
+    )
 
     const appJsPath = await execute('npm run path-test')
     console.log(appJsPath)
