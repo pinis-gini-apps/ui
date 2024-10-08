@@ -94,7 +94,7 @@ const run = async () => {
 
     const changedFiles = Array.from(changedFilesSet)
     console.log('Changed files in current branch:', changedFiles)
-    core.setOutput('my_output', changedFiles)
+    core.setOutput('my_output', envVariables.TEST_TAG)
 
     // const result = await Promise.all([
     //   runNpmScript('add-comment-to-http-client'),

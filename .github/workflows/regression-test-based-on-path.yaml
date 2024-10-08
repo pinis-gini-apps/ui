@@ -24,7 +24,7 @@ jobs:
         working-directory: .github/actions/pathRegression
 
       - name: Run Custom Action
-        id: run_custom_action  # Assign an ID to the step
+        id: run_custom_action
         uses: ./.github/actions/pathRegression
         with:
           base-ref: ${{ toJson(github.event) }}
@@ -36,7 +36,77 @@ jobs:
           REACT_APP_NUCLIO_API_URL: ${{ secrets.REACT_APP_NUCLIO_API_URL }}
           REACT_APP_IGUAZIO_API_URL: ${{ secrets.REACT_APP_IGUAZIO_API_URL }}
 
-      - name: Use output from custom action
+      - name: Set output for next job
+        id: set_output
+        run: echo "custom_output=${{ steps.run_custom_action.outputs.my_output }}" >> $GITHUB_ENV
+
+  regression-test-forked:
+    name: Regression Test in forked branch
+    runs-on: ubuntu-latest
+    env:
+      REACT_APP_FUNCTION_CATALOG_URL: ${{ secrets.REACT_APP_FUNCTION_CATALOG_URL }}
+      REACT_APP_MLRUN_API_URL: ${{ secrets.REACT_APP_MLRUN_API_URL }}
+      REACT_APP_NUCLIO_API_URL: ${{ secrets.REACT_APP_NUCLIO_API_URL }}
+      REACT_APP_IGUAZIO_API_URL: ${{ secrets.REACT_APP_IGUAZIO_API_URL }}
+
+    needs: check-file-changes
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run parallel tasks
         run: |
-            echo "The output from the custom action is: ${{ steps.run_custom_action.outputs.my_output }}"
-            echo "The output from the custom action is: ${{ steps.run_custom_action.outputs }}"
+          npm run add-comment-to-http-client &
+          npm run mock-server &
+          npm start &
+          MLRUN_VERSION=${{ env.custom_output }} npm run test:regression  # Pass variable to npm script
+
+        continue-on-error: true
+
+      - name: Upload test reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-reports
+          path: tests/reports
+
+#jobs:
+#  check-file-changes:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v3
+#
+#      - name: Set up Node.js
+#        uses: actions/setup-node@v3
+#        with:
+#          node-version: '18'
+#
+#      - name: Install dependencies
+#        run: npm install
+#        working-directory: .github/actions/pathRegression
+#
+#      - name: Run Custom Action
+#        id: run_custom_action
+#        uses: ./.github/actions/pathRegression
+#        with:
+#          base-ref: ${{ toJson(github.event) }}
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          GITHUB_REPOSITORY: ${{ github.repository }}
+#          REACT_APP_FUNCTION_CATALOG_URL: ${{ secrets.REACT_APP_FUNCTION_CATALOG_URL }}
+#          REACT_APP_MLRUN_API_URL: ${{ secrets.REACT_APP_MLRUN_API_URL }}
+#          REACT_APP_NUCLIO_API_URL: ${{ secrets.REACT_APP_NUCLIO_API_URL }}
+#          REACT_APP_IGUAZIO_API_URL: ${{ secrets.REACT_APP_IGUAZIO_API_URL }}
+#
+#      - name: Use output from custom action
+#        run: |
+#            echo "The output from the custom action is: ${{ steps.run_custom_action.outputs.my_output }}"
+#            echo "The output from the custom action is: ${{ steps.run_custom_action.outputs }}"
