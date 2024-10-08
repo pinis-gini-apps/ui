@@ -19,10 +19,14 @@ jobs:
         with:
           node-version: '18'
 
-#      - name: Install dependencies
-#        run: npm install
+      - name: Install dependencies
+        run: npm install
+        working-directory: .github/actions/pathRegression
 
-      - name: Check for file changes in 'src/components/Jobs' and run src-specific tests
-        run: |
-          echo "Checking for changes in src/components/Jobs..."
-          echo "${{ toJson(github) }}"
+      - name: Run Custom Action
+        uses: ./.github/actions/pathRegression
+        with:
+          base-ref: ${{ toJson(github.event) }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}

@@ -1,0 +1,5 @@
+name: Custom action
+description: Path regression action
+runs:
+  using: "node16"
+  main: "index.js"
