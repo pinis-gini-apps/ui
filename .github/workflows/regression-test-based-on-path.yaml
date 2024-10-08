@@ -38,7 +38,8 @@ jobs:
 
       - name: Set output for next job
         id: set_output
-        run: echo "custom_output=${{ steps.run_custom_action.outputs.my_output }}" >> $GITHUB_ENV
+        run: |
+          echo "custom_output=${{ steps.run_custom_action.outputs.my_output }}" >> $GITHUB_ENV
 
   regression-test-forked:
     name: Regression Test in forked branch
@@ -67,7 +68,7 @@ jobs:
           npm run add-comment-to-http-client &
           npm run mock-server &
           npm start &
-          MLRUN_VERSION=${{ env.custom_output }} npm run test:regression  # Pass variable to npm script
+          MLRUN_VERSION=${{ env.custom_output }} npm run path-test 
 
         continue-on-error: true
 
