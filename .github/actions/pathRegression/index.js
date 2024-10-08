@@ -51,14 +51,42 @@ async function run() {
 
     const owner = 'pinis-gini-apps' // Your GitHub username or organization
     const repo = 'ui' // Your repository name
-
-    // Fetch repository information
-    const { data } = await octokit.repos.get({
+    const { data: commits } = await octokit.repos.listCommits({
       owner,
-      repo
+      repo,
+      sha: 'regression-test-based-on-path',
+      per_page: 100 // Adjust the number of commits per page if needed
     })
+    console.log(commits)
+    // Create a set to store unique file names
+    const changedFilesSet = new Set()
 
-    console.log(data)
+    for (const commit of commits) {
+      // Compare this commit with the base branch to get changed files
+      const { data: comparison } = await octokit.repos.compareCommits({
+        owner,
+        repo,
+        base: 'development',
+        head: commit.sha
+      })
+
+      // Add changed files to the set
+      comparison.files.forEach(file => {
+        changedFilesSet.add(file.filename)
+      })
+    }
+
+    // Convert set to an array and log the results
+    const changedFiles = Array.from(changedFilesSet)
+    console.log('Changed files in current branch:', changedFiles)
+
+    // // Fetch repository information
+    // const { data } = await octokit.repos.get({
+    //   owner,
+    //   repo
+    // })
+    //
+    // console.log(data)
     // const filePaths = changedFiles.files.map(file => file.filename)
     //
     // core.setOutput('changed_files', filePaths.join('\n'))
