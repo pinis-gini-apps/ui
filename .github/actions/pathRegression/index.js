@@ -37,6 +37,8 @@ async function run() {
     const octokit = new Octokit({ auth: token })
 
     const eventPayload = require(process.env.GITHUB_EVENT_PATH)
+    // const owner = eventPayload.repository.owner.login;
+
     console.log('eventPayload:-----')
     console.log(eventPayload)
     const commitSHA = eventPayload.head_commit.id
@@ -54,6 +56,15 @@ async function run() {
     console.log(eventPayload?.repository?.name)
     console.log('---------eventPayload.repository.name----------')
 
+    console.log('------------------------')
+    console.log(owner)
+    console.log('-')
+    console.log(repo)
+    console.log('-')
+    console.log(eventPayload.before)
+    console.log('-')
+    console.log(commitSHA)
+    console.log('------------------------')
     const { data: changedFiles } = await octokit.repos.compareCommits({
       owner,
       repo,
