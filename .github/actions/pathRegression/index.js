@@ -20,21 +20,21 @@ such restriction.
 const core = require('@actions/core')
 const { Octokit } = require('@octokit/rest')
 
-async function run() {
+const run = async () => {
   try {
+    const currentBranch = process.env.GITHUB_REF.split('/').pop()
     const token = process.env.GITHUB_TOKEN
     const repository = process.env.GITHUB_REPOSITORY
-    const currentBranch = process.env.GITHUB_REF.split('/').pop()
-    console.log(process.env.GITHUB_REF)
-    console.log(currentBranch)
     const [owner, repo] = repository.split('/')
 
+    const targetBranch = process.env.GITHUB_BASE_REF || 'development'
+    console.log(targetBranch)
     const octokit = new Octokit({ auth: token })
 
     const { data: commits } = await octokit.repos.listCommits({
       owner,
       repo,
-      sha: 'regression-test-based-on-path',
+      sha: currentBranch,
       per_page: 100
     })
     const changedFilesSet = new Set()
@@ -43,7 +43,7 @@ async function run() {
       const { data: comparison } = await octokit.repos.compareCommits({
         owner,
         repo,
-        base: 'development',
+        base: targetBranch,
         head: commit.sha
       })
 
