@@ -24,7 +24,9 @@ async function run() {
   try {
     const token = process.env.GITHUB_TOKEN
     const repository = process.env.GITHUB_REPOSITORY
-
+    const currentBranch = process.env.GITHUB_REF.split('/').pop()
+    console.log(process.env.GITHUB_REF)
+    console.log(currentBranch)
     const [owner, repo] = repository.split('/')
 
     const octokit = new Octokit({ auth: token })
