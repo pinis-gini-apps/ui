@@ -40,7 +40,8 @@ const run = async () => {
     console.log(ls1)
     console.log('-----')
 
-    const appJsPath = await execute('npm run path-test" | xargs dirname')
+    const appJsPath = await execute('npm run path-test')
+    console.log(appJsPath)
     // const appJsPath = await execute('find . -name "package.json" | xargs dirname')
     // console.log(appJsPath)
 
