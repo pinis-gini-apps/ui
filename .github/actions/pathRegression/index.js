@@ -37,8 +37,11 @@ async function run() {
     const octokit = new Octokit({ auth: token })
 
     const eventPayload = require(process.env.GITHUB_EVENT_PATH)
+    console.log('eventPayload:-----')
+    console.log(eventPayload)
     const commitSHA = eventPayload.head_commit.id
-
+    console.log('commitSHA:-----')
+    console.log(commitSHA)
     // console.log('------github_token----------')
     // console.log(core.getInput('github_token', { required: true }))
     // console.log('------github_token----------')
