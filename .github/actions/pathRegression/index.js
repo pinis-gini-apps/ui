@@ -94,15 +94,16 @@ const run = async () => {
 
     const changedFiles = Array.from(changedFilesSet)
     console.log('Changed files in current branch:', changedFiles)
+    core.setOutput('my_output', changedFiles)
 
-    const result = await Promise.all([
-      runNpmScript('add-comment-to-http-client'),
-      runNpmScript('mock-server'),
-      runNpmScript('start'),
-      runNpmScript('path-test', { env: envVariables })
-    ])
-
-    console.log(result)
+    // const result = await Promise.all([
+    //   runNpmScript('add-comment-to-http-client'),
+    //   runNpmScript('mock-server'),
+    //   runNpmScript('start'),
+    //   runNpmScript('path-test', { env: envVariables })
+    // ])
+    //
+    // console.log(result)
 
     // exec(
     //   'npm run path-test',

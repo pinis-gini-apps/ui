@@ -24,6 +24,7 @@ jobs:
         working-directory: .github/actions/pathRegression
 
       - name: Run Custom Action
+        id: run_custom_action  # Assign an ID to the step
         uses: ./.github/actions/pathRegression
         with:
           base-ref: ${{ toJson(github.event) }}
@@ -35,3 +36,7 @@ jobs:
           REACT_APP_NUCLIO_API_URL: ${{ secrets.REACT_APP_NUCLIO_API_URL }}
           REACT_APP_IGUAZIO_API_URL: ${{ secrets.REACT_APP_IGUAZIO_API_URL }}
 
+      - name: Use output from custom action
+        run: |
+            echo "The output from the custom action is: ${{ steps.run_custom_action.outputs.my_output }}"
+            echo "The output from the custom action is: ${{ steps.run_custom_action.outputs }}"
