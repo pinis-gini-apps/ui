@@ -22,7 +22,7 @@ const { exec } = require('child_process')
 const { Octokit } = require('@octokit/rest')
 
 const envVariables = {
-  TEST_PATH: 'my test path'
+  TEST_TAG: '@smoke1'
 }
 const execute = command => {
   return new Promise((resolve, reject) => {
@@ -36,27 +36,33 @@ const execute = command => {
   })
 }
 
+const runNpmScript = (script, options = {}) => {
+  return new Promise((resolve, reject) => {
+    const env = { ...process.env, ...options.env }
+
+    const process = exec(`npm run ${script}`, { env }, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error executing ${script}:`, error.message)
+        return reject(error)
+      }
+      if (stderr) {
+        console.error(`stderr from ${script}:`, stderr)
+      }
+      console.log(`stdout from ${script}:`, stdout)
+      resolve()
+    })
+
+    process.stdout.on('data', data => {
+      console.log(data)
+    })
+    process.stderr.on('data', data => {
+      console.error(data)
+    })
+  })
+}
+
 const run = async () => {
   try {
-    exec(
-      'npm run path-test',
-      { env: { ...process.env, ...envVariables } },
-      (error, stdout, stderr) => {
-        if (error) {
-          console.error(`Error: ${error.message}`)
-          return
-        }
-        if (stderr) {
-          console.error(`stderr: ${stderr}`)
-          return
-        }
-        console.log(`stdout: ${stdout}`)
-      }
-    )
-
-    const appJsPath = await execute('npm run path-test')
-    console.log(appJsPath)
-
     const currentBranch = process.env.GITHUB_REF.split('/').pop()
     const token = process.env.GITHUB_TOKEN
     const repository = process.env.GITHUB_REPOSITORY
@@ -88,6 +94,31 @@ const run = async () => {
 
     const changedFiles = Array.from(changedFilesSet)
     console.log('Changed files in current branch:', changedFiles)
+
+    const result = await Promise.all([
+      runNpmScript('add-comment-to-http-client'),
+      runNpmScript('mock-server'),
+      runNpmScript('start'),
+      runNpmScript('path-test', { env: envVariables })
+    ])
+
+    console.log(result)
+
+    // exec(
+    //   'npm run path-test',
+    //   { env: { ...process.env, ...envVariables } },
+    //   (error, stdout, stderr) => {
+    //     if (error) {
+    //       console.error(`Error: ${error.message}`)
+    //       return
+    //     }
+    //     if (stderr) {
+    //       console.error(`stderr: ${stderr}`)
+    //       return
+    //     }
+    //     console.log(`stdout: ${stdout}`)
+    //   }
+    // )
   } catch (error) {
     console.log(error)
     core.setFailed(`Error: ${error.message}`)
