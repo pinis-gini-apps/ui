@@ -39,7 +39,13 @@ jobs:
       - name: Set output for next job
         id: set_output
         run: |
+          echo "${{ steps.run_custom_action.outputs.my_output }}"
           echo "custom_output=${{ steps.run_custom_action.outputs.my_output }}" >> $GITHUB_ENV
+          echo "::set-output name=custom_output::Hello, World!" # Set the output
+
+    outputs:
+      my_output: ${{ steps.run_custom_action.outputs.my_output }}
+
 
   regression-test-forked:
     name: Regression Test in forked branch
@@ -66,10 +72,11 @@ jobs:
       - name: Run parallel tasks
         run: |
           echo "${{ env.custom_output }}"
+          echo "Output from previous job: ${{ needs.job1.outputs.my_output }}"
           npm run add-comment-to-http-client &
           npm run mock-server &
           npm start &
-          TEST_TAG=${{ env.custom_output }} npm run path-test 
+          TEST_TAG=${{ needs.job1.outputs.my_output }} npm run path-test
 
         continue-on-error: true
 
