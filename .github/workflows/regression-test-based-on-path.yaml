@@ -25,7 +25,6 @@ jobs:
 
       - name: Run Custom Action
         run:
-          echo "Changed files: ${{ steps.get_changed_files.outputs.changed_files }}"
         uses: ./.github/actions/pathRegression
         with:
           base-ref: ${{ toJson(github.event) }}
