@@ -23,46 +23,21 @@ const { Octokit } = require('@octokit/rest')
 async function run() {
   try {
     const token = process.env.GITHUB_TOKEN
-    // const repo = process.env.GITHUB_REPOSITORY
-    const path = process.env.GITHUB_EVENT_PATH
+    const repo = process.env.GITHUB_REPOSITORY
 
-    // const [owner1, repoName] = repo.split('/')
+    const [owner, repoName] = repo.split('/')
 
     const octokit = new Octokit({ auth: token })
 
-    // const eventPayload = require(process.env.GITHUB_EVENT_PATH)
-    // const owner = eventPayload.repository.owner.login;
-
-    // console.log('eventPayload:-----')
-    // console.log(eventPayload)
-    // const commitSHA = eventPayload.head_commit.id
-    // console.log('commitSHA:-----')
-    // console.log(commitSHA)
-    // console.log('------github_token----------')
-    // console.log(core.getInput('github_token', { required: true }))
-    // console.log('------github_token----------')
-
-    // const { data: changedFiles } = await octokit.repos.compareCommits({
-    //   owner,
-    //   repoName,
-    //   base: eventPayload.before,
-    //   head: commitSHA
-    // })
-
-    const owner = 'pinis-gini-apps' // Your GitHub username or organization
-    const repo = 'ui' // Your repository name
     const { data: commits } = await octokit.repos.listCommits({
       owner,
-      repo,
+      repoName,
       sha: 'regression-test-based-on-path',
-      per_page: 100 // Adjust the number of commits per page if needed
+      per_page: 100
     })
-    console.log(commits)
-    // Create a set to store unique file names
     const changedFilesSet = new Set()
 
     for (const commit of commits) {
-      // Compare this commit with the base branch to get changed files
       const { data: comparison } = await octokit.repos.compareCommits({
         owner,
         repo,
@@ -70,27 +45,13 @@ async function run() {
         head: commit.sha
       })
 
-      // Add changed files to the set
       comparison.files.forEach(file => {
         changedFilesSet.add(file.filename)
       })
     }
 
-    // Convert set to an array and log the results
     const changedFiles = Array.from(changedFilesSet)
     console.log('Changed files in current branch:', changedFiles)
-
-    // // Fetch repository information
-    // const { data } = await octokit.repos.get({
-    //   owner,
-    //   repo
-    // })
-    //
-    // console.log(data)
-    // const filePaths = changedFiles.files.map(file => file.filename)
-    //
-    // core.setOutput('changed_files', filePaths.join('\n'))
-    // console.log('Changed files:', filePaths)
   } catch (error) {
     console.log(error)
     core.setFailed(`Error: ${error.message}`)
