@@ -19,8 +19,8 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install dependencies
-        run: npm install
+#      - name: Install dependencies
+#        run: npm install
 
       - name: Check for file changes in 'src/components/Jobs' and run src-specific tests
         run: |
