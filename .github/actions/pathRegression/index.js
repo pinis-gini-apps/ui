@@ -23,15 +23,15 @@ const { Octokit } = require('@octokit/rest')
 async function run() {
   try {
     const token = process.env.GITHUB_TOKEN
-    const repo = process.env.GITHUB_REPOSITORY
+    const repository = process.env.GITHUB_REPOSITORY
 
-    const [owner, repoName] = repo.split('/')
+    const [owner, repo] = repository.split('/')
 
     const octokit = new Octokit({ auth: token })
 
     const { data: commits } = await octokit.repos.listCommits({
       owner,
-      repoName,
+      repo,
       sha: 'regression-test-based-on-path',
       per_page: 100
     })
