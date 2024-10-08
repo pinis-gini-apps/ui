@@ -24,7 +24,6 @@ jobs:
         working-directory: .github/actions/pathRegression
 
       - name: Run Custom Action
-        run:
         uses: ./.github/actions/pathRegression
         with:
           base-ref: ${{ toJson(github.event) }}
