@@ -38,11 +38,6 @@ const execute = command => {
 
 const run = async () => {
   try {
-    const ls1 = await execute('ls')
-    console.log('-----')
-    console.log(ls1)
-    console.log('-----')
-
     exec(
       'npm run path-test',
       { env: { ...process.env, ...envVariables } },
@@ -61,14 +56,6 @@ const run = async () => {
 
     const appJsPath = await execute('npm run path-test')
     console.log(appJsPath)
-    // const appJsPath = await execute('find . -name "package.json" | xargs dirname')
-    // console.log(appJsPath)
-
-    return
-    process.chdir(appJsPath.trim())
-
-    const ls = await execute('ls')
-    console.log(ls)
 
     const currentBranch = process.env.GITHUB_REF.split('/').pop()
     const token = process.env.GITHUB_TOKEN
@@ -76,7 +63,6 @@ const run = async () => {
     const [owner, repo] = repository.split('/')
 
     const targetBranch = process.env.GITHUB_BASE_REF || 'development'
-    console.log(targetBranch)
     const octokit = new Octokit({ auth: token })
 
     const { data: commits } = await octokit.repos.listCommits({
