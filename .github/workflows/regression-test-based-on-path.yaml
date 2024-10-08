@@ -25,26 +25,4 @@ jobs:
       - name: Check for file changes in 'src/components/Jobs' and run src-specific tests
         run: |
           echo "Checking for changes in src/components/Jobs..."
-          git diff --name-only HEAD~1 HEAD
-          
-          
-          # Check if HEAD~1 exists
-          if git rev-parse --quiet --verify HEAD~1; then
-            echo "Checking differences between HEAD~1 and HEAD..."
-            # Check for changes in 'src/components/Jobs'
-            if [[ $(git diff --name-only HEAD~1 HEAD | grep 'src/components/Jobs/') ]]; then
-              echo "Changes detected in 'src/components/Jobs'. Running tests..."
-              node .github/regressionTestBasedOnPath.js "test-variable"
-            else
-              echo "No changes detected in 'src/components/Jobs'. Skipping tests."
-            fi
-          else
-            # If HEAD~1 does not exist, assume this is the first commit
-            echo "This may be the first commit. Checking for any changes in 'src/components/Jobs'."
-            if [[ $(git ls-files --others --exclude-standard | grep 'src/components/Jobs/') ]]; then
-              echo "Untracked changes detected in 'src/components/Jobs'. Running tests..."
-              node .github/regressionTestBasedOnPath.js "test-variable"
-            else
-              echo "No changes detected in 'src/components/Jobs'. Skipping tests."
-            fi
-          fi
+          echo "${{ toJson(github.event.pull_request.changed_files) }}"
