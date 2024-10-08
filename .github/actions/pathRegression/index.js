@@ -23,7 +23,7 @@ const { Octokit } = require('@octokit/rest')
 async function run() {
   try {
     const token = process.env.GITHUB_TOKEN
-    const repo = process.env.GITHUB_REPOSITORY
+    // const repo = process.env.GITHUB_REPOSITORY
     const path = process.env.GITHUB_EVENT_PATH
     console.log('path:-----')
     console.log(path)
@@ -31,8 +31,7 @@ async function run() {
     console.log('token:-----')
     console.log(token)
     console.log('repo:-----')
-    console.log(repo)
-    const [owner, repoName] = repo.split('/')
+    const [owner, repo] = repo.split('/')
 
     const octokit = new Octokit({ auth: token })
 
