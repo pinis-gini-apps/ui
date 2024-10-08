@@ -25,24 +25,19 @@ async function run() {
     const token = process.env.GITHUB_TOKEN
     // const repo = process.env.GITHUB_REPOSITORY
     const path = process.env.GITHUB_EVENT_PATH
-    console.log('path:-----')
-    console.log(path)
 
-    console.log('token:-----')
-    console.log(token)
-    console.log('repo:-----')
     // const [owner1, repoName] = repo.split('/')
 
     const octokit = new Octokit({ auth: token })
 
-    const eventPayload = require(process.env.GITHUB_EVENT_PATH)
+    // const eventPayload = require(process.env.GITHUB_EVENT_PATH)
     // const owner = eventPayload.repository.owner.login;
 
-    console.log('eventPayload:-----')
-    console.log(eventPayload)
-    const commitSHA = eventPayload.head_commit.id
-    console.log('commitSHA:-----')
-    console.log(commitSHA)
+    // console.log('eventPayload:-----')
+    // console.log(eventPayload)
+    // const commitSHA = eventPayload.head_commit.id
+    // console.log('commitSHA:-----')
+    // console.log(commitSHA)
     // console.log('------github_token----------')
     // console.log(core.getInput('github_token', { required: true }))
     // console.log('------github_token----------')
@@ -63,6 +58,7 @@ async function run() {
       repo
     })
 
+    console.log(data)
     // const filePaths = changedFiles.files.map(file => file.filename)
     //
     // core.setOutput('changed_files', filePaths.join('\n'))
