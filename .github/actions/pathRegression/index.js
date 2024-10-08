@@ -66,6 +66,7 @@ async function run() {
     core.setOutput('changed_files', filePaths.join('\n'))
     console.log('Changed files:', filePaths)
   } catch (error) {
+    console.log(error)
     core.setFailed(`Error: ${error.message}`)
   }
 }
