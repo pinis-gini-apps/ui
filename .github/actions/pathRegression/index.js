@@ -24,6 +24,9 @@ async function run() {
   try {
     const token = process.env.GITHUB_TOKEN
     const repo = process.env.GITHUB_REPOSITORY
+    const path = process.env.GITHUB_EVENT_PATH
+    console.log('path:-----')
+    console.log(path)
 
     console.log('token:-----')
     console.log(token)

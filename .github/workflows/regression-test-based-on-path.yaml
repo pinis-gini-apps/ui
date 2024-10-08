@@ -24,9 +24,13 @@ jobs:
         working-directory: .github/actions/pathRegression
 
       - name: Run Custom Action
+        run:
+          echo "Changed files: ${{ steps.get_changed_files.outputs.changed_files }}"
         uses: ./.github/actions/pathRegression
         with:
           base-ref: ${{ toJson(github.event) }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_EVENT_PATH: ${{ github.event_path }}
+
