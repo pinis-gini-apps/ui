@@ -18,10 +18,30 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 const core = require('@actions/core')
+const { exec } = require('child_process')
 const { Octokit } = require('@octokit/rest')
+
+const execute = command => {
+  return new Promise((resolve, reject) => {
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`exec error: ${error}`)
+        reject(error)
+      }
+      resolve(stdout)
+    })
+  })
+}
 
 const run = async () => {
   try {
+    const appJsPath = await execute('find . -name "package.json" | xargs dirname')
+    console.log(appJsPath)
+    process.chdir(appJsPath.trim())
+
+    const ls = await execute('ls')
+    console.log(ls)
+
     const currentBranch = process.env.GITHUB_REF.split('/').pop()
     const token = process.env.GITHUB_TOKEN
     const repository = process.env.GITHUB_REPOSITORY

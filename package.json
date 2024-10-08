@@ -72,6 +72,7 @@
     "mock-server:dev": "nodemon --watch tests/mockServer scripts/mockServer.js",
     "add-comment-to-http-client": "node scripts/ci-cd-scripts/appendCommentToHttpClient.js",
     "test:ui": "node scripts/testui.js",
+    "path-test": "node -e \"console.log('test')\"",
     "report": "node tests/report.js",
     "test:regression": "HEADLESS=true npm run test:ui && sleep 10 && echo 'Finished regression' && sleep 10 && npm run report",
     "start:regression": "concurrently \"npm:mock-server\" \"npm:start\" \"npm:test:regression\"",
