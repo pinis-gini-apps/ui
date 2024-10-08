@@ -31,7 +31,7 @@ async function run() {
     console.log('token:-----')
     console.log(token)
     console.log('repo:-----')
-    const [owner1, repoName] = repo.split('/')
+    // const [owner1, repoName] = repo.split('/')
 
     const octokit = new Octokit({ auth: token })
 
