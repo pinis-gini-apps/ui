@@ -44,7 +44,7 @@ const run = async () => {
     console.log('-----')
 
     exec(
-      'npm run run-script',
+      'npm run path-test',
       { env: { ...process.env, ...envVariables } },
       (error, stdout, stderr) => {
         if (error) {
