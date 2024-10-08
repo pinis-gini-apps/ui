@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - regression-test-based-on-path
-    paths:
-      - 'src/components/Jobs/**'
+#    paths:
+#      - 'src/components/Jobs/**'
 
 jobs:
   check-file-changes:
