@@ -38,6 +38,7 @@ Feature: Artifacts Page
   @MLA
   @passive
   @smoke
+  @smoke2
   Scenario: MLA002 - Verify filtering by file name on Artifacts page
     Given open url
     And wait load page

@@ -22,7 +22,7 @@ const { exec } = require('child_process')
 const { Octokit } = require('@octokit/rest')
 
 const envVariables = {
-  TEST_TAG: '@smoke1'
+  TEST_TAG: '@smoke1 @smoke2'
 }
 const execute = command => {
   return new Promise((resolve, reject) => {
