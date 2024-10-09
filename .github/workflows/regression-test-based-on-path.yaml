@@ -39,16 +39,14 @@ jobs:
       - name: Set output for next job
         id: set_output
         run: |
-          echo "${{ steps.run_custom_action.outputs.my_output }}"
           echo "custom_output=${{ steps.run_custom_action.outputs.my_output }}" >> $GITHUB_ENV
-          echo "::set-output name=custom_output::Hello, World!" # Set the output
+          echo "${{ steps.run_custom_action.outputs.my_output }}"
 
     outputs:
-      my_output: ${{ steps.run_custom_action.outputs.my_output }}
-
+      my_output: ${{ steps.run_custom_action.outputs.my_output }}  # Output for the next job
 
   regression-test-forked:
-    name: Regression Test in forked branch
+    name: Regression Test in Forked Branch
     runs-on: ubuntu-latest
     env:
       REACT_APP_FUNCTION_CATALOG_URL: ${{ secrets.REACT_APP_FUNCTION_CATALOG_URL }}
@@ -64,19 +62,21 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: '18'  # Ensure the same version if necessary
 
       - name: Install dependencies
         run: npm install
 
       - name: Run parallel tasks
         run: |
-          echo "${{ env.custom_output }}"
-          echo "Output from previous job: ${{ needs.job1.outputs.my_output }}"
+          echo "Custom output from previous job: ${{ needs.check-file-changes.outputs.my_output }}"
+          TEST_TAG=${{ needs.check-file-changes.outputs.my_output }}  # Correctly pass the output
+          
+          # Run parallel tasks
           npm run add-comment-to-http-client &
           npm run mock-server &
           npm start &
-          TEST_TAG=${{ needs.job1.outputs.my_output }} npm run path-test
+          TEST_TAG=${{ needs.check-file-changes.outputs.my_output }} npm run path-test
 
         continue-on-error: true
 
