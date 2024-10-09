@@ -1,0 +1,11 @@
+name: Unit tests
+
+on:
+  push:
+    branches:
+      - remote-regression-test-runs
+
+jobs:
+  regression-test-forked:
+    name: Unit test
+    runs-on: ubuntu-latest
