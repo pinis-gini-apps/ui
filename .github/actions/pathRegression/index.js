@@ -63,6 +63,12 @@ const runNpmScript = (script, options = {}) => {
 
 const run = async () => {
   try {
+    const workflowName = process.env.GITHUB_WORKFLOW
+
+    console.log('-----------workflowName-----------')
+    console.log(workflowName)
+    console.log('-----------workflowName-----------')
+
     const currentBranch = process.env.GITHUB_REF.split('/').pop()
     const token = process.env.GITHUB_TOKEN
     const repository = process.env.GITHUB_REPOSITORY
