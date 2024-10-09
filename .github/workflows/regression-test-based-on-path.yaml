@@ -43,7 +43,7 @@ jobs:
           echo "${{ steps.run_custom_action.outputs.my_output }}"
 
     outputs:
-      my_output: ${{ steps.run_custom_action.outputs.my_output }}  # Output for the next job
+      my_output: ${{ steps.run_custom_action.outputs.my_output }}
 
   regression-test-forked:
     name: Regression Test in Forked Branch
@@ -62,7 +62,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'  # Ensure the same version if necessary
+          node-version: '18'
 
       - name: Install dependencies
         run: npm install
