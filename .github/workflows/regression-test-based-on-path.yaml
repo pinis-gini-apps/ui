@@ -70,7 +70,7 @@ jobs:
       - name: Run parallel tasks
         run: |
           echo "Custom output from previous job: ${{ needs.check-file-changes.outputs.my_output }}"
-          TEST_TAG=${{ needs.check-file-changes.outputs.my_output }}  # Correctly pass the output
+          TEST_TAG=${{ needs.check-file-changes.outputs.my_output }}
           
           # Run parallel tasks
           npm run add-comment-to-http-client &

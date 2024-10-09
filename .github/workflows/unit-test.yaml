@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - remote-regression-test-runs
+    paths:
+      - 'src/components/**'
 
 jobs:
   regression-test-forked:
