@@ -10,6 +10,8 @@ on:
 jobs:
   check-file-changes:
     runs-on: ubuntu-latest
+    outputs:
+      my_output: ${{ steps.run_custom_action.outputs.my_output }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -37,9 +39,6 @@ jobs:
         run: |
           echo "custom_output=${{ steps.run_custom_action.outputs.my_output }}" >> $GITHUB_ENV
           echo "${{ steps.run_custom_action.outputs.my_output }}"
-
-    outputs:
-      my_output: ${{ steps.run_custom_action.outputs.my_output }}
 
   regression-test-forked:
     name: Regression Test in Forked Branch
