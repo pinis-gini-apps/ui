@@ -90,6 +90,9 @@ export const JOBS_MONITORING_JOBS_TAB = 'jobs'
 export const JOBS_MONITORING_WORKFLOWS_TAB = 'workflows'
 export const JOBS_MONITORING_SCHEDULED_TAB = 'scheduled'
 
+export const ALERTS_PAGE = 'ALERTS'
+export const ALERTS_FILTERS = 'alerts'
+
 export const MODELS_PAGE = 'MODELS'
 export const MODELS_TAB = 'models'
 export const MODEL_ENDPOINTS_TAB = 'model-endpoints'
@@ -565,6 +568,15 @@ export const AUTO_REFRESH_ID = 'auto-refresh'
 export const AUTO_REFRESH = 'Auto Refresh'
 export const ANY_TIME = 'Any time'
 export const STATUS_FILTER_NAME = 'state'
+export const APPLICATION = 'application'
+export const ENDPOINT = 'endpoint'
+export const ENTITY_TYPE = 'entity-type'
+export const ENTITY_ID = 'entity-id'
+export const EVENT_TYPE = 'event-type'
+export const SEVERITY = 'severity'
+export const JOB = 'job'
+export const ENDPOINT_APPLICATION = 'endpoint-application'
+export const ENDPOINT_RESULT = 'endpoint-result'
 
 export const FILTER_MENU = 'filterMenu'
 export const FILTER_MENU_MODAL = 'filterMenuModal'
@@ -642,6 +654,6 @@ export const CHART_TYPE_LINE = 'line'
 export const CHART_TYPE_BAR = 'bar'
 
 /*=========== ARTIFACTS LIMITS =============*/
-export const ARTIFACT_MAX_CHUNK_SIZE = 1048576       // 1MB
-export const ARTIFACT_MAX_PREVIEW_SIZE = 10485760    // 10MB
-export const ARTIFACT_MAX_DOWNLOAD_SIZE = 104857600  // 100MB
+export const ARTIFACT_MAX_CHUNK_SIZE = 1048576 // 1MB
+export const ARTIFACT_MAX_PREVIEW_SIZE = 10485760 // 10MB
+export const ARTIFACT_MAX_DOWNLOAD_SIZE = 104857600 // 100MB

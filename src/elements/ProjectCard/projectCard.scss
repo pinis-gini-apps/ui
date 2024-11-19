@@ -74,7 +74,7 @@
     font-size: 0.75rem;
     color: $topaz;
 
-    & > *:first-child {
+    & > *:nth-child(2) {
       flex: 0 0 auto;
       margin-right: 5px;
       color: $spunPearl;

@@ -40,7 +40,9 @@ import {
   JOB_KIND_APPLICATION,
   JOB_KIND_REMOTE,
   ERROR_STATE,
-  FAILED_STATE
+  FAILED_STATE,
+  ENDPOINT,
+  APPLICATION
 } from '../../constants'
 
 export const jobsStatuses = [
@@ -86,7 +88,7 @@ export const generateTypeFilter = () => {
     { label: 'Dask', id: JOB_KIND_DASK },
     { label: 'Databricks', id: JOB_KIND_DATABRICKS },
     { label: 'Local', id: JOB_KIND_LOCAL },
-    { label: 'Handler', id: JOB_KIND_HANDLER },
+    { label: 'Handler', id: JOB_KIND_HANDLER }
   ]
 }
 
@@ -109,4 +111,42 @@ export const filterScheduledTypeOptions = [
   { label: 'All', id: FILTER_ALL_ITEMS },
   { label: 'Jobs', id: JOB_KIND_JOB },
   { label: 'Workflows', id: JOB_KIND_WORKFLOW }
+]
+
+export const allProjectsOption = [
+  {
+    id: FILTER_ALL_ITEMS,
+    label: 'All'
+  }
+]
+
+export const filterAlertsTypeOptions = [
+  { label: 'All', id: FILTER_ALL_ITEMS },
+  { label: 'Jobs', id: JOB_KIND_JOB },
+  { label: 'Endpoint', id: ENDPOINT },
+  { label: 'Application', id: APPLICATION }
+]
+
+export const filterAlertsSeverityOptions = [
+  { label: 'All', id: FILTER_ALL_ITEMS, status: FILTER_ALL_ITEMS },
+  { label: 'Critical', id: 'critical', status: 'critical' },
+  { label: 'High', id: 'high', status: 'high' },
+  { label: 'Low', id: 'low', status: 'low' }
+]
+
+export const filterAlertsEventTypeOptions = [
+  { label: 'All', id: FILTER_ALL_ITEMS },
+  { label: 'Job Failed', id: 'job-failed' },
+  { label: 'Data Drift Detected', id: 'data-drift-detected' },
+  { label: 'Data Drift Suspected', id: 'data-drift-suspected' },
+  { label: 'Conc Drift Detected', id: 'concept-drift-detected' },
+  { label: 'Conc Drift Suspected', id: 'concept-drift-suspected' },
+  { label: 'MM Perf. Detected', id: 'model-performance-detected' },
+  { label: 'MM Perf. Suspected', id: 'model-performance-suspected' },
+  { label: 'S Perf. Detected', id: 'system-performance-detected' },
+  { label: 'S Perf. Suspected', id: 'system-performance-suspected' },
+  { label: 'MM App Ano. Detected', id: 'mm-app-anomaly-detected' },
+  { label: 'MM App Ano. Suspected', id: 'mm-app-anomaly-suspected' },
+  { label: 'MM App Failed', id: 'mm-app-failed' },
+  { label: 'MM App Failed', id: 'failed' }
 ]

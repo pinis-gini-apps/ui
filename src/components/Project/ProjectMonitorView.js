@@ -40,6 +40,7 @@ import { launchIDEOptions, generateTipMessageForCounter } from './project.utils'
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
 import './project.scss'
+import AlertsCounters from '../../elements/ProjectsMonitoringCounters/AlertsCounters'
 
 const ProjectMonitorView = ({
   closeFeatureSetPanel,
@@ -164,6 +165,7 @@ const ProjectMonitorView = ({
                   }
                 />
               )}
+              <AlertsCounters />
             </div>
             <div className="main-info__statistics-section">
               <ProjectJobs />

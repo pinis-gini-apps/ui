@@ -5,6 +5,24 @@
   flex-wrap: unset;
   justify-content: flex-start;
 
+  .link {
+    color: black;
+    cursor: pointer;
+    line-height: 20px;
+
+    &:hover {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      color: #7F7989;
+    }
+  }
+
+  &_my-class {
+    border: 1px solid #F4BEC6;
+    background:
+            linear-gradient(0deg, rgba(229, 65, 88, 0.08) 0%, rgba(229, 65, 88, 0.08) 100%),
+            #FFF;
+  }
   .stats-card__row {
     flex: unset;
 

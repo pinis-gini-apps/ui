@@ -219,6 +219,14 @@
       &__statistics-section {
         display: flex;
         margin-bottom: 25px;
+
+        > * {
+          flex-grow: 1;
+        }
+
+        > *:last-child {
+          flex-grow: 1;
+        }
       }
     }
   }

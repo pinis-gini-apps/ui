@@ -60,6 +60,7 @@ import './scss/main.scss'
 import { createPortal } from 'react-dom'
 
 import Notification from './common/Notification/Notification'
+import ProjectsAlerts from './components/ProjectsAlerts/ProjectsAlerts'
 
 const Page = lazyRetry(() => import('./layout/Page/Page'))
 const CreateJobPage = lazyRetry(() => import('./components/CreateJobPage/CreateJobPage'))
@@ -151,6 +152,11 @@ const App = () => {
           </Route>
           <Route path="projects/:projectName" element={<Navigate replace to={PROJECT_MONITOR} />} />
           <Route path={`projects/:projectName/${PROJECT_MONITOR}`} element={<ProjectMonitor />} />
+
+          <Route path="projects/*">
+            <Route path="alerts" element={<ProjectsAlerts />} />
+            <Route path=":id/alerts" element={<ProjectsAlerts />} />
+          </Route>
 
           {!isNuclioModeDisabled && (
             <Route

@@ -55,14 +55,19 @@ const Breadcrumbs = ({ onClick = () => {} }) => {
   const projectTabs = useMemo(() => {
     return generateTabsList()
   }, [])
-
+  console.log(mlrunScreens)
   const projectsList = useMemo(() => {
     return generateProjectsList(projectStore.projectsNames.data)
   }, [projectStore.projectsNames.data])
 
   const urlItems = useMemo(() => {
-    if (params.projectName) {
+    console.log(location.pathname)
+
+    if ((params.projectName || params.id) && params.id !== '*') {
       const [projects, projectName, screenName] = location.pathname.split('/').slice(1, 4)
+      console.log(projects)
+      console.log(projectName)
+      console.log(screenName)
       const screen = mlrunScreens.find(screen => screen.id === screenName)
       const tab = projectTabs.find(tab =>
         location.pathname
@@ -86,7 +91,7 @@ const Breadcrumbs = ({ onClick = () => {} }) => {
       }
     }
   }, [location.pathname, params.projectName, mlrunScreens, projectTabs])
-
+  console.log(urlItems)
   const handleCloseDropdown = useCallback(
     event => {
       if (breadcrumbsRef.current && !breadcrumbsRef.current.contains(event.target)) {

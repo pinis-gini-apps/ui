@@ -21,7 +21,7 @@ import JobsCounters from '../../../elements/ProjectsMonitoringCounters/JobsCount
 import PageHeader from '../../../elements/PageHeader/PageHeader'
 import ScheduledJobsCounters from '../../../elements/ProjectsMonitoringCounters/ScheduledJobsCounters'
 import WorkflowsCounters from '../../../elements/ProjectsMonitoringCounters/WorkflowsCounters'
-
+import AlertsCounters from '../../../elements/ProjectsMonitoringCounters/AlertsCounters'
 import './projectsMonitoring.scss'
 
 const ProjectsMonitoring = () => {
@@ -46,6 +46,7 @@ const ProjectsMonitoring = () => {
         {/* Todo: Delete WorkflowsCounters after ML-5460 is impplemented */}
         <WorkflowsCounters />
         <ScheduledJobsCounters />
+        <AlertsCounters />
         {/* Todo: implement as part of ML-5460
         <ModelEndpointsCounters /> */}
       </div>

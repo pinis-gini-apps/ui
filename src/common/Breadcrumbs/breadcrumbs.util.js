@@ -42,6 +42,10 @@ export const generateMlrunScreens = params =>
           id: PROJECT_MONITOR
         },
         {
+          label: 'alerts',
+          id: 'alerts'
+        },
+        {
           label: 'Quick actions',
           id: PROJECT_QUICK_ACTIONS_PAGE
         },

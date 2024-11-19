@@ -176,7 +176,7 @@ export const pollDeletingProjects = (terminatePollRef, deletingProjects, refresh
     )
 
     if (finishedTasks.length > 0) {
-      const tasksToExclude  = []
+      const tasksToExclude = []
 
       finishedTasks.forEach(task => {
         tasksToExclude.push(task.metadata.name)
@@ -220,7 +220,13 @@ export const pollDeletingProjects = (terminatePollRef, deletingProjects, refresh
 }
 
 export const generateMonitoringCounters = (data, dispatch) => {
+  // console.log(data)
   const monitoringCounters = {
+    alerts: {
+      endpoint: 0,
+      job: 0,
+      application: 0
+    },
     jobs: {
       all: 0,
       completed: 0,
@@ -242,25 +248,32 @@ export const generateMonitoringCounters = (data, dispatch) => {
 
   data.forEach(project => {
     monitoringCounters.jobs.all +=
-      project.runs_completed_recent_count || 0 +
-      project.runs_failed_recent_count || 0 +
-      project.runs_running_count || 0
+      project.runs_completed_recent_count ||
+      0 + project.runs_failed_recent_count ||
+      0 + project.runs_running_count ||
+      0
     monitoringCounters.jobs.completed += project.runs_completed_recent_count || 0
     monitoringCounters.jobs.failed += project.runs_failed_recent_count || 0
     monitoringCounters.jobs.running += project.runs_running_count || 0
     monitoringCounters.workflows.all +=
-      project.pipelines_completed_recent_count || 0 +
-      project.pipelines_failed_recent_count || 0 +
-      project.pipelines_running_count || 0
+      project.pipelines_completed_recent_count ||
+      0 + project.pipelines_failed_recent_count ||
+      0 + project.pipelines_running_count ||
+      0
     monitoringCounters.workflows.completed += project.pipelines_completed_recent_count || 0
     monitoringCounters.workflows.failed += project.pipelines_failed_recent_count || 0
     monitoringCounters.workflows.running += project.pipelines_running_count || 0
     monitoringCounters.scheduled.all +=
-      project.distinct_scheduled_jobs_pending_count || 0 +
-      project.distinct_scheduled_pipelines_pending_count || 0
+      project.distinct_scheduled_jobs_pending_count ||
+      0 + project.distinct_scheduled_pipelines_pending_count ||
+      0
     monitoringCounters.scheduled.jobs += project.distinct_scheduled_jobs_pending_count || 0
-    monitoringCounters.scheduled.workflows += project.distinct_scheduled_pipelines_pending_count || 0
+    monitoringCounters.scheduled.workflows +=
+      project.distinct_scheduled_pipelines_pending_count || 0
+    monitoringCounters.alerts.endpoint += project.endpoint_alerts_count || 1 // TODO: Replace with 0 once the API is ready
+    monitoringCounters.alerts.job += project.job_alerts_count || 0
+    monitoringCounters.alerts.application += project.other_alerts_count || 2 // TODO: Replace with 0 once the API is ready
   })
-
+  // console.log(monitoringCounters)
   dispatch(projectsAction.setJobsMonitoringData(monitoringCounters))
 }

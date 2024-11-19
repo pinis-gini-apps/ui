@@ -21,6 +21,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { set } from 'lodash'
 
 import {
+  ALERTS_FILTERS,
   ARTIFACT_OTHER_TYPE,
   CONSUMER_GROUPS_FILTER,
   CONSUMER_GROUP_FILTER,
@@ -28,6 +29,8 @@ import {
   DATASET_TYPE,
   DATES_FILTER,
   DATE_FILTER_ANY_TIME,
+  EVENT_TYPE,
+  ENTITY_TYPE,
   FILES_FILTERS,
   FILTER_ALL_ITEMS,
   FILTER_MENU,
@@ -43,12 +46,17 @@ import {
   MODEL_TYPE,
   NAME_FILTER,
   PROJECT_FILTER,
+  SEVERITY,
   SHOW_ITERATIONS,
   SHOW_UNTAGGED_FILTER,
   STATUS_FILTER,
   TAG_FILTER,
   TAG_FILTER_LATEST,
-  TYPE_FILTER
+  TYPE_FILTER,
+  ENTITY_ID,
+  JOB,
+  ENDPOINT_APPLICATION,
+  ENDPOINT_RESULT
 } from '../constants'
 import {
   NEXT_24_HOUR_DATE_OPTION,
@@ -119,11 +127,11 @@ const initialState = {
     [FUNCTION_FILTERS]: {
       values: {
         [NAME_FILTER]: '',
-        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION),
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION)
       },
       initialValues: {
         [NAME_FILTER]: '',
-        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION),
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION)
       }
     },
     [CONSUMER_GROUPS_FILTER]: {
@@ -140,6 +148,16 @@ const initialState = {
       },
       initialValues: {
         [NAME_FILTER]: ''
+      }
+    },
+    [ALERTS_FILTERS]: {
+      values: {
+        [NAME_FILTER]: '',
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION)
+      },
+      initialValues: {
+        [NAME_FILTER]: '',
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION)
       }
     }
   },
@@ -220,6 +238,28 @@ const initialState = {
         [LABELS_FILTER]: '',
         [PROJECT_FILTER]: '',
         [TYPE_FILTER]: FILTER_ALL_ITEMS
+      }
+    },
+    [ALERTS_FILTERS]: {
+      initialValues: {
+        [PROJECT_FILTER]: FILTER_ALL_ITEMS,
+        [ENTITY_TYPE]: FILTER_ALL_ITEMS,
+        [ENTITY_ID]: '',
+        [JOB]: '',
+        [ENDPOINT_APPLICATION]: '',
+        [ENDPOINT_RESULT]: '',
+        [SEVERITY]: [FILTER_ALL_ITEMS],
+        [EVENT_TYPE]: FILTER_ALL_ITEMS
+      },
+      values: {
+        [PROJECT_FILTER]: FILTER_ALL_ITEMS,
+        [ENTITY_TYPE]: FILTER_ALL_ITEMS,
+        [ENTITY_ID]: '',
+        [JOB]: '',
+        [ENDPOINT_APPLICATION]: '',
+        [ENDPOINT_RESULT]: '',
+        [SEVERITY]: [FILTER_ALL_ITEMS],
+        [EVENT_TYPE]: FILTER_ALL_ITEMS
       }
     }
   }

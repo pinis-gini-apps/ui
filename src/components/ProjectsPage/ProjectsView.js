@@ -72,7 +72,7 @@ const ProjectsView = ({
     'projects',
     (createProject || convertedYaml.length > 0) && 'projects-modal_opened'
   )
-
+  const alertsProjects = { tutorial: 200 }
   return (
     <div className={projectsClassNames}>
       {(projectStore.loading || projectStore.project.loading || tasksStore.loading) && <Loader />}
@@ -176,6 +176,7 @@ const ProjectsView = ({
                   <ProjectCard
                     actionsMenu={actionsMenu}
                     key={project.id || project.metadata.name}
+                    totalAlerts={alertsProjects[project.metadata.name]}
                     project={project}
                     projectSummary={projectStore.projectsSummary.data.find(
                       item => item.name === project.metadata.name
