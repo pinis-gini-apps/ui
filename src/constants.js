@@ -67,7 +67,7 @@ export const FAIL_STATE = 'fail'
 export const FAILED_STATE = 'failed'
 
 /*=========== PAGES & TABS =============*/
-
+//
 export const PROJECTS_PAGE = 'PROJECTS'
 export const PROJECTS_PAGE_PATH = 'projects'
 export const PROJECTS_SETTINGS_PAGE = 'SETTINGS'
