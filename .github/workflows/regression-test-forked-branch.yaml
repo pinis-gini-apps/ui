@@ -13,7 +13,7 @@
 # limitations under the License.
 #
 name: Regression Tests Forked Branch
-
+#
 on:
   workflow_dispatch:
   push:
@@ -88,6 +88,7 @@ jobs:
           elif [ "${{ steps.upload_reports.outcome }}" = "failure" ]; then
             FAILED_STEP="Upload test reports" 
           fi
+          echo "failed_step=$FAILED_STEP" >> $GITHUB_OUTPUT
           echo "failed_step=$FAILED_STEP" >> $GITHUB_OUTPUT
 
   comment-pr:
