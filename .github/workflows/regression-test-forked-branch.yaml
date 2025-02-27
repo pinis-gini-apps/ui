@@ -107,6 +107,7 @@ jobs:
     env:
       JOB_STATUS: ${{ needs.run-regression-tests.result }}
       FAILED_STEP: ${{ needs.run-regression-tests.outputs.failed_step }}
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
     steps:
       - name: Post PR comment (success, failure, or cancelled)
         uses: actions/github-script@v6
@@ -114,23 +115,29 @@ jobs:
           script: |
             const jobStatus = process.env.JOB_STATUS;
             const failedStep = process.env.FAILED_STEP;
-            
+
             const prOwner = context.payload.pull_request.head.repo.owner.login;
             const prRepo = context.payload.pull_request.head.repo.name;
-            
+
             if (jobStatus === 'success') {
               github.rest.issues.createComment({
                 owner: prOwner,
                 repo: prRepo,
                 issue_number: context.issue.number,
-                body: "**Regression Test workflow finished successfully.** ✅"
+                body: "**Regression Test workflow finished successfully.** ✅",
+                headers: {
+                  Authorization: `token ${process.env.GH_TOKEN}`
+                }
               });
             } else if (jobStatus === 'cancelled') {
               github.rest.issues.createComment({
                 owner: prOwner,
                 repo: prRepo,
                 issue_number: context.issue.number,
-                body: "**Regression Test workflow was cancelled.** ⚠️"
+                body: "**Regression Test workflow was cancelled.** ⚠️",
+                headers: {
+                  Authorization: `token ${process.env.GH_TOKEN}`
+                }
               });
             } else if (jobStatus === 'failure') {
               let body = "**Regression Test workflow failed.** ❌";
@@ -143,6 +150,9 @@ jobs:
                 owner: prOwner,
                 repo: prRepo,
                 issue_number: context.issue.number,
-                body: body
+                body: body,
+                headers: {
+                  Authorization: `token ${process.env.GH_TOKEN}`
+                }
               });
             }
