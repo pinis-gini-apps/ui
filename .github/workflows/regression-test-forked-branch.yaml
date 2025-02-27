@@ -94,52 +94,55 @@ jobs:
           fi
           echo "failed_step=$FAILED_STEP" >> $GITHUB_OUTPUT
 
-comment-pr:
-  name: Regression Test - comment on PR
-  runs-on: ubuntu-24.04
-  needs: run-regression-tests
-  if: >
-    github.event_name == 'pull_request' &&
-    github.event.pull_request.head.repo.fork == true && always()
-  env:
-    JOB_STATUS: ${{ needs.run-regression-tests.result }}
-    FAILED_STEP: ${{ needs.run-regression-tests.outputs.failed_step }}
-  steps:
-    - name: Post PR comment (success, failure, or cancelled)
-      uses: actions/github-script@v6
-      with:
-        script: |
-          const jobStatus = process.env.JOB_STATUS;
-          const failedStep = process.env.FAILED_STEP;
 
-          const prOwner = context.payload.pull_request.head.repo.owner.login;
-          const prRepo = context.payload.pull_request.head.repo.name;
 
-          if (jobStatus === 'success') {
-            github.rest.issues.createComment({
-              owner: prOwner,
-              repo: prRepo,
-              issue_number: context.issue.number,
-              body: "**Regression Test workflow finished successfully.** ✅"
-            });
-          } else if (jobStatus === 'cancelled') {
-            github.rest.issues.createComment({
-              owner: prOwner,
-              repo: prRepo,
-              issue_number: context.issue.number,
-              body: "**Regression Test workflow was cancelled.** ⚠️"
-            });
-          } else if (jobStatus === 'failure') {
-            let body = "**Regression Test workflow failed.** ❌";
-            if (failedStep) {
-              body += `\nFailed step: **${failedStep}**`;
-            } else {
-              body += "\nFailed step: Unknown";
+
+  comment-pr:
+    name: Regression Test - comment on PR
+    runs-on: ubuntu-24.04
+    needs: run-regression-tests
+    if: >
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.fork == true && always()
+    env:
+      JOB_STATUS: ${{ needs.run-regression-tests.result }}
+      FAILED_STEP: ${{ needs.run-regression-tests.outputs.failed_step }}
+    steps:
+      - name: Post PR comment (success, failure, or cancelled)
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const jobStatus = process.env.JOB_STATUS;
+            const failedStep = process.env.FAILED_STEP;
+            
+            const prOwner = context.payload.pull_request.head.repo.owner.login;
+            const prRepo = context.payload.pull_request.head.repo.name;
+            
+            if (jobStatus === 'success') {
+              github.rest.issues.createComment({
+                owner: prOwner,
+                repo: prRepo,
+                issue_number: context.issue.number,
+                body: "**Regression Test workflow finished successfully.** ✅"
+              });
+            } else if (jobStatus === 'cancelled') {
+              github.rest.issues.createComment({
+                owner: prOwner,
+                repo: prRepo,
+                issue_number: context.issue.number,
+                body: "**Regression Test workflow was cancelled.** ⚠️"
+              });
+            } else if (jobStatus === 'failure') {
+              let body = "**Regression Test workflow failed.** ❌";
+              if (failedStep) {
+                body += `\nFailed step: **${failedStep}**`;
+              } else {
+                body += "\nFailed step: Unknown";
+              }
+              github.rest.issues.createComment({
+                owner: prOwner,
+                repo: prRepo,
+                issue_number: context.issue.number,
+                body: body
+              });
             }
-            github.rest.issues.createComment({
-              owner: prOwner,
-              repo: prRepo,
-              issue_number: context.issue.number,
-              body: body
-            });
-          }
