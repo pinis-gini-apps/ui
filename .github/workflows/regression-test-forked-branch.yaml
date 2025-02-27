@@ -24,6 +24,10 @@ on:
     branches:
       - remote-pre-merge-tests
 
+permissions:
+  pull-requests: write
+  issues: write
+
 jobs:
   run-regression-tests:
     runs-on: ubuntu-24.04
