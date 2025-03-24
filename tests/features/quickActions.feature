@@ -4,6 +4,7 @@ Feature: Quick actions Page
 
     @MLPH
     @smoke
+    #test for PR
     Scenario: MLPH001 - Check all mandatory components on Project Home
         * set tear-down property "project" created with "automation-test-1002" value
         * create "automation-test-1002" MLRun Project with code 201
