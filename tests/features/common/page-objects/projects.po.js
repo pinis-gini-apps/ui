@@ -102,7 +102,8 @@ const ProjectsTableSelector = {
 }
 
 module.exports = {
-  Retrieving_projects_message: By.css('[data-testid=no-data]'),
+  Retrieving_Projects_Message: By.css('[data-testid=no-data]'),
+  No_Archived_Projects_Message: By.css('.no-filtered-data'),
   New_Project_Button: By.css(
     '.projects__wrapper .projects-content-header-item .page-actions-container .btn_register'
   ),
@@ -111,7 +112,7 @@ module.exports = {
   Project_Card_Alert_Icon: By.css('.project-card__header-title .project-card__alert'),
   Overlay: By.css('#overlay_container .chip-block-hidden_visible'),
   Active_Projects_Button: By.css(
-    '.projects__wrapper .projects-content-header .projects-content-header-item [data-testid="active"] span'
+    '.projects__wrapper .projects-content-header .projects-content-header-item [data-testid="active"]'
   ),
   Archive_Projects_Button: By.css(
     '.projects__wrapper .projects-content-header .projects-content-header-item [data-testid=archived] a'
@@ -131,9 +132,7 @@ module.exports = {
   ),
   Projects_Monitoring_Container: {
     Monitoring_Container: By.css('.projects .projects-monitoring-container'),
-    Monitoring_Container_Title: By.css(
-      '.projects-monitoring-container .page-header__title'
-    ),
+    Monitoring_Container_Title: By.css('.projects-monitoring-container .page-header__title'),
     Monitoring_Jobs_Box: By.css(
       '.projects-monitoring-container .projects-monitoring-stats .stats-card:nth-of-type(1)'
     ),
@@ -152,9 +151,7 @@ module.exports = {
       '.projects-monitoring-stats .stats-card:nth-of-type(1) .stats-card__title'
     ),
     Filtering_Time_Period: By.css('.stats-card:nth-of-type(1) .stats-card__col > div > span'),
-    Total_Counter_Title: By.css(
-      '.stats-card:nth-of-type(1) .stats-card__col > div > div > span'
-    ),
+    Total_Counter_Title: By.css('.stats-card:nth-of-type(1) .stats-card__col > div > div > span'),
     Total_Counter_Number: By.css(
       '.stats-card:nth-of-type(1) .stats-card__col > div > div .stats__counter'
     ),
@@ -174,13 +171,13 @@ module.exports = {
       '.stats-card:nth-of-type(1) [data-testid="jobs_failed_counter"] .stats__subtitle'
     ),
     Counter_Failed_Status_Icon: By.css(
-      '.stats-card:nth-of-type(1) [data-testid="jobs_failed_counter"] .state-failed' 
+      '.stats-card:nth-of-type(1) [data-testid="jobs_failed_counter"] .state-failed'
     ),
     Counter_Completed_Status_Number: By.css(
-      '.stats-card:nth-of-type(1) [data-testid="jobs_completed_counter"] .stats__counter' 
+      '.stats-card:nth-of-type(1) [data-testid="jobs_completed_counter"] .stats__counter'
     ),
     Counter_Completed_Status_Subtitle: By.css(
-      '.stats-card:nth-of-type(1) [data-testid="jobs_completed_counter"] .stats__subtitle' 
+      '.stats-card:nth-of-type(1) [data-testid="jobs_completed_counter"] .stats__subtitle'
     ),
     Counter_Completed_Status_Icon: By.css(
       '.stats-card:nth-of-type(1) [data-testid="jobs_completed_counter"] .state-completed'
@@ -191,9 +188,7 @@ module.exports = {
       '.projects-monitoring-stats .stats-card:nth-of-type(2) .stats-card__title'
     ),
     Filtering_Time_Period: By.css('.stats-card:nth-of-type(2) .stats-card__col > div > span'),
-    Total_Counter_Title: By.css(
-      '.stats-card:nth-of-type(2) .stats-card__col > div > div > span'
-    ),
+    Total_Counter_Title: By.css('.stats-card:nth-of-type(2) .stats-card__col > div > div > span'),
     Total_Counter_Number: By.css(
       '.stats-card:nth-of-type(2) .stats-card__col > div > div .stats__counter'
     ),
@@ -236,9 +231,7 @@ module.exports = {
     Total_Workflows_Counter_Title: By.css(
       '.stats-card:nth-of-type(3) [data-testid="scheduled_wf_counter"] .stats__subtitle'
     ),
-    Total_Scheduled_Title: By.css(
-      '.stats-card:nth-of-type(3) .stats-card__col > div > div > span'
-    ),
+    Total_Scheduled_Title: By.css('.stats-card:nth-of-type(3) .stats-card__col > div > div > span'),
     Total_Job_Counter_Number: By.css(
       '.stats-card:nth-of-type(3) [data-testid="scheduled_jobs_counter"] .stats__counter'
     ),
@@ -275,9 +268,7 @@ module.exports = {
     Total_Application_Counter_Title: By.css(
       '.stats-card:nth-of-type(4) [data-testid="alerts_application_counter"] .stats__subtitle'
     ),
-    Total_Alerts_Title: By.css(
-      '.stats-card:nth-of-type(4) .stats-card__col > div > div > span'
-    ),
+    Total_Alerts_Title: By.css('.stats-card:nth-of-type(4) .stats-card__col > div > div > span'),
     Total_Alerts_Number: By.css(
       '.stats-card:nth-of-type(4) .stats-card__col > div > div .stats__counter'
     )

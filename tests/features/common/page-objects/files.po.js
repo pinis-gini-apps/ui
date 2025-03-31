@@ -59,10 +59,8 @@ const filesTable = {
       root: '.table-row',
       fields: {
         name: '.table-body__cell:nth-of-type(1) a .name-wrapper .link',
-        uid:  '.table-body__cell:nth-of-type(1) a .name-wrapper .link',
+        uid: '.table-body__cell:nth-of-type(1) a .name-wrapper .link',
         tag: '.table-body__cell:nth-of-type(1) a .item-tag',
-        name_expand_btn: '.table-body__cell:nth-of-type(1) a .name-wrapper .item-tag',
-        expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
         type: '.table-body__cell:nth-of-type(2) .data-ellipsis',
         labels: {
           componentType: dropdownComponent,
@@ -103,9 +101,13 @@ module.exports = {
         true
       )
     ),
-    Table_Refresh_Button: By.css('.content .content__action-bar-wrapper [data-testid="refresh-tooltip-wrapper"]'),
+    Table_Refresh_Button: By.css(
+      '.content .content__action-bar-wrapper [data-testid="refresh-tooltip-wrapper"]'
+    ),
     Files_Table: commonTable(filesTable),
-    Register_File_Button: By.css('.content__action-bar-wrapper .action-bar__actions .action-button'),
+    Register_File_Button: By.css(
+      '.content__action-bar-wrapper .action-bar__actions .action-button'
+    ),
     Table_FilterBy_Button: By.css('[data-testid="filter-menu-btn"]'),
     History_Back_Button: By.css('.history-back-link .history-back-link__icon'),
     Version_History_Title: By.css(

@@ -285,10 +285,13 @@ const JobsTable = React.forwardRef(
       params.jobName
     ])
 
-    const refreshJobsWithFilters = useCallback((useInitialFilter) => {
-      const initialFilters = getInitialFiltersByConfig(filtersConfig)
-      refreshJobs( useInitialFilter ? initialFilters : filters)
-    }, [filters, refreshJobs, filtersConfig])
+    const refreshJobsWithFilters = useCallback(
+      useInitialFilter => {
+        const initialJobFilters = getInitialFiltersByConfig(filtersConfig)
+        refreshJobs(useInitialFilter ? initialJobFilters : filters, { forceFetchJobs: true })
+      },
+      [filters, refreshJobs, filtersConfig]
+    )
 
     useEffect(() => {
       if (
@@ -424,7 +427,11 @@ const JobsTable = React.forwardRef(
                       ? 'Close detailed view and uncheck Auto Refresh to view more results'
                       : ''
                 }
-                disableNextDoubleBtn={filtersStore.autoRefresh || autoRefreshPrevValue}
+                disableNextDoubleBtn={
+                  (filtersStore.autoRefresh && !params.jobName) ||
+                  (params.jobName && filtersStore.internalAutoRefresh) ||
+                  autoRefreshPrevValue
+                }
               />
             </>
           )

@@ -733,7 +733,7 @@ module.exports = {
     ),
     Cross_Cancel_Button: commonCrossCancelButton,
     Cancel_Button: commonCancelButton,
-    Create_Button: By.css('.pop-up-dialog .btn-secondary'),
+    Create_Button: By.css('.pop-up-dialog .btn-primary'),
     Error_Message: By.css('.pop-up-dialog .error__message'),
     New_Project_Labels_Table: commonTable(newProjectLabelsTable),
     Add_Label_Button: By.css(
@@ -797,7 +797,7 @@ module.exports = {
       )
     },
     Metrics_Selector_Counter: By.css('[data-testid="metrics-selector-counter"]'),
-    Metrics_Apply_Button: By.css('[data-testid="metrics-selector-buttons"] .btn-secondary'),
+    Metrics_Apply_Button: By.css('[data-testid="metrics-selector-buttons"] .btn-primary'),
     Metrics_Clear_Button: By.css('[data-testid="metrics-selector-buttons"] .btn-tertiary')
   },
   modalTransitionPopup: {
@@ -805,7 +805,7 @@ module.exports = {
     Data_Status: By.css('.table__item-popup .item-header__status-row .updated'),
     State_Icon: By.css('[data-testid="modal"] [data-testid="detailsPanel"] .state'),
     Refresh_Button: By.css('.table__item-popup .item-header__buttons [data-testid="refresh"]'),
-    Tab_Tip : By.css('[data-testid="detailsPanel"] [data-testid="tip"]'),
+    Tab_Tip: By.css('[data-testid="detailsPanel"] [data-testid="tip"]'),
     Action_Menu: actionMenu(actionMenuStructureTransitionPopup),
     Cross_Close_Button: By.css(
       '.table__item-popup .item-header__buttons [data-testid="details-close-btn"]'
@@ -844,7 +844,7 @@ module.exports = {
     Filter_Dropdown: {
       Title: By.css('.hub-filter h3.filters-wizard__header'),
       Clear_Button: By.css('.hub-filter .filters-wizard__modal-buttons .btn-tertiary'),
-      Apply_Button: By.css('.hub-filter .filters-wizard__modal-buttons .btn-secondary')
+      Apply_Button: By.css('.hub-filter .filters-wizard__modal-buttons .btn-primary')
     },
     Category_Selector_Dropdown: categorySelect,
     Checkbox_Category_Selector: commonTable(checkboxCategorySelector),
@@ -1451,8 +1451,12 @@ module.exports = {
   },
   jobLogsPopup: {
     Title: By.css('#overlay_container .alerts-logs .modal__content .modal__header-title'),
-    Cross_Cancel_Button: By.css('#overlay_container .alerts-logs .modal__header-button .data-ellipsis'),
-    Alerts_Logs_Container: By.css('#overlay_container .alerts-logs .modal__body .table__item-logs-container')
+    Cross_Cancel_Button: By.css(
+      '#overlay_container .alerts-logs .modal__header-button .data-ellipsis'
+    ),
+    Alerts_Logs_Container: By.css(
+      '#overlay_container .alerts-logs .modal__body .table__item-logs-container'
+    )
   },
   confirmPopup: {
     Title: By.css('.pop-up-dialog .pop-up-dialog__header'),
@@ -1673,33 +1677,33 @@ module.exports = {
     ),
     Entity_ID_Filter_Input: inputGroup(
       generateInputGroup(
-        '#overlay_container [data-testid="pop-up-dialog"] [data-testid="entity-form-field-input"]', 
-        true, 
-        false, 
+        '#overlay_container [data-testid="pop-up-dialog"] [data-testid="entity-form-field-input"]',
+        true,
+        false,
         true
       )
     ),
     Endpoint_Application_Filter_Input: inputGroup(
       generateInputGroup(
-        '#overlay_container [data-testid="pop-up-dialog"] [data-testid="endpoint-application-form-field-input"]', 
-        true, 
-        false, 
+        '#overlay_container [data-testid="pop-up-dialog"] [data-testid="endpoint-application-form-field-input"]',
+        true,
+        false,
         true
       )
     ),
     Endpoint_Result_Filter_Input: inputGroup(
       generateInputGroup(
-        '#overlay_container [data-testid="pop-up-dialog"] [data-testid="endpoint-result-form-field-input"]', 
-        true, 
-        false, 
+        '#overlay_container [data-testid="pop-up-dialog"] [data-testid="endpoint-result-form-field-input"]',
+        true,
+        false,
         true
       )
     ),
     Job_Name_Filter_Input: inputGroup(
       generateInputGroup(
-        '#overlay_container [data-testid="pop-up-dialog"] [data-testid="job-name-form-field-input"]', 
-        true, 
-        false, 
+        '#overlay_container [data-testid="pop-up-dialog"] [data-testid="job-name-form-field-input"]',
+        true,
+        false,
         true
       )
     ),
@@ -1890,7 +1894,7 @@ module.exports = {
         true
       )
     ),
-    Add_Button: By.css('[data-testid="modal"] .modal__footer .btn-secondary'),
+    Add_Button: By.css('[data-testid="modal"] .modal__footer .btn-primary'),
     Cancel_Button: By.css('[data-testid="modal"] .modal__footer .btn-tertiary')
   },
   deleteArtifactPopup: {
@@ -1917,7 +1921,7 @@ module.exports = {
   },
   schedulePopUp: {
     Schedule_For_Later: {
-      Schedule_Button: By.css('.schedule-wizard .modal__footer-actions .btn-secondary'),
+      Schedule_Button: By.css('.schedule-wizard .modal__footer-actions .btn-primary'),
       Time_unit_Dropdown: dropdownComponent(
         generateDropdownGroup(
           '.simple-schedule-item .form-field-select .form-field__wrapper',

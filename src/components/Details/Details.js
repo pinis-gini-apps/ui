@@ -279,7 +279,7 @@ const Details = ({
       resetChanges()
 
       const changes = cloneDeep(detailsStore.changes)
-      
+
       // todo [redux-toolkit] rework it after redux-toolkit will be added to the details store. Need to remove setTimeout and use a Promise that resolves after the state is updated.
       setTimeout(() => {
         applyDetailsChangesCallback(changes, selectedItem)
@@ -296,6 +296,7 @@ const Details = ({
   const cancelChanges = useCallback(() => {
     if (detailsStore.changes.counter > 0) {
       resetChanges()
+
       formRef.current.reset(formInitialValues)
     }
   }, [detailsStore.changes.counter, formInitialValues, resetChanges])
@@ -318,6 +319,12 @@ const Details = ({
     handleShowWarning,
     setFiltersWasHandled
   ])
+
+  const doNotLeavePage = useCallback(() => {
+    blocker.reset?.()
+    dispatch(detailsActions.showWarning(false))
+    window.dispatchEvent(new CustomEvent('cancelLeave'))
+  }, [blocker, dispatch])
 
   return (
     <Form form={formRef.current} onSubmit={() => {}}>
@@ -372,27 +379,19 @@ const Details = ({
           {(blocker.state === 'blocked' || detailsStore.showWarning) && (
             <ConfirmDialog
               cancelButton={{
-                handler: () => {
-                  blocker.reset?.()
-                  dispatch(detailsActions.showWarning(false))
-                },
-                label: detailsStore.filtersWasHandled ? "Don't refresh" : "Don't Leave",
+                handler: doNotLeavePage,
+                label: 'Cancel',
                 variant: TERTIARY_BUTTON
               }}
-              closePopUp={() => {
-                blocker.reset?.()
-                dispatch(detailsActions.showWarning(false))
-              }}
+              closePopUp={doNotLeavePage}
               confirmButton={{
                 handler: leavePage,
-                label: detailsStore.filtersWasHandled ? 'Refresh' : 'Leave',
+                label: 'Yes',
                 variant: PRIMARY_BUTTON
               }}
               header="You have unsaved changes."
               isOpen={blocker.state === 'blocked' || detailsStore.showWarning}
-              message={`${
-                detailsStore.filtersWasHandled ? 'Refreshing the list' : 'Leaving this page'
-              } will discard your changes.`}
+              message="Do you want to discard the changes?"
             />
           )}
           {!isDetailsPopUp && (

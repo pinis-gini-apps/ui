@@ -19,6 +19,8 @@ such restriction.
 */
 import React from 'react'
 
+import { isCommunityEdition } from '../../../utils/helper'
+
 import { ReactComponent as DB } from 'igz-controls/images/db-icon.svg'
 
 export const EXTERNAL_OFFLINE = 'externalOffline'
@@ -53,7 +55,7 @@ export const checkboxModels = {
 }
 
 export const onlineKindOptions = [
-  { label: 'V3IO', id: NOSQL, icon: <DB /> },
+  ...(isCommunityEdition() ? [] : [{ label: 'V3IO', id: NOSQL, icon: <DB /> }]),
   { label: 'REDIS', id: REDISNOSQL, icon: <DB /> }
 ]
 
@@ -108,7 +110,7 @@ export const partitionRadioButtonsInitialState = {
 
 export const onlineKindDataInitialState = {
   name: 'nosql',
-  kind: 'nosql',
+  kind: isCommunityEdition() ? REDISNOSQL : 'nosql',
   online: true,
   path: ''
 }
@@ -160,7 +162,7 @@ export const generatePath = (prefixes, project, kind, name, suffix) => {
     return `${path.replace(
       /{project}|{name}|{kind}/gi,
       matchToReplace =>
-        ({ '{project}': project, '{name}': name || '{name}', '{kind}': kind }[matchToReplace])
+        ({ '{project}': project, '{name}': name || '{name}', '{kind}': kind })[matchToReplace]
     )}/sets/${name || '{name}'}${suffix ? '.' + suffix : ''}`
   }
 
@@ -236,6 +238,6 @@ export const getInvalidParquetPathMessage = parquet => {
   return parquet.partitioned && /\.\w*\s*$/.test(parquet.path)
     ? 'The partitioned Parquet target for storey engine must be a directory. (The directory name must not end in .parquet/.pq.)'
     : !parquet.partitioned && !/\.parquet\s*$|\.pq\s*$/.test(parquet.path)
-    ? 'The Parquet target for storey engine file path must have a .parquet/.pq suffix.'
-    : 'This field is invalid.'
+      ? 'The Parquet target for storey engine file path must have a .parquet/.pq suffix.'
+      : 'This field is invalid.'
 }

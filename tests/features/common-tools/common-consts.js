@@ -19,12 +19,7 @@ such restriction.
 */
 module.exports = {
   Project: {
-    Create_New_Options: [
-      'Batch run',
-      'Feature set',
-      'Register artifact',
-      'Register dataset'
-    ],
+    Create_New_Options: ['Batch run', 'Feature set', 'Register artifact', 'Register dataset'],
     Create_New_Options_Demo: [
       'Batch run',
       'ML function',
@@ -47,7 +42,8 @@ module.exports = {
   },
   Feature_Store: {
     Tab_List: ['Feature Sets', 'Features', 'Feature Vectors'],
-    Delete_Feature_Vector_Message: /Are you sure you want to delete the feature vector "(.+?)"\?. You cannot restore a feature vector after deleting it./,
+    Delete_Feature_Vector_Message:
+      /Are you sure you want to delete the feature vector "(.+?)"\?. You cannot restore a feature vector after deleting it./
   },
   Models: {
     Tab_List: ['Models', 'Model Endpoints', 'Real-Time Pipelines'],
@@ -104,12 +100,19 @@ module.exports = {
     ]
   },
   Common_Lists: {
-    Action_Menu_List: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete', 'Delete all versions'],
+    Action_Menu_List: [
+      'Add a tag',
+      'Download',
+      'Copy URI',
+      'View YAML',
+      'Delete',
+      'Delete all versions'
+    ],
     Action_Menu_List_Version_History: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete'],
     Action_Menu_List_Expanded: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete all'],
     Action_Menu_List_Dataset_Transition_Popup: ['Download', 'Copy URI', 'View YAML'],
     Action_Menu_List_Function_Transition_Popup: ['View YAML'],
-    Action_Menu_List_Run_Transition_Popup: ['Run\'s resource monitoring', 'View YAML'],
+    Action_Menu_List_Run_Transition_Popup: ["Run's resource monitoring", 'View YAML'],
     Action_Menu_List_Feature_Set_Transition_Popup: ['View YAML'],
     Handler_List: ['train'],
     Pods_Priority_List: ['Low', 'Medium', 'High'],
@@ -157,13 +160,7 @@ module.exports = {
       'Severity:',
       'Job:'
     ],
-    Overview_General_Headers_PerProject: [
-      'Job Name:',
-      'Type:',
-      'Timestamp:',
-      'Severity:',
-      'Job:'
-    ],
+    Overview_General_Headers_PerProject: ['Job Name:', 'Type:', 'Timestamp:', 'Severity:', 'Job:'],
     Overview_Trigger_Criteria_Headers: ['Trigger criteria count:', 'Trigger criteria time period:']
   },
   Alerts_Endpoint_Info_Pane: {
@@ -227,7 +224,8 @@ module.exports = {
   },
   Files_Info_Pane: {
     Tab_List: ['Overview', 'Preview'],
-    Info_Banner_Message: /The (.+?) is not in the filtered list\. Closing the details panel will return you to the current list\./,
+    Info_Banner_Message:
+      /The (.+?) is not in the filtered list\. Closing the details panel will return you to the current list\./,
     Overview_General_Headers: [
       'Hash:',
       'Key:',
@@ -253,12 +251,10 @@ module.exports = {
       'Iter:',
       'Kind:',
       'Size:',
-      'Label column:',
       'Path:',
       'URI:',
       'Model file:',
       'Feature vector:',
-      'UID:',
       'Updated:',
       'Framework:',
       'Algorithm:',
@@ -279,18 +275,9 @@ module.exports = {
       'Feature set:',
       'Sampling percentage:',
       'Last prediction:',
-      'Error count:',
-      'Accuracy:',
-      'Stream path:'
+      'Error count:'
     ],
-    Overview_Drift_Headers: [
-      'Mean TVD:',
-      'Mean Hellinger:',
-      'Mean KLD:',
-      'Drift Actual Value:',
-      'Drift Detected Threshold:',
-      'Possible Drift Threshold:'
-    ]
+    Overview_Drift_Headers: ['Mean TVD:', 'Mean Hellinger:', 'Mean KLD:', 'Drift Actual Value:']
   },
   New_Feature_Store: {
     Kind_Options: ['HTTP', 'CSV', 'PARQUET'],
@@ -379,6 +366,7 @@ module.exports = {
       'These secrets are automatically available to all jobs belonging to this project that are not executed locally. See Secrets'
   },
   Common_Tooltips: {
+    Auto_Refresh: 'Uncheck Auto Refresh to view more results',
     FilterBy_Button: 'Filter',
     FilterBy_Button_1: 'Filter (1)',
     Show_All_Versions: 'Show all versions',
@@ -389,7 +377,8 @@ module.exports = {
     Failed_Jobs: 'Aborted, Error',
     Failed_Worflows: 'Error, Failed',
     Succeeded: 'Completed',
-    Statistics_Tab_Tip: 'Statistics reflect the data for the latest ingestion. \n Note that some values may be empty due to the use of different engines for calculating statistics',
+    Statistics_Tab_Tip:
+      'Statistics reflect the data for the latest ingestion. \n Note that some values may be empty due to the use of different engines for calculating statistics',
     Error_Content: 'Error. Columns must be same length as key',
     Error_Content_Workflow:
       "Error. 2021-08-29 20:01:36.582972: W tensorflow/stream_executor/platform/default/dso_loader.cc:60] Could not load dynamic library 'libcudart.so.11.0'; dlerror: libcudart.so.11.0: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/lib:/usr/local/lib: 2021-08-29 20:01:36.583019: I tensorflow/stream_executor/cuda/cudart_stub.cc:29] Ignore above cudart dlerror if you do not have a GPU set up on your machine. 2021-08-29 20:01:46.470042: I tensorflow/compiler/jit/xla_cpu_device.cc:41] Not creating XLA devices, tf_xla_enable_xla_devices not set 2021-08-29 20:01:46.470263: W tensorflow/stream_executor/platform/default/dso_loader.cc:60] Could not load dynamic library 'libcuda.so.1'; dlerror: libcuda.so.1: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/lib:/usr/local/lib: 2021-08-29 20:01:46.470283: W tensorflow/stream_executor/cuda/cuda_driver.cc:326] failed call to cuInit: UNKNOWN ERROR (303) 2021-08-29 20:01:46.470306: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (train-1193bacd-worker-0): /proc/driver/nvidia/version does not exist 2021-08-29 20:01:46.518782: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations: AVX2 FMA To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags. 2021-08-29 20:01:46.518927: I tensorflow/compiler/jit/xla_gpu_device.cc:99] Not creating XLA devices, tf_xla_enable_xla_devices not set Some callbacks may not have access to the averaged metrics, see https://github.com/horovod/horovod/issues/2440 Traceback (most recent call last): File \"/User/demos/image-classification-with-distributed-training/src-tfv2/horovod-training.py\", line 116, in <module> hvd.callbacks.LearningRateWarmupCallback(warmup_epochs=5, verbose=1), TypeError: __init__() missing 1 required positional argument: 'initial_lr'"
@@ -517,13 +506,13 @@ module.exports = {
       ' Note that some values may be empty due to the use of different engines for calculating statistics',
     Models_Statistics:
       'Note that some values may be empty due to the use of different engines for calculating statistics',
-    Model_Stats_Tip:  
+    Model_Stats_Tip:
       'Each model can have multiple versions, produced by multiple runs and given multiple tags.\n' +
       ' You can browse them in the Models page.',
-    FeatureSets_Stats_Tip:  
+    FeatureSets_Stats_Tip:
       'Each feature set can have multiple versions, produced by multiple runs and given multiple tags.\n' +
       ' You can browse them in the Feature store page.',
-    Artifacts_Stats_Tip:  
+    Artifacts_Stats_Tip:
       'Each artifact can have multiple versions, produced by multiple runs and given multiple tags.\n' +
       ' You can browse them in the Artifacts page.'
   },
@@ -551,15 +540,38 @@ module.exports = {
   },
   Jobs_And_Workflows: {
     Tab_List: ['Monitor Jobs', 'Monitor Workflows', 'Schedule'],
-    Job_Action_Menu_Options: ['Batch re-run', 'Run\'s resource monitoring', 'View YAML', 'Delete run'],
-    Job_List_Action_Menu_Options: ['Batch re-run', 'Run\'s resource monitoring', 'View YAML', 'Delete run', 'Delete all runs'],
-    Job_Overview_Action_Menu_Options: ['View YAML', 'Run\'s resource monitoring', 'Batch re-run', 'Delete run'],
-    Running_Job_Action_Menu_Options: ['Run\'s resource monitoring', 'Abort', 'View YAML'],
-    Delete_Run_Message: /Are you sure you want to delete the run with the UID "(.+?)" of the job "(.+?)"\? Deleted runs can not be restored./,
-    Delete_All_Runs_Message: /Are you sure you want to delete all runs of the job "(.+?)"\? Deleted runs can not be restored./,
+    Job_Action_Menu_Options: [
+      'Batch re-run',
+      "Run's resource monitoring",
+      'View YAML',
+      'Delete run'
+    ],
+    Job_List_Action_Menu_Options: [
+      'Batch re-run',
+      "Run's resource monitoring",
+      'View YAML',
+      'Delete run',
+      'Delete all runs'
+    ],
+    Job_Overview_Action_Menu_Options: [
+      'View YAML',
+      "Run's resource monitoring",
+      'Batch re-run',
+      'Delete run'
+    ],
+    Running_Job_Action_Menu_Options: ["Run's resource monitoring", 'Abort', 'View YAML'],
+    Delete_Run_Message:
+      /Are you sure you want to delete the run with the UID "(.+?)" of the job "(.+?)"\? Deleted runs can not be restored./,
+    Delete_All_Runs_Message:
+      /Are you sure you want to delete all runs of the job "(.+?)"\? Deleted runs can not be restored./,
     Workflows_Action_Menu_Options: ['View YAML', 'Retry'],
     Workflows_Info_Pane_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'View YAML', 'Delete'],
-    Pending_Job_Action_Menu_Options: ['Batch re-run', 'Run\'s resource monitoring', 'Abort', 'View YAML'],
+    Pending_Job_Action_Menu_Options: [
+      'Batch re-run',
+      "Run's resource monitoring",
+      'Abort',
+      'View YAML'
+    ],
     Schedule_Action_Menu_Options: ['Run now', 'Edit', 'Delete', 'View YAML'],
     Workflows_Unsuccessful_Run_Message: 'Workflow did not run successfully\nRETRY'
   },
@@ -613,8 +625,34 @@ module.exports = {
     Status_Filter_Options: ['All', 'Completed', 'Running', 'Pending', 'Error', 'Aborted'],
     Entity_Type_Filter_Options: ['All', 'Job', 'Endpoint', 'Application'],
     Severity_Filter_Options: ['All', 'High', 'Medium', 'Low'],
-    Event_Type_Filter_Options: ['All', 'Job failed', 'Data drift detected', 'Data drift suspected', 'Conc drift detected', 'Conc drift suspected', 'MM performance detected', 'MM performance suspected', 'System performance detected', 'System performance suspected', 'MM app anomaly detected', 'MM app anomaly suspected', 'MM app failed'],
-    Event_Type_Endpoint_Filter_Options: ['All', 'Data drift detected', 'Data drift suspected', 'Conc drift detected', 'Conc drift suspected', 'MM performance detected', 'MM performance suspected', 'System performance detected', 'System performance suspected', 'MM app anomaly detected', 'MM app anomaly suspected'],
+    Event_Type_Filter_Options: [
+      'All',
+      'Job failed',
+      'Data drift detected',
+      'Data drift suspected',
+      'Conc drift detected',
+      'Conc drift suspected',
+      'MM performance detected',
+      'MM performance suspected',
+      'System performance detected',
+      'System performance suspected',
+      'MM app anomaly detected',
+      'MM app anomaly suspected',
+      'MM app failed'
+    ],
+    Event_Type_Endpoint_Filter_Options: [
+      'All',
+      'Data drift detected',
+      'Data drift suspected',
+      'Conc drift detected',
+      'Conc drift suspected',
+      'MM performance detected',
+      'MM performance suspected',
+      'System performance detected',
+      'System performance suspected',
+      'MM app anomaly detected',
+      'MM app anomaly suspected'
+    ],
     Event_Type_Job_Filter_Options: ['All', 'Job failed'],
     Event_Type_Application_Filter_Options: ['All', 'MM app failed'],
     Jobs_Status_Filter_Options: [
@@ -641,15 +679,10 @@ module.exports = {
       'All',
       'Job',
       'Workflow',
-      'Nuclio',
-      'Application',
-      'Serving',
       'Spark',
       'Horovod',
       'Dask',
-      'Databricks',
-      'Local',
-      'Handler'
+      'Databricks'
     ],
     Group_By_Filter_Options: ['None', 'Name'],
     Start_Time_Filter_Options: [
@@ -720,6 +753,9 @@ module.exports = {
   No_Data_Message: {
     Common_Message_Jobs_Monitoring:
       /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: test"/,
+    Common_Message_Monitor_Jobs_Name: /No data matches the filter: "Name: (.+?)"/,
+    Common_Message_Jobs_Monitoring_Workflow_Project:
+      /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: test"/,
     Common_Message_Jobs_Monitoring_Status:
       /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Status: (.+?)"/,
     Common_Message_Jobs_Monitoring_Type:
@@ -737,10 +773,14 @@ module.exports = {
     No_Data: 'No data to show',
     No_Features_Yet: 'No features found.',
     No_Consumer_Group_Yet: 'You haven’t created any consumer group yet',
-    No_Datasets_data: 'No data matches the filter: "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
-    No_Documents_data: 'No data matches the filter: "Version tag: latest, Show best iteration only: true"',
-    No_Files_data: 'No data matches the filter: "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
-    No_Models_data: 'No data matches the filter: "Version tag: latest, Labels: MY-KEY, Show best iteration only: true"',
+    No_Datasets_data:
+      'No data matches the filter: "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
+    No_Documents_data:
+      'No data matches the filter: "Version tag: latest, Show best iteration only: true"',
+    No_Files_data:
+      'No data matches the filter: "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
+    No_Models_data:
+      'No data matches the filter: "Version tag: latest, Labels: MY-KEY, Show best iteration only: true"',
     No_Pods_data: 'Pods not found, it is likely because Kubernetes removed these pods listing'
   },
   Preview_Pop_Up: {

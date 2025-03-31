@@ -37,10 +37,7 @@ import {
   SHOW_ITERATIONS
 } from '../../constants'
 import { PRIMARY_BUTTON } from 'igz-controls/constants'
-import {
-  applyTagChanges,
-  chooseOrFetchArtifact
-} from '../../utils/artifacts.util'
+import { applyTagChanges, chooseOrFetchArtifact } from '../../utils/artifacts.util'
 import { copyToClipboard } from '../../utils/copyToClipboard'
 import { getIsTargetPathValid } from '../../utils/createArtifactsContent'
 import { showArtifactsPreview } from '../../reducers/artifactsReducer'
@@ -186,7 +183,8 @@ export const generateActionsMenu = (
         label: 'Add a tag',
         hidden: isDetailsPopUp,
         icon: <TagIcon />,
-        onClick: handleAddTag
+        onClick: handleAddTag,
+        allowLeaveWarning: true
       },
       {
         label: 'Download',
@@ -254,7 +252,8 @@ export const generateActionsMenu = (
                     DATASET_TYPE
                   )
                 }
-              )
+              ),
+        allowLeaveWarning: true
       },
       {
         label: 'Delete all versions',
@@ -279,7 +278,8 @@ export const generateActionsMenu = (
                 true
               )
             }
-          )
+          ),
+        allowLeaveWarning: true
       }
     ],
     [

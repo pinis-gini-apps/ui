@@ -516,6 +516,7 @@ function createNewProject(req, res) {
   } else if (!collectedProjects.length) {
     const project = cloneDeep(projectTemplate)
     project.metadata.name = req.body.metadata.name
+    project.metadata.labels = req.body.metadata.labels
     project.metadata.created = currentDate.toISOString()
     project.spec.description = req.body.spec.description
     projects.projects.push(project)
@@ -917,7 +918,7 @@ function getAlerts(req, res) {
 
   if (req.query['entity']) {
     collectedAlerts = collectedAlerts.filter(schedule =>
-      schedule.name.includes(req.query['name'].slice(1))
+      schedule.entity_id.includes(req.query['entity'].slice(1, -1))
     )
   }
 
@@ -1337,7 +1338,7 @@ function getProjectsArtifactTags(req, res) {
 
   const tags = collectedArtifacts.map(artifact => artifact.metadata.tag)
 
-  res.send({project: req.params.project, tags})
+  res.send({ project: req.params.project, tags })
 }
 
 function getArtifacts(req, res) {

@@ -142,12 +142,13 @@ const modelsEndpointTable = {
         function: '.table-body__cell:nth-of-type(2) .data-ellipsis',
         version: '.table-body__cell:nth-of-type(3) .data-ellipsis',
         class: '.table-body__cell:nth-of-type(4) .data-ellipsis',
+        name_href: '.table-body__cell:nth-of-type(1) a',
         labels: {
           componentType: dropdownComponent,
           structure: generateDropdownGroup(
             '.table-body__cell:nth-of-type(5)',
             '.chip-block span.chips_button',
-            '.chip-block .data-ellipsis.tooltip-wrapper', 
+            '.chip-block .data-ellipsis.tooltip-wrapper',
             false,
             true
           )
@@ -246,7 +247,9 @@ const realTimePipelinesGraph = {
 }
 
 // Common components
-const tableRefreshButton = By.css('.content__action-bar-wrapper .action-bar [data-testid="refresh"]')
+const tableRefreshButton = By.css(
+  '.content__action-bar-wrapper .action-bar [data-testid="refresh"]'
+)
 const tableNameFilterInput = inputGroup(
   generateInputGroup(
     '.content .content__action-bar-wrapper .action-bar .name-filter .form-field-input',
@@ -266,7 +269,9 @@ module.exports = {
     ),
     Models_Table: commonTable(modelsTable),
     Overlay: By.css('#overlay_container .chip-block-hidden_visible'),
-    Register_Model_Button: By.css('.content__action-bar-wrapper .action-bar__actions .btn-tertiary'),
+    Register_Model_Button: By.css(
+      '.content__action-bar-wrapper .action-bar__actions .btn-tertiary'
+    ),
     Train_Model_Button: By.css('.content__action-bar-wrapper .action-bar__actions .btn-primary'),
     Table_FilterBy_Button: By.css('.models .action-bar [data-testid="filter-menu-btn"]'),
     History_Back_Button: By.css('.history-back-link .history-back-link__icon'),

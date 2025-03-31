@@ -84,8 +84,60 @@ const overallTable = {
         name: '[data-testid="name"] a .link',
         uid: '[data-testid="uid"] a .link',
         project_name: '[data-testid="projectName"] .data-ellipsis',
-        datetime:
-          '.table-body__cell:nth-of-type(1) a .date-uid-row .link-subtext:nth-of-type(1)',
+        datetime: '.table-body__cell:nth-of-type(1) a .date-uid-row .link-subtext:nth-of-type(1)',
+        duration: '.table-body__cell:nth-of-type(3) .data-ellipsis',
+        owner: '.table-body__cell:nth-of-type(4) .data-ellipsis',
+        action_menu: {
+          componentType: actionMenu,
+          structure: actionMenuStructure
+        },
+        labels: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.table-body__cell:nth-of-type(7)',
+            '.chip-block span.chips_button',
+            '.chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
+            false,
+            false
+          )
+        },
+        type: {
+          componentType: labelComponent,
+          structure: generateLabelGroup(
+            '.table-body__cell:nth-of-type(3)',
+            '.data-ellipsis',
+            true,
+            '.tooltip .tooltip__text span'
+          )
+        }
+      }
+    }
+  }
+}
+
+const scheduledTabTable = {
+  root: '.table__content',
+  header: {
+    root: '.table-head',
+    sorters: {
+      name: '.table-head__item:nth-of-type(1) .data-ellipsis',
+      type: '.table-head__item:nth-of-type(2) .data-ellipsis',
+      duration: '.table-head__item:nth-of-type(3) .data-ellipsis',
+      owner: '.table-head__item:nth-of-type(4) .data-ellipsis',
+      labels: '.table-head__item:nth-of-type(5) .data-ellipsis',
+      parameters: '.table-head__item:nth-of-type(6) .data-ellipsis',
+      results: '.table-head__item:nth-of-type(7) .data-ellipsis'
+    }
+  },
+  body: {
+    root: '.table-body',
+    row: {
+      root: '.table-row',
+      fields: {
+        name: '.table-cell-name.link',
+        uid: '[data-testid="uid"] a .link',
+        project_name: '[data-testid="projectName"] .data-ellipsis',
+        datetime: '.table-body__cell:nth-of-type(1) a .date-uid-row .link-subtext:nth-of-type(1)',
         duration: '.table-body__cell:nth-of-type(3) .data-ellipsis',
         owner: '.table-body__cell:nth-of-type(4) .data-ellipsis',
         action_menu: {
@@ -111,6 +163,15 @@ const overallTable = {
             '.tooltip .tooltip__text span'
           )
         },
+        status: {
+          componentType: labelComponent,
+          structure: generateLabelGroup(
+            '.table-body__cell:nth-of-type(1) .status',
+            'i',
+            true,
+            '.tooltip .tooltip__text span'
+          )
+        }
       }
     }
   }
@@ -136,11 +197,7 @@ const commonCustomRangeFilter = dropdownComponent(
 )
 
 const commonSearchByNameFilterInput = inputGroup(
-  generateInputGroup(
-    '[data-testid="name-form-field-input"]',
-    true,
-    false
-  )
+  generateInputGroup('[data-testid="name-form-field-input"]', true, false)
 )
 
 // date picker start
@@ -182,8 +239,7 @@ const dateTimePickerCalendars = {
   fromDatePicker: {
     root: '.date-picker__calendars .date-picker__calendar:nth-of-type(1)',
     elements: {
-      month_prev_btn:
-        '.date-picker__header svg.date-picker__header-previous-month',
+      month_prev_btn: '.date-picker__header svg.date-picker__header-previous-month',
       month_next_btn: '.date-picker__header svg.date-picker__header-next-month',
       month_label: '.date-picker__header div .date-picker__header-month',
       year_label: '.date-picker__header div .date-picker__header-year',
@@ -197,8 +253,7 @@ const dateTimePickerCalendars = {
   toDatePicker: {
     root: '.date-picker__calendars .date-picker__calendar:nth-of-type(2)',
     elements: {
-      month_prev_btn:
-        '.date-picker__header svg.date-picker__header-previous-month',
+      month_prev_btn: '.date-picker__header svg.date-picker__header-previous-month',
       month_next_btn: '.date-picker__header svg.date-picker__header-next-month',
       month_label: '.date-picker__header div .date-picker__header-month',
       year_label: '.date-picker__header div .date-picker__header-year',
@@ -224,11 +279,12 @@ module.exports = {
     Auto_Refresh_Checkbox: checkboxComponent({
       root: '[data-testid="form-field-checkbox"]',
       elements: {
-        checkbox: 'input', 
+        checkbox: 'input',
         name: '',
         icon: ''
       }
     }),
+    Auto_Refresh_Checkbox_Element: By.css('[data-testid="form-field-checkbox"] input'),
     Search_By_Name_Filter_Input: commonSearchByNameFilterInput,
     Date_Picker_Filter_Dropdown: commonDatePickerFilter,
     Custom_Range_Filter_Dropdown: commonCustomRangeFilter,
@@ -256,6 +312,6 @@ module.exports = {
     Date_Time_Picker: datepicker(dateTimePickerCalendars),
     Refresh_Button: commonRefreshButton,
     Error_Message: commonErrorMessage,
-    Scheduled_Table: commonTable(overallTable)
+    Scheduled_Table: commonTable(scheduledTabTable)
   }
 }

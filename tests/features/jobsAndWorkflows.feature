@@ -116,7 +116,7 @@ Feature: Jobs and workflows
         Then verify "Workflows_Monitor_Table" element visibility on "Workflows_Monitor_Tab" wizard
         Then verify "Monitor_Workflows_Subtitle" element visibility on "Workflows_Monitor_Tab" wizard
         Then "Monitor_Workflows_Subtitle" element on "Workflows_Monitor_Tab" should contains "View running workflows and previously executed workflows" value
-        When turn on demo mode with query params "false"
+        When turn on demo mode with query params "true"
         And wait load page
         Then click on "Table_FilterBy_Button" element on "Workflows_Monitor_Tab" wizard
         #moved to demo mode ML-7352
@@ -158,7 +158,7 @@ Feature: Jobs and workflows
         Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
         Then click on "Table_FilterBy_Button" element on "Schedule_Monitor_Tab" wizard
         Then verify "Batch_Run_Button" element visibility on "Schedule_Monitor_Tab" wizard
-        Then "Batch_Run_Button" element on "Schedule_Monitor_Tab" should contains "Batch Run" value
+        Then "Batch_Run_Button" element on "Schedule_Monitor_Tab" should contains "Batch run" value
         Then verify "Table_Refresh_Button" element visibility on "Schedule_Monitor_Tab" wizard
         Then verify "Schedule_Monitor_Table" element visibility on "Schedule_Monitor_Tab" wizard
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Schedule_Monitor_Tab" wizard
@@ -577,7 +577,7 @@ Feature: Jobs and workflows
         Then verify "Delete_Button" element on "Confirm_Popup" wizard is enabled
         Then "Delete_Button" element on "Confirm_Popup" should contains "Delete" value
         When click on "Cancel_Button" element on "Confirm_Popup" wizard
-        
+
     @MLJW
     @passive
     @smoke
@@ -652,7 +652,7 @@ Feature: Jobs and workflows
         Then select "2" option in "Iterations_Dropdown" dropdown on "Artifacts_Info_Pane" wizard
         And wait load page
         Then verify "Artifacts_Table" element visibility on "Artifacts_Info_Pane" wizard
-    
+
     @MLJM
     @smoke
     Scenario: MLJW090 - Check Pagination info pane on on Jobs Monitor Page
@@ -952,7 +952,7 @@ Feature: Jobs and workflows
         Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
         Then verify "Workflow_List_View_Table" element visibility on "Workflows_Monitor_Tab" wizard
 
-    @MLJW 
+    @MLJW
     @passive
     @smoke
     Scenario: MLJW072 - Check all mandatory components on Overview tab Item infopane on Workflow List View Tab
@@ -965,11 +965,12 @@ Feature: Jobs and workflows
         And wait load page
         And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
-        When click on cell with row index 2 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
         And wait load page
         When click on cell with row index 2 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
+        And wait load page
         Then verify "Arrow_Back" element visibility on "Workflows_Monitor_Tab_Info_Pane" wizard
         Then verify "Header" element visibility on "Workflows_Monitor_Tab_Info_Pane" wizard
         Then verify "Updated" element visibility on "Workflows_Monitor_Tab_Info_Pane" wizard
@@ -992,7 +993,7 @@ Feature: Jobs and workflows
         And wait load page
         And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
-        When click on cell with row index 2 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
         When click on cell with row index 2 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
@@ -1016,7 +1017,7 @@ Feature: Jobs and workflows
         And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
-        When click on cell with row index 2 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
         When click on cell with row index 2 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
@@ -1038,7 +1039,7 @@ Feature: Jobs and workflows
         And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
-        When click on cell with row index 2 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
         When click on cell with row index 2 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
@@ -1060,7 +1061,7 @@ Feature: Jobs and workflows
         And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
-        When click on cell with row index 2 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
         When click on cell with row index 4 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
@@ -1081,7 +1082,7 @@ Feature: Jobs and workflows
         And wait load page
         And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
-        When click on cell with row index 2 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
         And wait load page
@@ -1153,7 +1154,7 @@ Feature: Jobs and workflows
         And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
-        When click on cell with row index 2 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
         When click on cell with row index 1 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
@@ -1244,7 +1245,7 @@ Feature: Jobs and workflows
         And wait load page
         Then verify "Schedule" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         Then verify action menu on "Schedule_Monitor_Tab" wizard in "Schedule_Monitor_Table" table with "clean-data" value in "name" column should contains "Jobs_And_Workflows"."Schedule_Action_Menu_Options"
-        
+
     @MLJW
     @passive
     @smoke
@@ -1323,7 +1324,7 @@ Feature: Jobs and workflows
         And wait load page
         And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
-        When click on cell with row index 2 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then verify "Workflow_Graph" element visibility on "Workflows_Monitor_Tab" wizard
         # Then verify arrow lines position on "Workflow_Graph" on "Workflows_Monitor_Tab" wizard
@@ -1347,7 +1348,7 @@ Feature: Jobs and workflows
         Given open url
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard       
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
@@ -1419,7 +1420,7 @@ Feature: Jobs and workflows
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And wait load page
-        Then select "Delete all versions" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "test-m_ingest" value in "name" column
+        Then select "Delete" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "test-m_ingest" value in "name" column
         And wait load page
         Then "Title" element on "Common_Popup" should contains "Delete function?" value
         Then verify "Delete_Button" element visibility on "Common_Popup" wizard
@@ -1430,7 +1431,7 @@ Feature: Jobs and workflows
         Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Function deletion in progress" value
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
-        Then wait for 8 seconds
+        Then wait for 9 seconds
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
         Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Function test-m_ingest is successfully deleted" value
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
@@ -1587,6 +1588,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @smoke
+#TODO: check the redirection from projects/default/jobs/monitor-jobs/INVALID/864f4da42773494eb94dce1c8834feb6/overview?dates=anyTime&savedParams=P2JlUGFnZT0xJmZlUGFnZT0xJmRhdGVzPWFueVRpbWU%3D&bePage=1&fePage=1
     Scenario: MLJW085 - Check broken link redirection on Monitor Jobs and Schedules screens
         Given open url
         And wait load page
@@ -1606,37 +1608,42 @@ Feature: Jobs and workflows
         And wait load page
         When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
         And wait load page
-        Then verify redirection from "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/INVALID" to "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/overview"
+        Then verify redirection from "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/INVALID?dates=anyTime&savedParams=P2JlUGFnZT0xJmZlUGFnZT0xJmRhdGVzPWFueVRpbWU%3D&bePage=1&fePage=1" to "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/overview?dates=anyTime&savedParams=P2JlUGFnZT0xJmZlUGFnZT0xJmRhdGVzPWFueVRpbWU%3D&bePage=1&fePage=1"
+        And wait load page
         Then select "Inputs" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
         And wait load page
-        Then verify redirection from "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/INVALID" to "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/overview"
+        Then verify redirection from "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/inputsINVALID?dates=anyTime&savedParams=P2JlUGFnZT0xJmZlUGFnZT0xJmRhdGVzPWFueVRpbWU%3D&bePage=1&fePage=1" to "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/overview?dates=anyTime&savedParams=P2JlUGFnZT0xJmZlUGFnZT0xJmRhdGVzPWFueVRpbWU%3D&bePage=1&fePage=1"
+        And wait load page
         Then select "Artifacts" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
         And wait load page
-        Then verify redirection from "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/INVALID" to "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/overview"
-        Then select "Results" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
+        Then verify redirection from "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/artifactsINVALID?dates=anyTime&savedParams=P2JlUGFnZT0xJmZlUGFnZT0xJmRhdGVzPWFueVRpbWU%3D&bePage=1&fePage=1" to "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/overview?dates=anyTime&savedParams=P2JlUGFnZT0xJmZlUGFnZT0xJmRhdGVzPWFueVRpbWU%3D&bePage=1&fePage=1"
         And wait load page
-        Then verify redirection from "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/INVALID" to "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/overview"
+        Then select "Results" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
+        Then verify redirection from "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/resultsINVALID?dates=anyTime&savedParams=P2JlUGFnZT0xJmZlUGFnZT0xJmRhdGVzPWFueVRpbWU%3D&bePage=1&fePage=1" to "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/overview?dates=anyTime&savedParams=P2JlUGFnZT0xJmZlUGFnZT0xJmRhdGVzPWFueVRpbWU%3D&bePage=1&fePage=1"
+        And wait load page
         Then select "Logs" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
         And wait load page
-        Then verify redirection from "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/INVALID" to "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/overview"
+        Then verify redirection from "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/logsINVALID?dates=anyTime&savedParams=P2JlUGFnZT0xJmZlUGFnZT0xJmRhdGVzPWFueVRpbWU%3D&bePage=1&fePage=1" to "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/overview?dates=anyTime&savedParams=P2JlUGFnZT0xJmZlUGFnZT0xJmRhdGVzPWFueVRpbWU%3D&bePage=1&fePage=1"
+        And wait load page
         Then select "Pods" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
         And wait load page
-        Then verify redirection from "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/INVALID" to "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/overview"
-        Then verify redirection from "projects/default/jobs/monitor-jobs/aggregate-test/INVALID/overview" to "projects/default/jobs/monitor-jobs"
+        Then verify redirection from "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/resultsINVALID?dates=anyTime&savedParams=P2JlUGFnZT0xJmZlUGFnZT0xJmRhdGVzPWFueVRpbWU%3D&bePage=1&fePage=1" to "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/overview?dates=anyTime&savedParams=P2JlUGFnZT0xJmZlUGFnZT0xJmRhdGVzPWFueVRpbWU%3D&bePage=1&fePage=1"
+        And wait load page
+        Then verify redirection from "projects/default/jobs/monitor-jobs/aggregate-test/INVALID/overview?dates=anyTime&savedParams=P2JlUGFnZT0xJmZlUGFnZT0xJmRhdGVzPWFueVRpbWU%3D&bePage=1&fePage=1" to "projects/default/jobs/monitor-jobs/aggregate-test/INVALID/overview?dates=anyTime&savedParams=P2JlUGFnZT0xJmZlUGFnZT0xJmRhdGVzPWFueVRpbWU%3D&bePage=1&fePage=1"
         And wait load page
         Then verify if "Notification_Popup" popup dialog appears
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
-        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "This job either does not exist or was deleted" value
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "This run either does not exist or was deleted" value
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
         And select "Schedule" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
-        Then verify redirection from "projects/default/jobs/INVALID" to "projects/default/jobs/monitor-jobs"
-        Then verify redirection from "projects/default/INVALID/monitor-jobs" to "projects"
+        Then verify redirection from "projects/default/jobs/INVALID" to "projects/default/jobs/monitor-jobs?bePage=1&fePage=1"
+        Then verify redirection from "projects/default/INVALID/monitor-jobs?bePage=1&fePage=1" to "projects"
 
     @MLJW
     @smoke
-    Scenario: MLJW086 - Check broken link redirection on Monitor Workflows and Schedules screens
+    Scenario: MLJW086 - Check broken link redirection on Monitor Workflows tab
         Given open url
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -1645,33 +1652,43 @@ Feature: Jobs and workflows
         And wait load page
         Then select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
-        Then verify redirection from "projects/churn-project-admin/jobs/INVALID" to "projects/churn-project-admin/jobs/monitor-jobs"
+        Then verify redirection from "projects/churn-project-admin/jobs/INVALID" to "projects/churn-project-admin/jobs/monitor-jobs?bePage=1&fePage=1"
         Then select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
         When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then verify redirection from "projects/churn-project-admin/jobs/monitor-workflows/workflow/INVALID" to "projects/churn-project-admin/jobs/monitor-workflows"
+        Then verify if "Notification_Popup" popup dialog appears
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Failed to fetch workflow" value
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
         When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
-        Then verify redirection from "projects/churn-project-admin/jobs/monitor-workflows/INVALID/eaae138e-439a-47fa-93c6-ba0fe1dc3b79" to "projects/churn-project-admin/jobs/monitor-jobs"
+        Then verify redirection from "projects/churn-project-admin/jobs/monitor-workflows/INVALID/eaae138e-439a-47fa-93c6-ba0fe1dc3b79" to "projects/churn-project-admin/jobs/monitor-jobs?bePage=1&fePage=1"
         Then select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
-        When click on cell with row index 2 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         When click on node with name "current-state" in "Workflow_Graph" graph on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then verify redirection from "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/07f98fb46a424b2dbee5247b35f37727/INVALID" to "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/07f98fb46a424b2dbee5247b35f37727/overview"
+        And wait load page
         Then select "Inputs" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
         And wait load page
         Then verify redirection from "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/07f98fb46a424b2dbee5247b35f37727/INVALID" to "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/07f98fb46a424b2dbee5247b35f37727/overview"
+        And wait load page
         Then select "Artifacts" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
         And wait load page
         Then verify redirection from "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/07f98fb46a424b2dbee5247b35f37727/INVALID" to "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/07f98fb46a424b2dbee5247b35f37727/overview"
+        And wait load page
         Then select "Results" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
         And wait load page
         Then verify redirection from "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/07f98fb46a424b2dbee5247b35f37727/INVALID" to "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/07f98fb46a424b2dbee5247b35f37727/overview"
+        And wait load page
         Then select "Logs" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
         And wait load page
         Then verify redirection from "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/07f98fb46a424b2dbee5247b35f37727/INVALID" to "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/07f98fb46a424b2dbee5247b35f37727/overview"
+        And wait load page
         Then select "Pods" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
         And wait load page
         Then verify redirection from "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/07f98fb46a424b2dbee5247b35f37727/INVALID" to "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/07f98fb46a424b2dbee5247b35f37727/overview"
@@ -1726,7 +1743,7 @@ Feature: Jobs and workflows
         Then verify "Search_Input" element visibility on "Modal_Wizard_Form" wizard
         When type searchable fragment "test" into "Search_Input" on "Modal_Wizard_Form" wizard
         Then searchable case "sensitive" fragment "test" should be in every suggested option into "Search_Input" on "Modal_Wizard_Form" wizard
-        Then value in "name" column with "text" in "Functions_Table" on "Modal_Wizard_Form" wizard should contains "test" 
+        Then value in "name" column with "text" in "Functions_Table" on "Modal_Wizard_Form" wizard should contains "test"
         When click on "Form_Header_Function_Selection" element on "commonPagesHeader" wizard
         Then verify "Project_Selector_Dropdown" element visibility on "Modal_Wizard_Form" wizard
         Then select "churn-project-admin" option in "Project_Selector_Dropdown" filter dropdown on "Modal_Wizard_Form" wizard
@@ -1769,7 +1786,7 @@ Feature: Jobs and workflows
         Then verify "Next_Button" element on "Modal_Wizard_Form" wizard is enabled
         Then verify "Schedule_For_Later_Button" element on "Modal_Wizard_Form" wizard is enabled
         Then verify "Run_Button" element on "Modal_Wizard_Form" wizard is enabled
-    
+
     @MLJW
     @smoke
     Scenario: MLJW013 - Verify behaviour of Filter by category on Batch Run wizard - Function selection (Hub tab)
@@ -1856,20 +1873,20 @@ Feature: Jobs and workflows
             |    key4   |    value4   |
             |    key5   |    value5   |
         Then verify values in "Run_Details_Labels_Table" table on "Modal_Wizard_Form" wizard with attribute
-            | key_verify | value_verify | 
+            | key_verify | value_verify |
             |    key1    |    value1    |
             |    key2    |    value2    |
             |    key3    |    value3    |
             |    key4    |    value4    |
             |    key5    |    value5    |
         When click on "remove_btn" in "Run_Details_Labels_Table" table on "Modal_Wizard_Form" wizard with attribute
-            | key_verify | 
-            |    key1    |    
-            |    key3    |    
-            |    key4    |    
-            |    key5    |    
+            | key_verify |
+            |    key1    |
+            |    key3    |
+            |    key4    |
+            |    key5    |
         Then verify values in "Run_Details_Labels_Table" table on "Modal_Wizard_Form" wizard with attribute
-            | key_verify | value_verify | 
+            | key_verify | value_verify |
             |    key2    |    value2    |
 
     @MLJW
@@ -1933,23 +1950,23 @@ Feature: Jobs and workflows
         Then "Function_Title" element on "Modal_Wizard_Form" should contains "test" value
         Then verify "Version_Dropdown" element visibility on "Modal_Wizard_Form" wizard
         And select "$latest" option in "Version_Dropdown" dropdown on "Modal_Wizard_Form" wizard
-        Then verify "Method_Dropdown" element visibility on "Modal_Wizard_Form" wizard 
+        Then verify "Method_Dropdown" element visibility on "Modal_Wizard_Form" wizard
         Then "Method_Dropdown_Label_Select" element on "Modal_Wizard_Form" should contains "Handler" value
-        And select "data_clean" option in "Method_Dropdown" dropdown on "Modal_Wizard_Form" wizard 
+        And select "data_clean" option in "Method_Dropdown" dropdown on "Modal_Wizard_Form" wizard
         Then verify "Run_Details_Labels_Table" element visibility on "Modal_Wizard_Form" wizard
         And click on "Add_Label_Button" element on "Modal_Wizard_Form" wizard
         Then type value "/" to "Run_Details_Labels_Key" field on "Modal_Wizard_Form" wizard
         Then verify labels warning should display options "Input_Hint"."Labels_Warning_Key_Modal_Wizard_Form"
         Then type value "/" to "Run_Details_Labels_Value" field on "Modal_Wizard_Form" wizard without inputgroup
         When click on "Title" element on "Modal_Wizard_Form" wizard
-        And click on "Close_Label_Button" element on "Modal_Wizard_Form" wizard   
+        And click on "Close_Label_Button" element on "Modal_Wizard_Form" wizard
         When add rows to "Run_Details_Labels_Table" table on "Modal_Wizard_Form" wizard
             | key_input | value_input |
             |    key1   |    value1   |
             |    key2   |    value2   |
             |    key3   |    value3   |
         Then verify values in "Run_Details_Labels_Table" table on "Modal_Wizard_Form" wizard with attribute
-            | key_verify | value_verify | 
+            | key_verify | value_verify |
             |    key1    |    value1    |
             |    key2    |    value2    |
             |    key3    |    value3    |
@@ -1970,7 +1987,7 @@ Feature: Jobs and workflows
         And wait load page
 	    And click on row root with value "feature-selection" in "name" column in "Functions_Table" table on "Modal_Wizard_Form" wizard
 	    And click on "Next_Button" element on "Modal_Wizard_Form" wizard
-	    Then verify "Method_Dropdown" element visibility on "Modal_Wizard_Form" wizard 
+	    Then verify "Method_Dropdown" element visibility on "Modal_Wizard_Form" wizard
         And select "plot_stat" option in "Method_Dropdown" dropdown on "Modal_Wizard_Form" wizard
         Then "Method_Dropdown_Option" element on "Modal_Wizard_Form" should contains "plot_stat" value
         And select "show_values_on_bars" option in "Method_Dropdown" dropdown on "Modal_Wizard_Form" wizard
@@ -2035,33 +2052,33 @@ Feature: Jobs and workflows
             |    name2   |      V3IO     | container-name/file |
             |    name3   |      V3IO     | container-name/file |
         Then verify data in "Data_Inputs_Table" table on "Modal_Wizard_Form" wizard
-            | name_verify |         path_verify         |    
-            |   dataset   |                             | 
-            | sample_set  |                             | 
-            |   test_set  |                             | 
-            |    name1    | v3io:///container-name/file | 
-            |    name2    | v3io:///container-name/file | 
-            |    name3    | v3io:///container-name/file | 
+            | name_verify |         path_verify         |
+            |   dataset   |                             |
+            | sample_set  |                             |
+            |   test_set  |                             |
+            |    name1    | v3io:///container-name/file |
+            |    name2    | v3io:///container-name/file |
+            |    name3    | v3io:///container-name/file |
         When click on "delete_btn" with data in "Data_Inputs_Table" table on "Modal_Wizard_Form" wizard with offset "false"
             | name_verify |
             |    name1    |
             |    name3    |
         Then verify data in "Data_Inputs_Table" table on "Modal_Wizard_Form" wizard
-            | name_verify |         path_verify         |    
-            |   dataset   |                             | 
-            | sample_set  |                             | 
-            |   test_set  |                             | 
-            |    name2    | v3io:///container-name/file |    
+            | name_verify |         path_verify         |
+            |   dataset   |                             |
+            | sample_set  |                             |
+            |   test_set  |                             |
+            |    name2    | v3io:///container-name/file |
         Then edit 4 row in "Data_Inputs_Table" key-value table on "Modal_Wizard_Form" wizard
             | name_input | path_input |
             |   edited   |   edited   |
         Then verify data in "Data_Inputs_Table" table on "Modal_Wizard_Form" wizard
-            | name_verify |           path_verify             |    
-            |   dataset   |                                   | 
-            | sample_set  |                                   | 
-            |   test_set  |                                   | 
+            | name_verify |           path_verify             |
+            |   dataset   |                                   |
+            | sample_set  |                                   |
+            |   test_set  |                                   |
             | name2edited | v3io:///container-name/fileedited |
-    
+
     @MLJW
     @smoke
     Scenario: MLJW038 - Check all mandatory components on Batch Run wizard - Parameters
@@ -2102,7 +2119,7 @@ Feature: Jobs and workflows
             | name_input | type_dropdown | value_input |
             |    name1   |      str      |    value1   |
             |    name2   |      int      |      1      |
-            |    name3   |      float    |     0.5     | 
+            |    name3   |      float    |     0.5     |
         Then verify data in "Parameters_Table" table on "Modal_Wizard_Form" wizard
             | name_verify           |         type_dropdown_verify         | value_verify |
             | model_class           |                str                   |              |
@@ -2133,7 +2150,7 @@ Feature: Jobs and workflows
             | name2                 |                int                   |      1       |
         Then edit 9 row in "Parameters_Table" key-value table on "Modal_Wizard_Form" wizard
             |  name_input | value_input |
-            |    edited   |     234     |   
+            |    edited   |     234     |
         Then verify data in "Parameters_Table" table on "Modal_Wizard_Form" wizard
             | name_verify           |         type_dropdown_verify         | value_verify |
             | model_class           |                str                   |              |
@@ -2144,7 +2161,7 @@ Feature: Jobs and workflows
             | train_test_split_size |                float                 |              |
             | random_state          |                int                   |              |
             | labels                |                dict                  |              |
-            | name2edited           |                int                   |     1234     |      
+            | name2edited           |                int                   |     1234     |
 
     @MLJW
     @inProgress
@@ -2243,8 +2260,8 @@ Feature: Jobs and workflows
         Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Minimum_Value_Warning"
         Then type value "1" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
         Then type value "1025" to "CPU_Request_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
-        Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Limit_Number_Warning" 
-        Then verify "CPU_Request_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Request_Number_Warning" 
+        Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Limit_Number_Warning"
+        Then verify "CPU_Request_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Request_Number_Warning"
         Then type value "0" to "GPU_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
         Then verify "GPU_Limit_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."GPU_Minimum_Value_Warning"
         Then verify "Memory_Request_Dropdown" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
@@ -2468,18 +2485,18 @@ Feature: Jobs and workflows
             |     data_tag    |  MLRun store  |               Datasets               |     default (Current project)      |             test-i              |            #0:latest           |
         Then verify data in "Data_Inputs_Table" table on "Modal_Wizard_Form" wizard
             |   name_verify   |                       path_verify                    |
-            |     dataset     |                                                      | 
-            |    sample_set   |                                                      | 
-            |     test_set    |                                                      |    
-            |    artifacts    | store://artifacts/default/download_content#0:latest  | 
-            |     datasets    | store://datasets/default/test_new_structure#0:latest | 
+            |     dataset     |                                                      |
+            |    sample_set   |                                                      |
+            |     test_set    |                                                      |
+            |    artifacts    | store://artifacts/default/download_content#0:latest  |
+            |     datasets    | store://datasets/default/test_new_structure#0:latest |
             |      models     |    store://models/default/model_default#0:latest     |
             | feature vectors |   store://feature-vectors/default/test-i:test-tag    |
             |     data_tag    |      store://datasets/default/test-i#0:latest        |
 
     @MLJW
     @smoke
-    Scenario: MLJW034 - Check setting schedule for a job - Batch Run - Schedule for later 
+    Scenario: MLJW034 - Check setting schedule for a job - Batch Run - Schedule for later
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -2529,11 +2546,11 @@ Feature: Jobs and workflows
         Then "Form_Header_Advanced" element on "commonPagesHeader" should contains "Advanced" value
         Then verify "Accordion_Advanced_Subheader" element visibility on "Modal_Wizard_Form" wizard
         Then "Accordion_Advanced_Subheader" element on "Modal_Wizard_Form" should contains "Environment variables" value
-        Then verify "Advanced_Environment_Variables_Table" element visibility on "Modal_Wizard_Form" wizard 
+        Then verify "Advanced_Environment_Variables_Table" element visibility on "Modal_Wizard_Form" wizard
         Then verify data in "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard
             |   name_verify   | type_dropdown_verify |            value_verify              |
             |    V3IO_API     |        value         |       http://v3io-webapi:8081        |
-            |  V3IO_USERNAME  |        value         |              pipelines               | 
+            |  V3IO_USERNAME  |        value         |              pipelines               |
             | V3IO_ACCESS_KEY |        value         | b1410f67-92a9-41fd-9413-6d0015c493fd |
             |  V3IO_FRAMESD   |        value         |         http://framesd:8080          |
         Then edit dropdown field 1 row in "Advanced_Environment_Variables_Table" key-value table on "Modal_Wizard_Form" wizard
@@ -2545,13 +2562,13 @@ Feature: Jobs and workflows
         Then verify data in "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard
             |   name_verify   | type_dropdown_verify |        value_verify      |
             |    V3IO_API     |        secret        | sectretName1:sectretKey1 |
-            |  V3IO_USERNAME  |        value         |         pipelines        | 
+            |  V3IO_USERNAME  |        value         |         pipelines        |
             | V3IO_ACCESS_KEY |        secret        | sectretName2:sectretKey2 |
             |  V3IO_FRAMESD   |        value         |    http://framesd:8080   |
 
     @MLJW
     @smoke
-    Scenario: MLJW036 - Check setting schedule for a job - Batch Run - Schedule for later 
+    Scenario: MLJW036 - Check setting schedule for a job - Batch Run - Schedule for later
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -2690,7 +2707,7 @@ Feature: Jobs and workflows
         Then verify "Parameters_From_File_Input" element in "Parameters_Accordion" on "Modal_Wizard_Form" wizard is enabled by class name
         Then verify "Parameters_Headers" on "Modal_Wizard_Form" wizard should contains "Modal_Wizard_Form"."Parameters_Table_Header"
         Then verify "Hyper_Toggle_Switch" element not exists in "Parameters_Accordion" on "Modal_Wizard_Form" wizard
-    
+
     @MLJW
     @smoke
     Scenario: MLJW049 - Check Abort action on Monitor Jobs tab
@@ -2752,10 +2769,12 @@ Feature: Jobs and workflows
         Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then value in "status" column with "tooltip" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "Aborted"
-    
+
     @MLJW
     @passive
     @smoke
+    # retry action is using KFP API and so this can’t be implemented in the mock - https://iguazio.atlassian.net/browse/ML-9124
+    #TODO: need to add check Retry option for error and running status
     Scenario: MLJW087 - Check Retry option in action menu on Workflows Monitor tab
         Given open url
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -2770,11 +2789,6 @@ Feature: Jobs and workflows
         Then verify options in action menu on "Workflows_Monitor_Tab" wizard in "Workflows_Monitor_Table" table with "Completed" value in "status" column should contains "Jobs_And_Workflows"."Workflows_Action_Menu_Options"
         Then select "Retry" option in action menu on "Workflows_Monitor_Tab" wizard in "Workflows_Monitor_Table" table at row with "kfpipeline 2021-07-06 11-16-28" value in "name" column
         And wait load page
-        Then verify if "Notification_Popup" popup dialog appears
-        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
-        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Workflow ran successfully." value
-        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
-        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
         Then verify if "Notification_Popup" popup dialog appears
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
         Then "Notification_Pop_Up" component on "Notification_Popup" should contains "Jobs_And_Workflows"."Workflows_Unsuccessful_Run_Message"
@@ -2800,7 +2814,7 @@ Feature: Jobs and workflows
         And wait load page
         Then value in "status" column with "tooltip" in "Workflows_Monitor_Table" on "Workflows_Monitor_Tab" wizard should contains "Completed"
         Then value in "status" column with "tooltip" in "Workflows_Monitor_Table" on "Workflows_Monitor_Tab" wizard should contains "Failed"
-        When click on cell with row index 2 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
         And wait load page
@@ -2813,7 +2827,7 @@ Feature: Jobs and workflows
         Then verify "State_Icon" element visibility on "Workflows_Monitor_Tab_Info_Pane" wizard
         Then verify "State_Icon" element on "Workflows_Monitor_Tab_Info_Pane" wizard should display hover tooltip "Common_Tooltips"."Error_Content_Workflow"
         Then verify "Error_Content" element visibility on "Workflows_Monitor_Tab_Info_Pane" wizard
-    
+
     @MLJW
     @smoke
     Scenario: MLJW089 - Check Delete run / Delete all runs options in Action menu
@@ -2861,11 +2875,9 @@ Feature: Jobs and workflows
         Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Jobs_And_Workflows"."Delete_All_Runs_Message"
         When click on "Delete_Button" element on "Confirm_Popup" wizard
         And wait load page
+        And wait load page
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
-        And wait load page
-        And wait load page
         Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Job is successfully deleted" value
-        And wait load page
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
@@ -2894,4 +2906,78 @@ Feature: Jobs and workflows
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
         Then verify that 2 row elements are displayed in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard
 
-        
+    @MLJW
+    @passive
+    @smoke
+    Scenario: MLJW091 - Check the auto refresh checkbox on Jobs Monitor tab
+        Given open url
+        And wait load page
+        And click on row root with value "auto-generated-data" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        Then verify breadcrumbs "project" label should be equal "auto-generated-data" value
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Jobs and workflows" value
+        Then verify "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard should contains "Jobs_And_Workflows"."Tab_List"
+        Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify "Auto_Refresh_Checkbox" element visibility on "Jobs_Monitor_Tab" wizard
+        Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
+        Then verify "Pagination_Count" element visibility on "Pagination_Info_Pane" wizard
+        Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 50" value
+        Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is enabled
+        Then check "Auto_Refresh_Checkbox" element on "Jobs_Monitor_Tab" wizard
+        Then "Auto_Refresh_Checkbox" element should be checked on "Jobs_Monitor_Tab" wizard
+        Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 50" value
+        Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
+        Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard should display hover tooltip "Common_Tooltips"."Auto_Refresh"
+        When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Auto_Refresh_Checkbox" element visibility on "Jobs_Monitor_Tab" wizard
+        Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
+        Then check "Auto_Refresh_Checkbox" element on "Jobs_Monitor_Tab" wizard
+        Then "Auto_Refresh_Checkbox" element should be checked on "Jobs_Monitor_Tab" wizard
+        When click on cell with row index 1 in "uid" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Auto_Refresh_Checkbox" element visibility on "Jobs_Monitor_Tab" wizard
+        Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
+        Then verify "Auto_Refresh_Checkbox_Element" element on "Jobs_Monitor_Tab" wizard is disabled
+        Then click on "Cross_Close_Button" element on "Jobs_Monitor_Tab_Info_Pane" wizard
+        And wait load page
+        Then "Auto_Refresh_Checkbox" element should be checked on "Jobs_Monitor_Tab" wizard
+        Then click on "Arrow_Back" element on "Jobs_Monitor_Tab_Info_Pane" wizard
+        And wait load page
+        Then "Auto_Refresh_Checkbox" element should be checked on "Jobs_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
+        Then check "Auto_Refresh_Checkbox" element on "Jobs_Monitor_Tab" wizard
+        Then "Auto_Refresh_Checkbox" element should be checked on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        When click on cell with row index 1 in "uid" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
+        Then verify "Auto_Refresh_Checkbox_Element" element on "Jobs_Monitor_Tab" wizard is disabled
+        Then click on "Arrow_Back" element on "Jobs_Monitor_Tab_Info_Pane" wizard
+        And wait load page
+        Then "Auto_Refresh_Checkbox" element should be checked on "Jobs_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
+        Then click on "Arrow_Back" element on "Jobs_Monitor_Tab_Info_Pane" wizard
+        And wait load page
+        Then uncheck "Auto_Refresh_Checkbox" element on "Jobs_Monitor_Tab" wizard
+        Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
+        Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is enabled
+        Then click on "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard
+        And wait load page
+        Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
+        Then click on "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard
+        And wait load page
+        Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
+        Then check "Auto_Refresh_Checkbox" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then "Pagination_Count" element on "Pagination_Info_Pane" should contains "Showing 1 - 50" value
+        Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard is disabled
+        Then verify "BE_Pagination_Navigate_Next" element on "Pagination_Info_Pane" wizard should display hover tooltip "Common_Tooltips"."Auto_Refresh"

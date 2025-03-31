@@ -99,10 +99,8 @@ const jobsMonitorTable = {
             '.tooltip .tooltip__text span'
           )
         },
-        datetime:
-          '.table-body__cell:nth-of-type(1) a .date-uid-row .link-subtext:nth-of-type(1)',
-        uid:
-          '.table-body__cell:nth-of-type(1) a .date-uid-row .link-subtext:nth-of-type(2)',
+        datetime: '.table-body__cell:nth-of-type(1) a .date-uid-row .link-subtext:nth-of-type(1)',
+        uid: '[data-testid="uid"] a .link',
         type: {
           componentType: labelComponent,
           structure: generateLabelGroup(
@@ -265,7 +263,7 @@ const scheduleMonitorTable = {
             '.chip-block span.chips_button',
             '.chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
             false,
-            false          
+            false
           )
         },
         lastRun: '.table-body__cell:nth-of-type(6) .data-ellipsis',
@@ -318,8 +316,7 @@ const dateTimePickerCalendars = {
   fromDatePicker: {
     root: '.date-picker__calendars .date-picker__calendar:nth-of-type(1)',
     elements: {
-      month_prev_btn:
-        '.date-picker__header svg.date-picker__header-previous-month',
+      month_prev_btn: '.date-picker__header svg.date-picker__header-previous-month',
       month_next_btn: '.date-picker__header svg.date-picker__header-next-month',
       month_label: '.date-picker__header div .date-picker__header-month',
       year_label: '.date-picker__header div .date-picker__header-year',
@@ -333,8 +330,7 @@ const dateTimePickerCalendars = {
   toDatePicker: {
     root: '.date-picker__calendars .date-picker__calendar:nth-of-type(2)',
     elements: {
-      month_prev_btn:
-        '.date-picker__header svg.date-picker__header-previous-month',
+      month_prev_btn: '.date-picker__header svg.date-picker__header-previous-month',
       month_next_btn: '.date-picker__header svg.date-picker__header-next-month',
       month_label: '.date-picker__header div .date-picker__header-month',
       year_label: '.date-picker__header div .date-picker__header-year',
@@ -350,8 +346,7 @@ const dateTimePickerCalendars = {
 
 // Create job
 const selectFunctionFromDropdown = {
-  root:
-    '.create-container .create-container__data  .accordion__container.functions-wrapper .data-header__select',
+  root: '.create-container .create-container__data  .accordion__container.functions-wrapper .data-header__select',
   dropdownElements: {
     open_button: '.select__header .select__value',
     options: '.select__body .select__item',
@@ -360,8 +355,7 @@ const selectFunctionFromDropdown = {
 }
 
 const selectedFunctionsTemplates = {
-  root:
-    '.create-container .create-container__data  .accordion__container.functions-wrapper .create-container__data-list',
+  root: '.create-container .create-container__data  .accordion__container.functions-wrapper .create-container__data-list',
   header: {},
   body: {
     row: {
@@ -388,8 +382,7 @@ const predefinedFunctionsTemplates = {
 }
 
 const functionsTemplates = {
-  root:
-    '.create-container .create-container__data > .accordion__container:nth-of-type(3) .accordion__body .data-wrapper .templates-container',
+  root: '.create-container .create-container__data > .accordion__container:nth-of-type(3) .accordion__body .data-wrapper .templates-container',
   header: {},
   body: {
     row: {
@@ -407,12 +400,10 @@ const functionsTemplates = {
 }
 
 // Common components
-const pageHeaderButton = By.css(
-  '.action-bar .action-bar__actions button'
-)
+const pageHeaderButton = By.css('.action-bar .action-bar__actions button')
 const jobsTabSelector = commonTable(tabSelector)
 const tableRefreshButton = By.css(
-  '.content .content__action-bar-wrapper [data-testid="refresh"]'
+  '.content .content__action-bar-wrapper [data-testid="refresh"] [data-testid="refresh-tooltip-wrapper"]'
 )
 const commonStatusFilter = dropdownComponent(
   generateDropdownGroup(
@@ -442,11 +433,7 @@ const commonDatePickerFilter = dropdownComponent(
 )
 
 const commonTableNameFilter = inputGroup(
-  generateInputGroup(
-    '[data-testid="name-form-field-input"]',
-    true,
-    false
-  )
+  generateInputGroup('[data-testid="name-form-field-input"]', true, false)
 )
 
 const commonTableFilterByButton = By.css('[data-testid="filter-menu-btn-tooltip-wrapper"]')
@@ -475,11 +462,12 @@ module.exports = {
     Auto_Refresh_Checkbox: checkboxComponent({
       root: '[data-testid="form-field-checkbox"]',
       elements: {
-        checkbox: 'input', 
+        checkbox: 'input',
         name: '',
         icon: ''
       }
     }),
+    Auto_Refresh_Checkbox_Element: By.css('[data-testid="form-field-checkbox"] input'),
     Table_Refresh_Button: tableRefreshButton,
     Status_Filter_Dropdown: commonStatusFilter,
     Table_Name_Filter_Input: commonTableNameFilter,
@@ -549,9 +537,7 @@ module.exports = {
       Collapse_Button: By.css(
         '.create-container .create-container__data .accordion__container.functions-wrapper .accordion__icon'
       ),
-      Select_Function_From_Dropdown: dropdownComponent(
-        selectFunctionFromDropdown
-      ),
+      Select_Function_From_Dropdown: dropdownComponent(selectFunctionFromDropdown),
       Selected_Functions_Templates: commonTable(selectedFunctionsTemplates)
     },
     Function_Templates_Accordion: {

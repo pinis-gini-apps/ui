@@ -124,7 +124,7 @@ const DetailsTabsContent = ({
     case DETAILS_METRICS_TAB:
       return <DetailsMetrics selectedItem={selectedItem} />
     case DETAILS_ALERTS_TAB:
-      return <DetailsAlerts selectedItem={selectedItem} />
+      return <DetailsAlerts selectedItem={selectedItem} key={selectedItem?.metadata?.uid} /> // todo [Alerts] in ML-9205 remove the key when alerts are refactored and the issue is fixed by refactoring
     case DETAILS_PREVIEW_TAB:
       return <DetailsPreview artifact={selectedItem} handlePreview={handlePreview} />
     case DETAILS_INPUTS_TAB:
@@ -179,12 +179,12 @@ const DetailsTabsContent = ({
     case DETAILS_METADATA_TAB:
     case DETAILS_FEATURES_TAB:
     case DETAILS_RETURNED_FEATURES_TAB:
-      return (detailsStore.modelFeatureVectorData.features ??
+      return detailsStore.modelFeatureVectorData.features ??
         (selectedItem.schema ||
           selectedItem.entities ||
           selectedItem.features ||
           selectedItem.inputs ||
-          selectedItem.outputs)) ? (
+          selectedItem.outputs) ? (
         <DetailsMetadata
           selectedItem={
             selectedItem.schema ||
