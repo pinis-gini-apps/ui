@@ -797,7 +797,7 @@ module.exports = {
       )
     },
     Metrics_Selector_Counter: By.css('[data-testid="metrics-selector-counter"]'),
-    Metrics_Apply_Button: By.css('[data-testid="metrics-selector-buttons"] .btn-secondary'),
+    Metrics_Apply_Button: By.css('[data-testid="metrics-selector-buttons"] .btn-primary'),
     Metrics_Clear_Button: By.css('[data-testid="metrics-selector-buttons"] .btn-tertiary')
   },
   modalTransitionPopup: {
