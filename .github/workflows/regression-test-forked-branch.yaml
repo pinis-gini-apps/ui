@@ -23,6 +23,7 @@ on:
     types: [labeled, opened, reopened, synchronize]
     branches:
       - remote-pre-merge-tests
+      - remote-regression-test-runs-1.8.x
 
 permissions:
   pull-requests: write
