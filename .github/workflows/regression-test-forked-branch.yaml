@@ -19,11 +19,11 @@ on:
   push:
     branches:
       - remote-regression-test-runs
+      - remote-regression-test-runs-1.8.x
   pull_request:
     types: [labeled, opened, reopened, synchronize]
     branches:
       - remote-pre-merge-tests
-      - remote-regression-test-runs-1.8.x
 
 permissions:
   pull-requests: write
