@@ -19,7 +19,7 @@ on:
   push:
     branches:
       - remote-regression-test-runs
-  pull_request:
+  pull_request_target:
     types: [labeled, opened, reopened, synchronize]
     branches:
       - remote-pre-merge-tests
@@ -31,12 +31,10 @@ permissions:
 jobs:
   run-regression-tests:
     runs-on: ubuntu-24.04
-    if: >
+    if: |
+      github.event_name == 'workflow_dispatch' ||
       github.event_name == 'push' ||
-      (
-        github.event_name == 'pull_request' &&
-        github.event.pull_request.head.repo.fork == true
-      )
+      github.event_name == 'pull_request_target'
     env:
       REACT_APP_FUNCTION_CATALOG_URL: ${{ secrets.REACT_APP_FUNCTION_CATALOG_URL }}
       REACT_APP_MLRUN_API_URL: ${{ secrets.REACT_APP_MLRUN_API_URL }}
@@ -46,9 +44,11 @@ jobs:
       failed_step: ${{ steps.identify_failure.outputs.FAILED_STEP }}
       job_status: ${{ job.status }}
     steps:
-      - name: Checkout code
+      - name: Checkout PR code safely
         id: checkout_code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Set up Node.js
         id: setup_node
@@ -90,7 +90,7 @@ jobs:
           elif [ "${{ steps.run_parallel_tasks.outcome }}" = "failure" ]; then
             FAILED_STEP="Run parallel tasks"
           elif [ "${{ steps.upload_reports.outcome }}" = "failure" ]; then
-            FAILED_STEP="Upload test reports" 
+            FAILED_STEP="Upload test reports"
           fi
           echo "failed_step=$FAILED_STEP" >> $GITHUB_OUTPUT
 
@@ -98,13 +98,14 @@ jobs:
     name: Regression Test - comment on PR
     runs-on: ubuntu-24.04
     needs: run-regression-tests
-    if: >
-        github.event_name == 'pull_request' &&
-        github.event.pull_request.head.repo.fork == true && always()
+    if: |
+      github.event_name == 'pull_request_target' &&
+      github.event.pull_request.head.repo.fork == true &&
+      always()
     env:
-          JOB_STATUS: ${{ needs.run-regression-tests.result }}
-          FAILED_STEP: ${{ needs.run-regression-tests.outputs.failed_step }}
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      JOB_STATUS: ${{ needs.run-regression-tests.result }}
+      FAILED_STEP: ${{ needs.run-regression-tests.outputs.failed_step }}
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
     steps:
       - name: Post PR comment (success, failure, or cancelled)
         uses: actions/github-script@v6
