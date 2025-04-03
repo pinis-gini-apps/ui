@@ -17,10 +17,16 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+
+const HEADLESS = process.env.HEADLESS === 'true' || false
+
+/* eslint-disable-next-line no-console */
+console.log(`DRIVER_SLEEP: ${HEADLESS}`)
+
 module.exports = {
   timeout: 60000,
   browser: 'chrome',
-  headless: false,
+  headless: HEADLESS,
   screen_size: { width: 1600, height: 900 },
   report: 'tests/reports/cucumber_report',
   test_url: 'localhost',
