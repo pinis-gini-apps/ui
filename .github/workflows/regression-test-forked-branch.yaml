@@ -1,0 +1,156 @@
+# Copyright 2019 Iguazio
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+name: Pre-Merge Regression Tests
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - remote-regression-test-runs
+  pull_request_target:
+    types: [labeled, opened, reopened, synchronize]
+    branches:
+      - remote-pre-merge-tests
+
+permissions:
+  pull-requests: write
+  issues: write
+
+jobs:
+  run-regression-tests:
+    runs-on: ubuntu-24.04
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'push' ||
+      github.event_name == 'pull_request_target'
+    env:
+      REACT_APP_FUNCTION_CATALOG_URL: ${{ secrets.REACT_APP_FUNCTION_CATALOG_URL }}
+      REACT_APP_MLRUN_API_URL: ${{ secrets.REACT_APP_MLRUN_API_URL }}
+      REACT_APP_NUCLIO_API_URL: ${{ secrets.REACT_APP_NUCLIO_API_URL }}
+      REACT_APP_IGUAZIO_API_URL: ${{ secrets.REACT_APP_IGUAZIO_API_URL }}
+    outputs:
+      failed_step: ${{ steps.identify_failure.outputs.FAILED_STEP }}
+      job_status: ${{ job.status }}
+    steps:
+      - name: Checkout PR code safely
+        id: checkout_code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Set up Node.js
+        id: setup_node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        id: install_dependencies
+        run: npm install
+
+      - name: Run parallel tasks
+        id: run_parallel_tasks
+        run: |
+          npm run add-comment-to-http-client &
+          npm run mock-server &
+          npm start &
+          npm run test:regression
+
+      - name: Upload test reports
+        id: upload_reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: tests/reports/
+          if-no-files-found: error
+
+      - name: Identify failed step
+        if: ${{ always() }}
+        id: identify_failure
+        run: |
+          FAILED_STEP=""
+          if [ "${{ steps.checkout_code.outcome }}" = "failure" ]; then
+            FAILED_STEP="Checkout code"
+          elif [ "${{ steps.setup_node.outcome }}" = "failure" ]; then
+            FAILED_STEP="Set up Node.js"
+          elif [ "${{ steps.install_dependencies.outcome }}" = "failure" ]; then
+            FAILED_STEP="Install dependencies"
+          elif [ "${{ steps.run_parallel_tasks.outcome }}" = "failure" ]; then
+            FAILED_STEP="Run parallel tasks"
+          elif [ "${{ steps.upload_reports.outcome }}" = "failure" ]; then
+            FAILED_STEP="Upload test reports"
+          fi
+          echo "failed_step=$FAILED_STEP" >> $GITHUB_OUTPUT
+
+  comment-pr:
+    name: Regression Test - comment on PR
+    runs-on: ubuntu-24.04
+    needs: run-regression-tests
+    if: |
+      github.event_name == 'pull_request_target' &&
+      github.event.pull_request.head.repo.fork == true &&
+      always()
+    env:
+      JOB_STATUS: ${{ needs.run-regression-tests.result }}
+      FAILED_STEP: ${{ needs.run-regression-tests.outputs.failed_step }}
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    steps:
+      - name: Post PR comment (success, failure, or cancelled)
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const jobStatus = process.env.JOB_STATUS;
+            const failedStep = process.env.FAILED_STEP;
+
+            const prOwner = context.payload.pull_request.head.repo.owner.login;
+            const prRepo = context.payload.pull_request.head.repo.name;
+
+            if (jobStatus === 'success') {
+              github.rest.issues.createComment({
+                owner: prOwner,
+                repo: prRepo,
+                issue_number: context.issue.number,
+                body: "**Regression Test workflow finished successfully.** ✅",
+                headers: {
+                  Authorization: `token ${process.env.GH_TOKEN}`
+                }
+              });
+            } else if (jobStatus === 'cancelled') {
+              github.rest.issues.createComment({
+                owner: prOwner,
+                repo: prRepo,
+                issue_number: context.issue.number,
+                body: "**Regression Test workflow was cancelled.** ⚠️",
+                headers: {
+                  Authorization: `token ${process.env.GH_TOKEN}`
+                }
+              });
+            } else if (jobStatus === 'failure') {
+              let body = "**Regression Test workflow failed.** ❌";
+              if (failedStep) {
+                body += `\nFailed step: **${failedStep}**`;
+              } else {
+                body += "\nFailed step: Unknown";
+              }
+              github.rest.issues.createComment({
+                owner: prOwner,
+                repo: prRepo,
+                issue_number: context.issue.number,
+                body: body,
+                headers: {
+                  Authorization: `token ${process.env.GH_TOKEN}`
+                }
+              });
+            }
