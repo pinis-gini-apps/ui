@@ -50,6 +50,31 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
+      - name: Fetch test-related files from target branch
+        run: |
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+          git checkout origin/${{ github.event.pull_request.base.ref }} -- \
+            tests/config.js \
+            scripts/testui.js \
+            scripts/ci-cd-scripts/appendCommentToHttpClient.js \
+            scripts/ci-cd-scripts/commentedHttpClient.js
+
+      - name: Patch package.json scripts
+        run: |
+          cat << 'EOF' > patch-package-json.js
+          const fs = require("fs");
+          const pkgPath = "package.json";
+          const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
+
+          pkg.scripts = pkg.scripts || {};
+          pkg.scripts["add-comment-to-http-client"] = "node scripts/ci-cd-scripts/appendCommentToHttpClient.js";
+          pkg.scripts["test:regression"] = "HEADLESS=true npm run test:ui && sleep 10 && echo 'Finished regression' && sleep 10 && npm run report";
+
+          fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2));
+          EOF
+
+          node patch-package-json.js
+
       - name: Set up Node.js
         id: setup_node
         uses: actions/setup-node@v4
@@ -107,48 +132,32 @@ jobs:
       FAILED_STEP: ${{ needs.run-regression-tests.outputs.failed_step }}
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
     steps:
-      - name: Post PR comment (success, failure, or cancelled)
+      - name: Post PR comment
         uses: actions/github-script@v6
         with:
           script: |
             const jobStatus = process.env.JOB_STATUS;
             const failedStep = process.env.FAILED_STEP;
-
-            const prOwner = context.payload.pull_request.head.repo.owner.login;
-            const prRepo = context.payload.pull_request.head.repo.name;
+            const pr = context.payload.pull_request;
+            let body = '';
 
             if (jobStatus === 'success') {
-              github.rest.issues.createComment({
-                owner: prOwner,
-                repo: prRepo,
-                issue_number: context.issue.number,
-                body: "**Regression Test workflow finished successfully.** ✅",
-                headers: {
-                  Authorization: `token ${process.env.GH_TOKEN}`
-                }
-              });
+              body = "**Regression Test workflow finished successfully.** ✅";
             } else if (jobStatus === 'cancelled') {
-              github.rest.issues.createComment({
-                owner: prOwner,
-                repo: prRepo,
-                issue_number: context.issue.number,
-                body: "**Regression Test workflow was cancelled.** ⚠️",
-                headers: {
-                  Authorization: `token ${process.env.GH_TOKEN}`
-                }
-              });
+              body = "**Regression Test workflow was cancelled.** ⚠️";
             } else if (jobStatus === 'failure') {
-              let body = "**Regression Test workflow failed.** ❌";
-              if (failedStep) {
-                body += `\nFailed step: **${failedStep}**`;
-              } else {
-                body += "\nFailed step: Unknown";
+              body = "**Regression Test workflow failed.** ❌";
+              body += failedStep
+                ? `\nFailed step: **${failedStep}**`
+                : "\nFailed step: Unknown";
               }
+
+            if (body) {
               github.rest.issues.createComment({
-                owner: prOwner,
-                repo: prRepo,
-                issue_number: context.issue.number,
-                body: body,
+                owner: pr.head.repo.owner.login,
+                repo: pr.head.repo.name,
+                issue_number: pr.number,
+                body,
                 headers: {
                   Authorization: `token ${process.env.GH_TOKEN}`
                 }
