@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-name: Regression Tests Forked Branch
+name: Pre-Merge Regression Tests
 
 on:
   workflow_dispatch:
@@ -23,6 +23,10 @@ on:
     types: [labeled, opened, reopened, synchronize]
     branches:
       - remote-pre-merge-tests
+
+permissions:
+  pull-requests: write
+  issues: write
 
 jobs:
   run-regression-tests:
@@ -41,19 +45,46 @@ jobs:
       job_status: ${{ job.status }}
     steps:
       - name: Checkout PR code safely
+        id: checkout_code
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
+      - name: Fetch test-related files from target branch
+        run: |
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+          git checkout origin/${{ github.event.pull_request.base.ref }} -- \
+            tests/config.js \
+            scripts/testui.js \
+            scripts/ci-cd-scripts/appendCommentToHttpClient.js \
+            scripts/ci-cd-scripts/commentedHttpClient.js
+
+      - name: Patch package.json scripts
+        run: |
+          node -e '
+            const fs = require("fs");
+            const pkgPath = "package.json";
+            const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
+
+            pkg.scripts = pkg.scripts || {};
+            pkg.scripts["add-comment-to-http-client"] = "node scripts/ci-cd-scripts/appendCommentToHttpClient.js";
+            pkg.scripts["test:regression"] = "HEADLESS=true npm run test:ui && sleep 10 && echo \'Finished regression\' && sleep 10 && npm run report";
+
+            fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2));
+          '
+
       - name: Set up Node.js
+        id: setup_node
         uses: actions/setup-node@v4
         with:
           node-version: '16'
 
       - name: Install dependencies
+        id: install_dependencies
         run: npm install
 
-      - name: Run regression tasks
+      - name: Run parallel tasks
+        id: run_parallel_tasks
         run: |
           npm run add-comment-to-http-client &
           npm run mock-server &
@@ -61,6 +92,7 @@ jobs:
           npm run test:regression
 
       - name: Upload test reports
+        id: upload_reports
         uses: actions/upload-artifact@v4
         with:
           name: test-reports
@@ -72,12 +104,17 @@ jobs:
         id: identify_failure
         run: |
           FAILED_STEP=""
-          for step in checkout setup_node install_dependencies run_parallel_tasks upload_reports; do
-            if [ "${{ steps[$step].outcome }}" = "failure" ]; then
-              FAILED_STEP=$step
-              break
-            fi
-          done
+          if [ "${{ steps.checkout_code.outcome }}" = "failure" ]; then
+            FAILED_STEP="Checkout code"
+          elif [ "${{ steps.setup_node.outcome }}" = "failure" ]; then
+            FAILED_STEP="Set up Node.js"
+          elif [ "${{ steps.install_dependencies.outcome }}" = "failure" ]; then
+            FAILED_STEP="Install dependencies"
+          elif [ "${{ steps.run_parallel_tasks.outcome }}" = "failure" ]; then
+            FAILED_STEP="Run parallel tasks"
+          elif [ "${{ steps.upload_reports.outcome }}" = "failure" ]; then
+            FAILED_STEP="Upload test reports"
+          fi
           echo "failed_step=$FAILED_STEP" >> $GITHUB_OUTPUT
 
   comment-pr:
