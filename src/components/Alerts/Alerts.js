@@ -20,6 +20,7 @@ such restriction.
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import { isEmpty } from 'lodash'
 
 import AlertsView from './AlertsView'
 
@@ -31,13 +32,12 @@ import {
   checkForSelectedAlert
 } from './alerts.util'
 import { getJobLogs } from '../../utils/getJobLogs.util'
-import projectsAction from '../../actions/projects'
 import { useAlertsPageData } from '../../hooks/useAlertsPageData'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
+import { removeProjects } from '../../reducers/projectReducer'
 
 const Alerts = () => {
   const [selectedAlert, setSelectedAlert] = useState({})
-  const [, setProjectsRequestErrorMessage] = useState('')
   const alertsStore = useSelector(state => state.alertsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const dispatch = useDispatch()
@@ -79,14 +79,9 @@ const Alerts = () => {
     return paginatedAlerts.map(alert => createAlertRowData(alert, isCrossProjects))
   }, [isCrossProjects, paginatedAlerts])
 
-  const fetchMinimalProjects = useCallback(() => {
-    dispatch(projectsAction.fetchProjects({ format: 'minimal' }, setProjectsRequestErrorMessage))
-  }, [dispatch])
-
   useEffect(() => {
-    dispatch(projectsAction.removeProjects())
-    isCrossProjects && fetchMinimalProjects()
-  }, [dispatch, isCrossProjects, fetchMinimalProjects])
+    dispatch(removeProjects())
+  }, [dispatch, isCrossProjects])
 
   const handleCancel = () => {
     setSelectedAlert({})
@@ -94,9 +89,10 @@ const Alerts = () => {
 
   const handleFetchJobLogs = useCallback(
     (item, projectName, setDetailsLogs, streamLogsRef) => {
-      return getJobLogs(item.uid, projectName, streamLogsRef, setDetailsLogs, dispatch)
+      lastCheckedAlertIdRef.current &&
+        getJobLogs(item.uid, projectName, streamLogsRef, setDetailsLogs, dispatch)
     },
-    [dispatch]
+    [dispatch, lastCheckedAlertIdRef]
   )
 
   const pageData = useMemo(
@@ -132,6 +128,12 @@ const Alerts = () => {
     setSearchParams,
     tableContent
   ])
+
+  useEffect(() => {
+    if (isEmpty(selectedAlert)) {
+      lastCheckedAlertIdRef.current = null
+    }
+  }, [lastCheckedAlertIdRef, selectedAlert])
 
   return (
     <AlertsView

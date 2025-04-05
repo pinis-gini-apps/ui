@@ -62,7 +62,6 @@ import pipelines from './data/pipelines.json'
 import secretKeys from './data/secretKeys.json'
 import pipelineIDs from './data/piplineIDs.json'
 import schedules from './data/schedules.json'
-import artifactTags from './data/artifactsTags.json'
 import funcs from './data/funcs.json'
 import logs from './data/logs.json'
 import modelEndpoints from './data/modelEndpoints.json'
@@ -85,12 +84,25 @@ import {
   updatePipelineIDs,
   updateSchedules
 } from './dateSynchronization.js'
+import {
+  generateArtifacts,
+  generateFunctions,
+  makeUID,
+  generateRuns,
+  generateAlerts
+} from './dataGenerators.js'
 
 // Updating values in files with synthetic data
 updateRuns(runs)
 updatePipelines(pipelines)
 updatePipelineIDs(pipelineIDs)
 updateSchedules(schedules)
+
+// generate a lot of data for auto-generated-data project
+generateArtifacts(artifacts)
+generateFunctions(funcs)
+generateRuns(runs)
+generateAlerts(alerts)
 
 // Here we are configuring express to use body-parser as middle-ware.
 const app = express()
@@ -195,6 +207,12 @@ const nuclioApiUrl = '/nuclio-ingress.default-tenant.app.vmdev36.lab.iguazeng.co
 const iguazioApiUrl = '/platform-api.default-tenant.app.vmdev36.lab.iguazeng.com'
 const port = 30000
 const NOT_ALLOWED_SECRET_KEY = 'mlrun.'
+const artifactsCategories = {
+  dataset: ['dataset'],
+  document: ['document'],
+  model: ['model'],
+  other: ['', 'table', 'link', 'plot', 'chart', 'plotly', 'artifact']
+}
 
 // Support functions
 function createTask(projectName, config) {
@@ -308,18 +326,6 @@ function getPaginationConfig(data, query) {
   }
 
   return [pageData, paginationQueryConfig]
-}
-
-function makeUID(length) {
-  let result = ''
-  const characters = 'abcdef0123456789'
-  const charactersLength = characters.length
-
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength))
-  }
-
-  return result
 }
 
 function deleteProjectHandler(req, res, omitResponse) {
@@ -442,8 +448,9 @@ function getFeatureSet(req, res) {
       const specFields = ['description', 'entities', 'targets', 'engine'].map(
         fieldName => `spec.${fieldName}`
       )
+      const statusFields = ['state', 'stats', 'preview'].map(fieldName => `status.${fieldName}`)
 
-      return pick(featureSet, ['kind', ...metadataFields, 'status.state', ...specFields])
+      return pick(featureSet, ['kind', ...metadataFields, ...statusFields, ...specFields])
     })
   }
 
@@ -509,6 +516,7 @@ function createNewProject(req, res) {
   } else if (!collectedProjects.length) {
     const project = cloneDeep(projectTemplate)
     project.metadata.name = req.body.metadata.name
+    project.metadata.labels = req.body.metadata.labels
     project.metadata.created = currentDate.toISOString()
     project.spec.description = req.body.spec.description
     projects.projects.push(project)
@@ -883,7 +891,9 @@ function getAlerts(req, res) {
   // TODO:ML-8514 Update getAlerts to support both parameters and query strings.
   let collectedAlerts = alerts.activations
 
-  const [paginatedAlerts, pagination] = getPaginationConfig(collectedAlerts, req.query)
+  if (req.params.project !== '*') {
+    collectedAlerts = collectedAlerts.filter(alert => alert.project === req.params.project)
+  }
 
   if (req.query['name']) {
     collectedAlerts = collectedAlerts.filter(schedule =>
@@ -926,7 +936,25 @@ function getAlerts(req, res) {
     )
   }
 
-  res.send({ activations: collectedAlerts, paginatedAlerts, pagination })
+  const [paginatedAlerts, pagination] = getPaginationConfig(collectedAlerts, req.query)
+
+  res.send({ activations: paginatedAlerts, pagination })
+}
+
+function getAlert(req, res) {
+  const searchedAlert = alerts.activations.find(alert => {
+    return alert.project === req.params.project && Number(alert.id) === Number(req.params.id)
+  })
+
+  if (!searchedAlert) {
+    res.statusCode = 404
+
+    return res.send({
+      detail: `MLRunNotFoundError('Alert activation not found: activation_id=${req.params.id}')`
+    })
+  }
+
+  res.send(searchedAlert)
 }
 
 function patchRun(req, res) {
@@ -1296,18 +1324,24 @@ function getProjectsFeatureArtifactTags(req, res) {
 }
 
 function getProjectsArtifactTags(req, res) {
-  let artifactTag = artifactTags.find(aTag => aTag.project === req.params['project'])
+  let collectedArtifacts = artifacts.artifacts.filter(
+    artifact =>
+      artifact.metadata.tag &&
+      (artifact.metadata?.project === req.params.project || artifact.project === req.params.project)
+  )
 
-  res.send(artifactTag)
+  if (req.query['category']) {
+    collectedArtifacts = collectedArtifacts.filter(artifact =>
+      artifactsCategories[req.query['category']].includes(artifact.kind)
+    )
+  }
+
+  const tags = collectedArtifacts.map(artifact => artifact.metadata.tag)
+
+  res.send({project: req.params.project, tags})
 }
 
 function getArtifacts(req, res) {
-  const categories = {
-    dataset: ['dataset'],
-    document: ['document'],
-    model: ['model'],
-    other: ['', 'table', 'link', 'plot', 'chart', 'plotly', 'artifact']
-  }
   let collectedArtifacts = artifacts.artifacts.filter(
     artifact =>
       artifact.metadata?.project === req.params.project || artifact.project === req.params.project
@@ -1315,7 +1349,7 @@ function getArtifacts(req, res) {
 
   if (req.query['category']) {
     collectedArtifacts = collectedArtifacts.filter(artifact =>
-      categories[req.query['category']].includes(artifact.kind)
+      artifactsCategories[req.query['category']].includes(artifact.kind)
     )
   }
 
@@ -1384,9 +1418,14 @@ function getArtifacts(req, res) {
     )
   }
 
+  const sortArtifactBy = ['crated', 'updated'].includes(req.query['partition-sort-by'])
+    ? req.query['partition-sort-by']
+    : 'updated'
+
   collectedArtifacts = collectedArtifacts.sort((prevArtifact, nextArtifact) => {
-    const datePrevArtifact = new Date(prevArtifact.metadata.updated)
-    const dateNextArtifact = new Date(nextArtifact.metadata.updated)
+    const datePrevArtifact = new Date(prevArtifact.metadata[sortArtifactBy])
+    const dateNextArtifact = new Date(nextArtifact.metadata[sortArtifactBy])
+
     return dateNextArtifact - datePrevArtifact
   })
 
@@ -2065,9 +2104,6 @@ function postSubmitJob(req, res) {
 function putTags(req, res) {
   const tagName = req.params.tag
   const projectName = req.params.project
-  const tagObject = artifactTags.find(
-    artifact => artifact.metadata?.project === projectName || artifact.project === projectName
-  )
 
   const collectedArtifacts = artifacts.artifacts.filter(artifact => {
     const artifactMetaData = artifact.metadata ?? artifact
@@ -2087,15 +2123,6 @@ function putTags(req, res) {
     let editedTag = cloneDeep(collectedArtifacts[0])
     editedTag.metadata ? (editedTag.metadata.tag = tagName) : (editedTag.tag = tagName)
     artifacts.artifacts.push(editedTag)
-  }
-
-  if (tagObject) {
-    tagObject.tags.push(tagName)
-  } else {
-    artifactTags.push({
-      project: req.body.metadata.project,
-      tags: [tagName]
-    })
   }
 
   res.send({
@@ -2170,11 +2197,6 @@ function getArtifact(req, res) {
 function postArtifact(req, res) {
   const currentDate = new Date()
   const artifactTag = req.body.metadata.tag || 'latest'
-  const tagObject = artifactTags.find(
-    artifact =>
-      artifact.metadata?.project === req.body.metadata.project ||
-      artifact.project === req.body.metadata.project
-  )
   const artifactUID = makeUID(40)
 
   const artifactTemplate = {
@@ -2244,15 +2266,6 @@ function postArtifact(req, res) {
     artifactTemplateLatest.metadata['tag'] = 'latest'
     artifacts.artifacts.push(artifactTemplate)
     artifacts.artifacts.push(artifactTemplateLatest)
-  }
-
-  if (tagObject) {
-    tagObject.tags.push(artifactTag)
-  } else {
-    artifactTags.push({
-      project: req.body.metadata.project,
-      tags: [artifactTag]
-    })
   }
 
   res.send()
@@ -2712,9 +2725,10 @@ app.get(`${mlrunAPIIngress}/project-summaries/:project`, getProjectSummary)
 
 app.get(`${mlrunAPIIngress}/projects/:project/runs`, getRuns)
 app.get(`${mlrunAPIIngress}/projects/*/runs`, getRuns)
-app.get(`${mlrunAPIIngress}/projects/*/alert-activations`, getAlerts)
-app.get(`${mlrunAPIIngress}/run/:project/:uid`, getRun)
-app.patch(`${mlrunAPIIngress}/run/:project/:uid`, patchRun)
+app.get(`${mlrunAPIIngress}/projects/:project/alert-activations`, getAlerts)
+app.get(`${mlrunAPIIngress}/projects/:project/alert-activations/:id`, getAlert)
+app.get(`${mlrunAPIIngress}/projects/:project/runs/:uid`, getRun)
+app.patch(`${mlrunAPIIngress}/projects//:project/runs/:uid`, patchRun)
 app.delete(`${mlrunAPIIngress}/projects/:project/runs/:uid`, deleteRun)
 app.delete(`${mlrunAPIIngress}/projects/:project/runs`, deleteRuns)
 app.post(`${mlrunAPIIngress}/projects/:project/runs/:uid/abort`, abortRun)
@@ -2791,7 +2805,7 @@ app.post(`${mlrunAPIIngress}/build/function`, deployMLFunction)
 app.get(`${mlrunAPIIngress}/projects/:project/files`, getFile)
 app.get(`${mlrunAPIIngress}/projects/:project/filestat`, getFileStats)
 
-app.get(`${mlrunAPIIngress}/log/:project/:uid`, getLog)
+app.get(`${mlrunAPIIngress}/projects/:project/logs/:uid`, getLog)
 
 app.get(`${mlrunAPIIngress}/projects/:project/runtime-resources`, getRuntimeResources)
 

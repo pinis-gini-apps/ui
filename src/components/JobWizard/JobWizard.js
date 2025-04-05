@@ -63,7 +63,6 @@ import {
   getSaveJobErrorMsg
 } from './JobWizard.util'
 import functionsActions from '../../actions/functions'
-import projectsAction from '../../actions/projects'
 import { FUNCTIONS_SELECTION_FUNCTIONS_TAB } from './JobWizardSteps/JobWizardFunctionSelection/jobWizardFunctionSelection.util'
 import { JOB_WIZARD_MODE } from '../../types'
 import { MODAL_MAX } from 'igz-controls/constants'
@@ -73,6 +72,7 @@ import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { editJob, removeJobFunction, runNewJob } from '../../reducers/jobReducer'
+import { fetchProject } from '../../reducers/projectReducer'
 
 import './jobWizard.scss'
 
@@ -137,7 +137,15 @@ const JobWizard = ({
 
   useEffect(() => {
     if (!isEditMode) {
-      dispatch(projectsAction.fetchProject(params.projectName, { format: 'minimal' }))
+      dispatch(
+        fetchProject({
+          project: params.projectName,
+          params: {
+            format: 'minimal'
+          }
+        })
+      )
+        .unwrap()
         .then(response => setCurrentProject(response?.data))
         .catch(error => {
           showErrorNotification(dispatch, error, 'The project failed to load')
@@ -302,18 +310,6 @@ const JobWizard = ({
     [isBatchInference, isEditMode, isRunMode, isTrain, selectedFunctionData]
   )
 
-  const searchParams = useCallback(
-    isSchedule => {
-      if ((!isSchedule && tab === MONITOR_JOBS_TAB) || (isSchedule && tab === SCHEDULE_TAB)) {
-        return window.location.search
-      }
-      return ''
-    },
-    [tab]
-  )
-
-  searchParams()
-
   const runJobHandler = useCallback(
     (formData, selectedFunctionData, params, isSchedule) => {
       const jobRequestData = generateJobRequestData(
@@ -331,7 +327,7 @@ const JobWizard = ({
             setShowSchedule(state => !state)
           }
           resolveModal()
-          onSuccessRequest && onSuccessRequest()
+          onSuccessRequest && onSuccessRequest(true)
           dispatch(
             setNotification({
               status: 200,
@@ -342,14 +338,14 @@ const JobWizard = ({
         })
         .then(() => {
           return navigate(
-            `/projects/${params.projectName}/jobs/${isSchedule ? SCHEDULE_TAB : MONITOR_JOBS_TAB}${searchParams(isSchedule)}`
+            `/projects/${params.projectName}/jobs/${isSchedule ? SCHEDULE_TAB : MONITOR_JOBS_TAB}`
           )
         })
         .catch(error => {
           showErrorNotification(dispatch, error, '', getNewJobErrorMsg(error))
         })
     },
-    [dispatch, mode, navigate, onSuccessRequest, resolveModal, searchParams]
+    [dispatch, mode, navigate, onSuccessRequest, resolveModal]
   )
 
   const editJobHandler = useCallback(
@@ -577,7 +573,6 @@ export default connect(
     jobsStore
   }),
   {
-    ...functionsActions,
-    ...projectsAction
+    ...functionsActions
   }
 )(JobWizard)

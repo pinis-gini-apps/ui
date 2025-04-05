@@ -21,7 +21,7 @@ import React, { useCallback, useEffect, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 import arrayMutators from 'final-form-arrays'
 import { Form } from 'react-final-form'
-import { connect, useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { createForm } from 'final-form'
 import { cloneDeep, isEmpty } from 'lodash'
 import { useParams } from 'react-router-dom'
@@ -38,7 +38,6 @@ import {
 import ChangeOwnerPopUp from '../ChangeOwnerPopUp/ChangeOwnerPopUp'
 import Loader from '../../common/Loader/Loader'
 
-import projectsAction from '../../actions/projects'
 import projectsApi from '../../api/projects-api'
 import {
   ARTIFACT_PATH,
@@ -69,21 +68,21 @@ import { parseChipsData, convertChipsData } from '../../utils/convertChipsData'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { areNodeSelectorsSupported } from './projectSettingsGeneral.utils'
+import { fetchProject, removeProjectData } from '../../reducers/projectReducer'
 
 import './projectSettingsGeneral.scss'
 
 const ProjectSettingsGeneral = ({
   changeOwnerCallback,
-  fetchProject,
-  frontendSpec,
   membersState,
-  projectStore,
   projectMembershipIsEnabled,
-  projectOwnerIsShown,
-  removeProjectData
+  projectOwnerIsShown
 }) => {
   const [projectIsInitialized, setProjectIsInitialized] = useState(false)
   const [lastEditedProjectValues, setLastEditedProjectValues] = useState({})
+  const internalLabelsValidatedRef = useRef(true)
+  const projectStore = useSelector(store => store.projectStore)
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
 
   const formRef = useRef(
     createForm({
@@ -100,32 +99,32 @@ const ProjectSettingsGeneral = ({
     if (!projectIsInitialized) {
       setProjectIsInitialized(true)
 
-      fetchProject(params.projectName)
+      dispatch(fetchProject({ project: params.projectName }))
+        .unwrap()
         .then(response => {
-          setTimeout(() => {
-            const newInitial = {
-              [SOURCE_URL]: response?.data?.spec?.[SOURCE_URL],
-              [ARTIFACT_PATH]: response?.data?.spec?.[ARTIFACT_PATH],
-              [LOAD_SOURCE_ON_RUN]: response?.data?.spec?.[LOAD_SOURCE_ON_RUN],
-              [DEFAULT_IMAGE]: response?.data?.spec?.[DEFAULT_IMAGE],
-              [DESCRIPTION]: response?.data?.spec?.[DESCRIPTION],
-              [GOALS]: response?.data?.spec?.[GOALS],
-              [PARAMS]: parseObjectToKeyValue(response?.data?.spec?.[PARAMS]),
-              [LABELS]: parseChipsData(
-                response?.data?.metadata?.[LABELS],
-                frontendSpec.internal_labels || []
-              )
-            }
+          const newInitial = {
+            [SOURCE_URL]: response?.data?.spec?.[SOURCE_URL],
+            [ARTIFACT_PATH]: response?.data?.spec?.[ARTIFACT_PATH],
+            [LOAD_SOURCE_ON_RUN]: response?.data?.spec?.[LOAD_SOURCE_ON_RUN],
+            [DEFAULT_IMAGE]: response?.data?.spec?.[DEFAULT_IMAGE],
+            [DESCRIPTION]: response?.data?.spec?.[DESCRIPTION],
+            [GOALS]: response?.data?.spec?.[GOALS],
+            [PARAMS]: parseObjectToKeyValue(response?.data?.spec?.[PARAMS] || {}),
+            [LABELS]: parseChipsData(
+              response?.data?.metadata?.[LABELS],
+              frontendSpec.internal_labels || []
+            )
+          }
 
-            if (areNodeSelectorsSupported) {
-              newInitial[NODE_SELECTORS] = parseObjectToKeyValue(
-                response?.data?.spec?.[NODE_SELECTORS]
-              )
-            }
+          if (areNodeSelectorsSupported) {
+            newInitial[NODE_SELECTORS] = parseObjectToKeyValue(
+              response?.data?.spec?.[NODE_SELECTORS]
+            )
+          }
 
-            setLastEditedProjectValues(newInitial)
-            formStateRef.current.form.restart(newInitial)
-          }, 10)
+          internalLabelsValidatedRef.current = !isEmpty(frontendSpec)
+          setLastEditedProjectValues(newInitial)
+          formStateRef.current.form.restart(newInitial)
         })
         .catch(error => {
           const customErrorMsg =
@@ -136,21 +135,34 @@ const ProjectSettingsGeneral = ({
           showErrorNotification(dispatch, error, '', customErrorMsg)
         })
     }
-  }, [
-    params.pageTab,
-    params.projectName,
-    fetchProject,
-    dispatch,
-    frontendSpec.internal_labels,
-    projectIsInitialized
-  ])
+  }, [params.pageTab, params.projectName, dispatch, frontendSpec, projectIsInitialized])
+
+  useEffect(() => {
+    if (
+      !isEmpty(frontendSpec) &&
+      !isEmpty(lastEditedProjectValues) &&
+      !internalLabelsValidatedRef.current
+    ) {
+      const parsedLabels = parseChipsData(
+        projectStore.project.data?.metadata?.[LABELS],
+        frontendSpec.internal_labels || []
+      )
+
+      formStateRef.current.form.change(LABELS, parsedLabels)
+      setLastEditedProjectValues(state => ({
+        ...state,
+        [LABELS]: parsedLabels
+      }))
+      internalLabelsValidatedRef.current = true
+    }
+  }, [frontendSpec, projectStore.project.data, lastEditedProjectValues])
 
   useEffect(() => {
     return () => {
-      removeProjectData()
+      dispatch(removeProjectData())
       setProjectIsInitialized(false)
     }
-  }, [removeProjectData])
+  }, [dispatch])
 
   const sendProjectSettingsData = useCallback(
     projectData => {
@@ -316,10 +328,11 @@ const ProjectSettingsGeneral = ({
                       </div>
                       <div className="settings__labels">
                         <FormChipCell
+                          key={`${LABELS}_${internalLabelsValidatedRef.current}`}
                           chipOptions={getChipOptions('metrics')}
                           formState={formState}
                           initialValues={formState.initialValues}
-                          isEditable
+                          isEditable={internalLabelsValidatedRef.current}
                           label="Labels"
                           name={LABELS}
                           shortChips
@@ -328,7 +341,7 @@ const ProjectSettingsGeneral = ({
                           validationRules={{
                             key: getValidationRules(
                               'project.labels.key',
-                              getInternalLabelsValidationRule(frontendSpec.internal_labels || [])
+                              getInternalLabelsValidationRule(frontendSpec.internal_labels)
                             ),
                             value: getValidationRules('project.labels.value')
                           }}
@@ -356,23 +369,25 @@ const ProjectSettingsGeneral = ({
                       )}
                     </div>
                     <div className="settings__card-content-col">
-                      <div className="settings__owner">
-                        <div className="settings__owner-row">
-                          <div className="row-value">
-                            <span className="row-label">Owner:</span>
-                            <span className="row-name">
-                              {membersState.projectInfo?.owner?.username ||
-                                projectStore.project.data?.spec?.owner}
-                            </span>
+                      {!frontendSpec.ce?.version && (
+                        <div className="settings__owner">
+                          <div className="settings__owner-row">
+                            <div className="row-value">
+                              <span className="row-label">Owner:</span>
+                              <span className="row-name">
+                                {membersState.projectInfo?.owner?.username ||
+                                  projectStore.project.data?.spec?.owner}
+                              </span>
+                            </div>
                           </div>
+                          {projectMembershipIsEnabled && projectOwnerIsShown && (
+                            <ChangeOwnerPopUp
+                              changeOwnerCallback={changeOwnerCallback}
+                              projectId={membersState.projectInfo.id}
+                            />
+                          )}
                         </div>
-                        {projectMembershipIsEnabled && projectOwnerIsShown && (
-                          <ChangeOwnerPopUp
-                            changeOwnerCallback={changeOwnerCallback}
-                            projectId={membersState.projectInfo.id}
-                          />
-                        )}
-                      </div>
+                      )}
                       <div>
                         <p className="settings__card-title">Parameters</p>
                         <p className="settings__card-subtitle">
@@ -404,10 +419,4 @@ ProjectSettingsGeneral.propTypes = {
   changeOwnerCallback: PropTypes.func.isRequired
 }
 
-export default connect(
-  ({ appStore, projectStore }) => ({
-    projectStore,
-    frontendSpec: appStore.frontendSpec
-  }),
-  { ...projectsAction }
-)(ProjectSettingsGeneral)
+export default ProjectSettingsGeneral

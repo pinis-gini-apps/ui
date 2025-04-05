@@ -1483,7 +1483,8 @@ Then(
 
     await hoverComponent(
       this.driver,
-      pageObjects[wizard][table]['tableFields'][column](indx)
+      pageObjects[wizard][table]['tableFields'][column](indx),
+      false
     )
     await this.driver.sleep(500)
     await componentIsPresent(this.driver, actionMenuSel)
@@ -1512,7 +1513,7 @@ Then(
       pageObjects[wizard][table]['tableFields'][column](indx)
     )
     await this.driver.sleep(500)
-	await checkComponentHintTextWithHover(
+	  await checkComponentHintTextWithHover(
       this.driver,
       actionMenuSel,
       pageObjects['commonPagesHeader']['Common_Tolltip'],

@@ -79,7 +79,8 @@ const functionsTable = {
         action_menu: {
           componentType: actionMenu,
           structure: actionMenuStructure
-        }
+        },
+        show_all_versions: '[data-testid="quick-link-show-all-versions"]'
       }
     }
   }
@@ -99,9 +100,8 @@ module.exports = {
     Table_Refresh_Button: By.css(
       '.content [data-testid="refresh-tooltip-wrapper"]'
     ),
-    Table_Expand_Rows_Button: By.css(
-      '.content [data-testid="toggle-collapse"]'
-    ),
+    Expand_All_Button: By.css('.action-bar [data-testid="toggle-collapse-tooltip-wrapper"]'),
+    Table_Expand_Rows_Button: By.css('#main-table-body .table-body__cell.table-cell-name svg'),
     Functions_Table: commonTable(functionsTable),
     Date_Picker_Filter_Dropdown: dropdownComponent(
       generateDropdownGroup(
@@ -111,6 +111,13 @@ module.exports = {
         '.data-ellipsis .data-ellipsis',
         false
       )
+    ),
+    History_Back_Button: By.css('.history-back-link .history-back-link__icon'),
+    Version_History_Title: By.css(
+      '.history-back-link .history-back-link__title [data-testid="version-history"]'
+    ),
+    Version_History_Model_Name: By.css(
+      '.history-back-link .history-back-link__title .data-ellipsis.tooltip-wrapper'
     )
   }
 }

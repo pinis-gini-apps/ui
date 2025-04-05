@@ -145,6 +145,7 @@ const ModelsView = React.forwardRef(
                   tab={MODELS_TAB}
                   tableClassName="models-table"
                   tableHeaders={!isEmpty(tableHeaders) ? tableHeaders : getDefaultFirstHeader(isAllVersions)}
+                  viewMode={viewMode}
                 >
                   {tableContent.map((tableItem, index) => (
                     <ArtifactsTableRow
@@ -167,6 +168,7 @@ const ModelsView = React.forwardRef(
               <Details
                 actionsMenu={actionsMenu}
                 applyDetailsChanges={applyDetailsChanges}
+                applyDetailsChangesCallback={applyDetailsChangesCallback}
                 detailsMenu={pageData.details.menu}
                 formInitialValues={detailsFormInitialValues}
                 handleRefresh={getAndSetSelectedArtifact}

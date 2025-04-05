@@ -25,6 +25,11 @@ import FeatureSetPopUp from '../../elements/DetailsPopUp/FeatureSetPopUp/Feature
 import JobPopUp from '../../elements/DetailsPopUp/JobPopUp/JobPopUp'
 
 import {
+  getValidationRules,
+  getInternalLabelsValidationRule
+} from 'igz-controls/utils/validation.util'
+
+import {
   DATASETS_PAGE,
   DOCUMENTS_TAB,
   FEATURE_SETS_TAB,
@@ -41,12 +46,14 @@ import { formatDatetime, generateLinkPath, parseUri } from '../../utils'
 import { isArtifactTagUnique } from '../../utils/artifacts.util'
 import { getFunctionImage } from '../FunctionsPage/functions.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import detailsActions from '../../actions/details'
 
 export const generateArtifactsContent = (
   detailsType,
   selectedItem,
   projectName,
-  isDetailsPopUp
+  isDetailsPopUp,
+  internal_labels
 ) => {
   if (detailsType === MODEL_ENDPOINTS_TAB) {
     const monitoringFeatureSetUri = selectedItem?.spec?.monitoring_feature_set_uri ?? ''
@@ -76,7 +83,7 @@ export const generateArtifactsContent = (
           })
       },
       function_tag: {
-        value: selectedItem?.spec?.function_uri?.match(/(?<=:)[^:]*$/) || 'latest'
+        value: selectedItem?.spec?.function_tag
       },
       monitoring_feature_set_uri: {
         value: monitoringFeatureSetUri,
@@ -199,13 +206,20 @@ export const generateArtifactsContent = (
         value: selectedItem.algorithm
       },
       labels: {
-        value: selectedItem.labels ?? [],
+        value: isEmpty(selectedItem.labels) ? [] : selectedItem.labels,
         fieldData: {
           name: 'labels'
         },
         editModeEnabled:
           !isDetailsPopUp && (detailsType === MODELS_TAB || detailsType === DOCUMENTS_TAB),
-        editModeType: 'chips'
+        editModeType: 'chips',
+        validationRules: {
+          key: getValidationRules(
+            'artifact.labels.key',
+            getInternalLabelsValidationRule(internal_labels)
+          ),
+          value: getValidationRules('artifact.labels.value')
+        }
       }
     }
   }
@@ -316,7 +330,7 @@ export const generateJobsContent = selectedItem => {
       value: selectedItem.resultsChips
     },
     labels: {
-      value: selectedItem.labels
+      value: isEmpty(selectedItem.labels) ? [] : selectedItem.labels
     },
     logLevel: {
       value: selectedItem.logLevel
@@ -396,7 +410,7 @@ export const generateFeatureSetsOverviewContent = (selectedItem, isDetailsPopUp)
     }
   },
   labels: {
-    value: selectedItem.labels ?? [],
+    value: isEmpty(selectedItem.labels) ? [] : selectedItem.labels,
     editModeEnabled: !isDetailsPopUp,
     editModeType: 'chips',
     fieldData: {
@@ -564,4 +578,27 @@ export const generateArtifactIdentifiers = (
   }
 
   setArtifactsIdentifiers(newArtifactsIdentifiers)
+}
+
+export const performDetailsActionHelper = async (changes, dispatch, filtersWasHandled = false) => {
+  let actionCanBePerformed = Promise.resolve(true)
+
+  if (changes.counter > 0) {
+    actionCanBePerformed = await new Promise(resolve => {
+      const resolver = isSuccess => {
+        window.removeEventListener('discardChanges', resolver)
+        window.removeEventListener('cancelLeave', resolver)
+
+        resolve(isSuccess)
+      }
+
+      window.addEventListener('discardChanges', () => resolver(true))
+      window.addEventListener('cancelLeave', () => resolver(false))
+
+      dispatch(detailsActions.setFiltersWasHandled(filtersWasHandled))
+      dispatch(detailsActions.showWarning(true))
+    })
+  }
+
+  return actionCanBePerformed
 }

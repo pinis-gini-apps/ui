@@ -123,7 +123,7 @@ const WorkflowsTable = React.forwardRef(
     const { sortedTableContent } = useSortTable({
       headers: tableContent[0]?.content,
       content: tableContent,
-      sortConfig: { defaultSortBy: 'startedAt' }
+      sortConfig: { defaultSortBy: 'createdat', defaultDirection: 'desc' }
     })
 
     const handleRetry = useCallback(() => {
@@ -400,9 +400,7 @@ const WorkflowsTable = React.forwardRef(
         dispatch(rerunWorkflow({ project: workflow.project, workflowId: workflow.id }))
           .unwrap()
           .then(() => {
-            setTimeout(() => {
-              handleRetry()
-            }, 5000)
+            handleRetry()
             dispatch(
               setNotification({
                 status: 200,

@@ -40,7 +40,6 @@ import {
   validTabs
 } from './projectSettings.util'
 import { onDeleteProject } from '../ProjectsPage/projects.util'
-import projectsAction from '../../actions/projects'
 import {
   initialMembersState,
   membersActions,
@@ -50,6 +49,7 @@ import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { PROJECTS_SETTINGS_MEMBERS_TAB, PROJECTS_SETTINGS_SECRETS_TAB } from '../../constants'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
+import { fetchProjects } from '../../reducers/projectReducer'
 
 import './projectSettings.scss'
 
@@ -68,7 +68,8 @@ const ProjectSettings = () => {
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
 
   const projectMembershipIsEnabled = useMemo(
-    () => frontendSpec?.feature_flags?.project_membership === 'enabled',
+    () =>
+      frontendSpec?.feature_flags?.project_membership === 'enabled' || frontendSpec?.ce?.version,
     [frontendSpec]
   )
 
@@ -243,7 +244,7 @@ const ProjectSettings = () => {
   }, [])
 
   const fetchMinimalProjects = useCallback(() => {
-    dispatch(projectsAction.fetchProjects({ format: 'minimal' }))
+    dispatch(fetchProjects({ params: { format: 'minimal' } }))
   }, [dispatch])
 
   useEffect(() => {
@@ -317,7 +318,9 @@ const ProjectSettings = () => {
                   }}
                   className="delete-project-btn"
                   disabled={
-                    !userIsProjectOwner || projectStore.loading || projectStore.project.loading
+                    (!frontendSpec?.ce?.version && !userIsProjectOwner) ||
+                    projectStore.loading ||
+                    projectStore.project.loading
                   }
                 />
               )}

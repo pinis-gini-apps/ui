@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useState, useEffect, useMemo, useRef } from 'react'
-import { connect, useDispatch } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 
@@ -26,10 +26,8 @@ import ProjectMonitorView from './ProjectMonitorView'
 import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
 import RegisterModelModal from '../../elements/RegisterModelModal/RegisterModelModal'
 
-import featureStoreActions from '../../actions/featureStore'
 import functionsActions from '../../actions/functions'
 import nuclioAction from '../../actions/nuclio'
-import projectsAction from '../../actions/projects'
 import {
   DATASET_TYPE,
   DATASETS_TAB,
@@ -46,21 +44,21 @@ import { setNotification } from '../../reducers/notificationReducer'
 import { useMode } from '../../hooks/mode.hook'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
-
-const ProjectMonitor = ({
-  fetchNuclioV3ioStreams,
+import { removeNewFeatureSet } from '../../reducers/featureStoreReducer'
+import {
   fetchProject,
   fetchProjectFunctions,
   fetchProjectSummary,
-  frontendSpec,
+  removeProjectData,
+  removeProjectSummary
+} from '../../reducers/projectReducer'
+
+const ProjectMonitor = ({
+  fetchNuclioV3ioStreams,
   functionsStore,
   nuclioStore,
-  projectStore,
   removeFunctionsError,
-  removeNewFeatureSet,
   removeNewFunction,
-  removeProjectData,
-  removeProjectSummary,
   removeV3ioStreams
 }) => {
   const [createFeatureSetPanelIsOpen, setCreateFeatureSetPanelIsOpen] = useState(false)
@@ -75,6 +73,8 @@ const ProjectMonitor = ({
   const projectAbortControllerRef = useRef(new AbortController())
   const projectSummariesAbortControllerRef = useRef(new AbortController())
   const v3ioStreamsAbortControllerRef = useRef(new AbortController())
+  const frontendSpec = useSelector(state => state.appStore.frontendSpec)
+  const projectStore = useSelector(store => store.projectStore)
 
   const registerArtifactLink = useCallback(
     artifactKind =>
@@ -133,16 +133,27 @@ const ProjectMonitor = ({
     projectSummariesAbortControllerRef.current = new AbortController()
 
     Promise.all([
-      fetchProject(params.projectName, {}, projectAbortControllerRef.current.signal),
-      fetchProjectSummary(params.projectName, projectSummariesAbortControllerRef.current.signal)
+      dispatch(
+        fetchProject({
+          project: params.projectName,
+          params: {},
+          signal: projectAbortControllerRef.current.signal
+        })
+      ).unwrap(),
+      dispatch(
+        fetchProjectSummary({
+          project: params.projectName,
+          signal: projectSummariesAbortControllerRef.current.signal
+        })
+      ).unwrap()
     ]).catch(error => {
       handleFetchProjectError(error, navigate, setConfirmData, dispatch)
     })
-  }, [dispatch, fetchProject, fetchProjectSummary, navigate, params.projectName])
+  }, [dispatch, navigate, params.projectName])
 
   const resetProjectData = useCallback(() => {
-    removeProjectData()
-  }, [removeProjectData])
+    dispatch(removeProjectData())
+  }, [dispatch])
 
   useEffect(() => {
     return () => {
@@ -157,9 +168,9 @@ const ProjectMonitor = ({
 
     return () => {
       resetProjectData()
-      removeProjectSummary()
+      dispatch(removeProjectSummary())
     }
-  }, [fetchProjectDataAndSummary, removeProjectSummary, resetProjectData])
+  }, [dispatch, fetchProjectDataAndSummary, resetProjectData])
 
   useEffect(() => {
     if (nuclioStreamsAreEnabled && !isNuclioModeDisabled) {
@@ -177,7 +188,7 @@ const ProjectMonitor = ({
 
   const closeFeatureSetPanel = () => {
     setCreateFeatureSetPanelIsOpen(false)
-    removeNewFeatureSet()
+    dispatch(removeNewFeatureSet())
   }
 
   const closeFunctionsPanel = () => {
@@ -191,7 +202,7 @@ const ProjectMonitor = ({
 
   const createFeatureSetSuccess = async () => {
     setCreateFeatureSetPanelIsOpen(false)
-    removeNewFeatureSet()
+    dispatch(removeNewFeatureSet())
   }
 
   const createFunctionSuccess = async () => {
@@ -216,17 +227,19 @@ const ProjectMonitor = ({
     setShowFunctionsPanel(false)
     removeNewFunction()
 
-    const funcs = await fetchProjectFunctions(params.projectName).catch(error => {
-      dispatch(
-        setNotification({
-          status: 200,
-          id: Math.random(),
-          message: 'Function was deployed'
-        })
-      )
+    const funcs = await dispatch(fetchProjectFunctions({ project: params.projectName }))
+      .unwrap()
+      .catch(error => {
+        dispatch(
+          setNotification({
+            status: 200,
+            id: Math.random(),
+            message: 'Function was deployed'
+          })
+        )
 
-      showErrorNotification(dispatch, error, '', 'Failed to fetch functions')
-    })
+        showErrorNotification(dispatch, error, '', 'Failed to fetch functions')
+      })
 
     if (!isEmpty(funcs)) {
       const currentItem = funcs.find(func => {
@@ -253,10 +266,12 @@ const ProjectMonitor = ({
     setShowFunctionsPanel(false)
     removeNewFunction()
 
-    const funcs = await fetchProjectFunctions(params.projectName).catch(error => {
-      showErrorNotification(dispatch, deployError, '', 'Failed to deploy the function')
-      showErrorNotification(dispatch, error, '', 'Failed to fetch functions')
-    })
+    const funcs = await dispatch(fetchProjectFunctions({ project: params.projectName }))
+      .unwrap()
+      .catch(error => {
+        showErrorNotification(dispatch, deployError, '', 'Failed to deploy the function')
+        showErrorNotification(dispatch, error, '', 'Failed to fetch functions')
+      })
 
     if (!isEmpty(funcs)) {
       const currentItem = funcs.find(func => {
@@ -274,8 +289,8 @@ const ProjectMonitor = ({
   const handleLaunchIDE = useCallback(() => {}, [])
 
   const handleRefresh = () => {
-    removeProjectData()
-    removeProjectSummary()
+    dispatch(removeProjectData())
+    dispatch(removeProjectSummary())
     fetchProjectDataAndSummary()
 
     if (nuclioStreamsAreEnabled && !isNuclioModeDisabled) {
@@ -316,17 +331,12 @@ const ProjectMonitor = ({
 }
 
 export default connect(
-  ({ appStore, functionsStore, featureStore, nuclioStore, projectStore }) => ({
-    featureStore,
+  ({ functionsStore, nuclioStore }) => ({
     functionsStore,
-    frontendSpec: appStore.frontendSpec,
-    nuclioStore,
-    projectStore
+    nuclioStore
   }),
   {
-    ...featureStoreActions,
     ...functionsActions,
-    ...projectsAction,
     ...nuclioAction
   }
 )(ProjectMonitor)

@@ -62,7 +62,7 @@ export const createArtifactsContent = (artifacts, page, pageTab, project, isAllV
   })
 }
 
-export const getDefaultFirstHeader = (isAllVersions) => [
+export const getDefaultFirstHeader = isAllVersions => [
   {
     headerId: isAllVersions ? 'uid' : 'name',
     headerLabel: isAllVersions ? 'UID' : 'Name',
@@ -464,7 +464,9 @@ export const createModelEndpointsRowData = (artifact, project) => {
         tooltip: artifact.spec?.model_uri
           ? `${artifact.name} - ${artifact.spec?.model_uri}`
           : artifact.name,
-        additionalInfo: `${artifact.spec.function_name}:${artifact.spec.function_tag}`
+        additionalInfo:
+          artifact.spec?.function_name &&
+          `${artifact.spec.function_name}:${artifact.spec.function_tag}`
       },
       {
         id: `functionName.${artifact.ui.identifierUnique}`,

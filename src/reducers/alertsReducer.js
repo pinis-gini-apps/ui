@@ -34,6 +34,7 @@ import {
   FILTER_ALL_ITEMS,
   JOB,
   JOB_NAME,
+  MODEL_ENDPOINT_ID,
   MODEL_ENDPOINT_RESULT,
   MODEL_MONITORING_APPLICATION
 } from '../constants'
@@ -79,12 +80,18 @@ const generateRequestParams = filters => {
     params[ENTITY_ID] = `~*${filters?.[JOB_NAME]}*`
   }
 
+  if (filters[MODEL_ENDPOINT_ID]) {
+    params[ENTITY_ID] = `~${filters[MODEL_ENDPOINT_ID]}*`
+  }
+
   const endpointApplication = filters?.[ENDPOINT_APPLICATION]?.trim()
   const endpointResult = filters?.[ENDPOINT_RESULT]?.trim()
 
-  if (entityType === MODEL_ENDPOINT_RESULT && (endpointApplication || endpointResult)) {
+  if (entityType === MODEL_ENDPOINT_RESULT && (endpointApplication || endpointResult || entityId)) {
+    const application = endpointApplication ? `*${endpointApplication}` : ''
+    const id = entityId ? `*${entityId}` : ''
     const metricName = endpointResult ? `*${endpointResult}` : ''
-    params[ENTITY_ID] = `~*${endpointApplication || ''}*.result.${metricName}*`
+    params[ENTITY_ID] = `~${id}*.${application}*.result.${metricName}*`
   }
 
   if (

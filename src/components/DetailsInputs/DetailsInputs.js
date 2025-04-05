@@ -32,6 +32,7 @@ import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import {
   ARTIFACT_OTHER_TYPE,
   DATASET_TYPE,
+  DOCUMENT_TYPE,
   MLRUN_STORAGE_INPUT_PATH_SCHEME,
   MODEL_TYPE,
   TAG_FILTER_LATEST
@@ -60,11 +61,7 @@ const DetailsInputs = ({ inputs, isDetailsPopUp = false }) => {
   )
 
   const inputsTabContent = useMemo(() => {
-    return generateInputsTabContent(
-      inputsContent,
-      showArtifact,
-      isDetailsPopUp
-    )
+    return generateInputsTabContent(inputsContent, showArtifact, isDetailsPopUp)
   }, [inputsContent, isDetailsPopUp, showArtifact])
 
   const dispatch = useDispatch()
@@ -91,7 +88,9 @@ const DetailsInputs = ({ inputs, isDetailsPopUp = false }) => {
             ? ARTIFACT_OTHER_TYPE
             : kind === 'datasets'
               ? DATASET_TYPE
-              : MODEL_TYPE
+              : kind === 'models'
+                ? MODEL_TYPE
+                : DOCUMENT_TYPE
       }
 
       if (tag) {
@@ -136,11 +135,11 @@ const DetailsInputs = ({ inputs, isDetailsPopUp = false }) => {
   useEffect(() => {
     Object.entries(inputs || {}).forEach(([inputName, inputPath]) => {
       if (inputPath.startsWith(MLRUN_STORAGE_INPUT_PATH_SCHEME)) {
-        const { iteration, key, project, tag, kind, uid } = parseUri(inputPath)
+        const { iteration, key, project, tag, kind, tree, uid } = parseUri(inputPath)
         const isFeatureVector = kind === FEATURE_VECTORS_KIND
         const fetchData = isFeatureVector
           ? () => fetchFeatureVector(project, key, tag, uid)
-          : () => fetchArtifactByKind(project, key, kind, tag, uid, iteration)
+          : () => fetchArtifactByKind(project, key, kind, tag, tree, iteration)
 
         setRequestsCounter(counter => ++counter)
 

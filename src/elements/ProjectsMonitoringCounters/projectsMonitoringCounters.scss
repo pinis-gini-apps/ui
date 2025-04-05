@@ -16,7 +16,12 @@
   border: 1px solid $frenchLilac;
 
   &.alerts-card {
-    height: 100%;
+    transition:
+      background-color 0s,
+      border-color 0s;
+  }
+
+  &.alerts-card_not-empty {
     background-color: $carouselPink;
     border: 1px solid $babyPink;
   }
@@ -36,6 +41,10 @@
       &:last-child {
         padding: 10px 0;
       }
+    }
+
+    &-card__col:not(:last-child) {
+      padding-right: 0.75em;
     }
 
     &__counter {
@@ -67,7 +76,6 @@
 
   .project-card__info {
     display: flex;
-    align-items: baseline;
     align-items: center;
     justify-content: flex-end;
     margin-left: 1rem;
@@ -100,7 +108,7 @@
       position: relative;
       margin-right: 0.6em;
       padding-right: 0.75em;
-      font-size: 0.9vi;
+      font-size: 1rem;
 
       &::after {
         position: absolute;

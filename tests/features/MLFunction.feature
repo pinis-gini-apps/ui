@@ -9,6 +9,8 @@ Feature: ML Functions
     Scenario: MLF005 - Check all mandatory components on ML Functions Page
         Given open url
         And wait load page
+        When turn on demo mode with query params "false"
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
@@ -25,17 +27,42 @@ Feature: ML Functions
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Table_Name_Filter_Input" element visibility on "ML_Functions" wizard
-        And turn on demo mode
-        And wait load page
         Then verify "New_Function_Button" element visibility on "ML_Functions" wizard
         Then "New_Function_Button" element on "ML_Functions" should contains "New" value
         Then verify "Table_Refresh_Button" element visibility on "ML_Functions" wizard
-        Then verify "Table_Expand_Rows_Button" element visibility on "ML_Functions" wizard
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "ML_Functions" wizard selected option value "Past week"
         Then verify "Date_Picker_Filter_Dropdown" dropdown element on "ML_Functions" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
         And wait load page
+        Then verify "Functions_Table" element visibility on "ML_Functions" wizard
+        Then verify "show_all_versions" option is present on "ML_Functions" wizard in "Functions_Table" table with "vizro" value in "name" column
+        Then verify "show_all_versions" option on "ML_Functions" wizard in "Functions_Table" table with "vizro" value in "name" column should display hover tooltip "Common_Tooltips"."Show_All_Versions"
+        Then click on "show_all_versions" option on "ML_Functions" wizard in "Functions_Table" table with "vizro" value in "name" column
+        And wait load page
+        Then verify "History_Back_Button" element visibility on "ML_Functions" wizard
+        Then verify "Version_History_Title" element visibility on "ML_Functions" wizard
+        Then "Version_History_Title" element on "ML_Functions" should contains "Version history:" value
+        Then verify "Version_History_Model_Name" element visibility on "ML_Functions" wizard
+        Then "Version_History_Model_Name" element on "ML_Functions" should contains "vizro" value
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "ML_Functions" wizard selected option value "Any time"
+        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "ML_Functions" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
+        Then verify "Table_Refresh_Button" element visibility on "ML_Functions" wizard
+        Then verify "Table_FilterBy_Button" element visibility on "ML_Functions" wizard
+        Then click on "Table_FilterBy_Button" element on "ML_Functions" wizard
+        Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
+        Then verify "Show_Untagged" element visibility on "FilterBy_Popup" wizard
+        Then "Show_Untagged" element should be unchecked on "FilterBy_Popup" wizard
+        Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
+        Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
+        Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
+        Then verify "Clear_Button" element on "FilterBy_Popup" wizard is disabled
+        Then click on "Table_FilterBy_Button" element on "ML_Functions" wizard
+        Then verify "Functions_Table" element visibility on "ML_Functions" wizard
+        Then click on "History_Back_Button" element on "ML_Functions" wizard
+        And wait load page
+        Then verify "Table_Name_Filter_Input" element visibility on "ML_Functions" wizard
         Then verify "Functions_Table" element visibility on "ML_Functions" wizard
 
     @MLF
@@ -166,7 +193,7 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -199,7 +226,7 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -245,7 +272,7 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -291,7 +318,7 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -382,7 +409,7 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -491,7 +518,7 @@ Feature: ML Functions
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
         And type value "demo-function-04" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -613,7 +640,7 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -685,7 +712,7 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -752,7 +779,7 @@ Feature: ML Functions
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
         And type value "demo-function-01" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -785,7 +812,7 @@ Feature: ML Functions
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
         And type value "demo-function-01" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -857,7 +884,7 @@ Feature: ML Functions
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
         And type value "demo-function-01" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -914,7 +941,7 @@ Feature: ML Functions
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
         And type value "demo-function-01" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -979,7 +1006,7 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -1011,7 +1038,7 @@ Feature: ML Functions
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         And click on "New_Function_Button" element on "ML_Functions" wizard
         And type value "demo-function-5" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
@@ -1120,7 +1147,7 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -1142,7 +1169,7 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -1164,7 +1191,7 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -1191,7 +1218,7 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "automation-test" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -1261,7 +1288,7 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "automation-test" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -1390,7 +1417,7 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -1440,7 +1467,7 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And turn on demo mode
+        When turn on demo mode with query params "false"
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard

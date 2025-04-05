@@ -27,7 +27,6 @@ import {
   TAG_FILTER,
   TAG_FILTER_LATEST
 } from '../../../constants'
-import featureStoreActions from '../../../actions/featureStore'
 import { parseFeatureTemplate } from '../../../utils/parseFeatureTemplate'
 import { parseChipsData } from '../../../utils/convertChipsData'
 
@@ -111,7 +110,8 @@ export const generateActionsMenu = (
       hidden: isDetailsPopUp,
       icon: <Delete />,
       className: 'danger',
-      onClick: onDeleteFeatureVector
+      onClick: onDeleteFeatureVector,
+      allowLeaveWarning: true
     }
   ]
 ]
@@ -120,16 +120,6 @@ export const searchFeatureVectorItem = (content, name, tag) => {
   return content.find(contentItem => {
     return contentItem.name === name && (contentItem.tag === tag || contentItem.uid === tag)
   })
-}
-
-export const featureVectorsActionCreator = {
-  deleteFeatureVector: featureStoreActions.deleteFeatureVector,
-  fetchFeatureVector: featureStoreActions.fetchFeatureVector,
-  fetchFeatureVectors: featureStoreActions.fetchFeatureVectors,
-  fetchFeatureVectorsTags: featureStoreActions.fetchFeatureVectorsTags,
-  removeFeatureVector: featureStoreActions.removeFeatureVector,
-  removeFeatureVectors: featureStoreActions.removeFeatureVectors,
-  updateFeatureStoreData: featureStoreActions.updateFeatureStoreData
 }
 
 export const generateDetailsFormInitialValue = (selectedFeatureVector, internalLabels) => {
