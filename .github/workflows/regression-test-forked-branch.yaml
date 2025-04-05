@@ -61,17 +61,19 @@ jobs:
 
       - name: Patch package.json scripts
         run: |
-          node -e '
-            const fs = require("fs");
-            const pkgPath = "package.json";
-            const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
+          cat << 'EOF' > patch-package-json.js
+          const fs = require("fs");
+          const pkgPath = "package.json";
+          const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
 
-            pkg.scripts = pkg.scripts || {};
-            pkg.scripts["add-comment-to-http-client"] = "node scripts/ci-cd-scripts/appendCommentToHttpClient.js";
-            pkg.scripts["test:regression"] = "HEADLESS=true npm run test:ui && sleep 10 && echo \'Finished regression\' && sleep 10 && npm run report";
+          pkg.scripts = pkg.scripts || {};
+          pkg.scripts["add-comment-to-http-client"] = "node scripts/ci-cd-scripts/appendCommentToHttpClient.js";
+          pkg.scripts["test:regression"] = "HEADLESS=true npm run test:ui && sleep 10 && echo 'Finished regression' && sleep 10 && npm run report";
 
-            fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2));
-          '
+          fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2));
+          EOF
+
+          node patch-package-json.js
 
       - name: Set up Node.js
         id: setup_node
