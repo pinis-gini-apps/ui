@@ -399,7 +399,7 @@ Feature: Artifacts Page
     Then verify "Preview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     When click on cell with value "download_content" in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
-    Then verify "Pop_Out_Button" element visibility on "Files_Info_Pane" wizard 
+    Then verify "Pop_Out_Button" element visibility on "Files_Info_Pane" wizard
     Then click on "Pop_Out_Button" element on "Files_Info_Pane" wizard
     And wait load page
     Then verify "Preview_Row" element visibility on "Artifact_Preview_Popup" wizard
@@ -421,7 +421,7 @@ Feature: Artifacts Page
 
   @MLA
   @smoke
-  Scenario: MLA022 - Verify the Delete option state in Artifacts table and Overview details action menu 
+  Scenario: MLA022 - Verify the Delete option state in Artifacts table and Overview details action menu
     Given open url
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -482,7 +482,7 @@ Feature: Artifacts Page
     Then "Header" element on "Files_Info_Pane" should contains "test-file" value
     #TODO: Verify text message 'The <artifact> you are viewing was updated. Close the detail panel and refresh the list to see the current version.' on Files_Info_Pane
     #TODO: Verify that editing the tag to an empty string '' will delete the artifact instance
-    
+
 
   @MLA
   @passive
@@ -647,7 +647,7 @@ Feature: Artifacts Page
       Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
       Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
       Then click on "Cross_Cancel_Button" element on "Preview_Popup" wizard
-      
+
   @MLA
   @passive
   @smoke
@@ -668,7 +668,7 @@ Feature: Artifacts Page
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
 
-  @MLA 
+  @MLA
   @smoke
   Scenario: MLA020 - Check broken link redirection
     Given open url
@@ -732,8 +732,8 @@ Feature: Artifacts Page
     Then compare "Header" element value on "Files_Info_Pane" wizard with test "name" context value
 	  Then verify that row index 1 is active in "Files_Table" table on "Files" wizard
     Then verify that row index 2 is NOT active in "Files_Table" table on "Files" wizard
-    Then click on cell with row index 2 in "name" column in "Files_Table" table on "Files" wizard  
-    Then verify that row index 2 is active in "Files_Table" table on "Files" wizard   
+    Then click on cell with row index 2 in "name" column in "Files_Table" table on "Files" wizard
+    Then verify that row index 2 is active in "Files_Table" table on "Files" wizard
     Then verify that row index 1 is NOT active in "Files_Table" table on "Files" wizard
     Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
@@ -758,10 +758,10 @@ Feature: Artifacts Page
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Overview_General_Headers"
     Then check "latest" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
-    Then verify "Edit_btn_table_view" element not exists on "Files_Info_Pane" wizard    
+    Then verify "Edit_btn_table_view" element not exists on "Files_Info_Pane" wizard
     Then click on "Full_View_Button" element on "Files_Info_Pane" wizard
     Then verify "Cross_Close_Button" element not exists on "Files_Info_Pane" wizard
-    Then verify "Edit_btn_full_view" element not exists on "Files_Info_Pane" wizard   
+    Then verify "Edit_btn_full_view" element not exists on "Files_Info_Pane" wizard
     Then "Version_tag_Value_full_view" element on "Files_Info_Pane" should contains "latest" value
     Then click on "Tabel_View_Button" element on "Files_Info_Pane" wizard
     Then verify "Cross_Close_Button" element visibility on "Files_Info_Pane" wizard
@@ -829,7 +829,7 @@ Feature: Artifacts Page
     And wait load page
     Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
-    Then verify "Overview_General_Headers" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Overview_General_Headers"   
+    Then verify "Overview_General_Headers" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Overview_General_Headers"
     Then "Version_Tag_Input_Placeholder" element on "Files_Info_Pane" should contains "Click to add" value
 
   @MLA
