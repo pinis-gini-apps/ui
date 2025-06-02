@@ -3,7 +3,7 @@ name: regression-test-forked-branch
 on:
   push:
     branches:
-      - remote-regression-test-runs
+      - remote-regression-test-runs-vite
 
 jobs:
   regression-test-forked:
