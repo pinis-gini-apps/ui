@@ -18,7 +18,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - remote-regression-test-runs
+      - remote-regression-test-runs-vite
   pull_request_target:
     types: [labeled, opened, reopened, synchronize]
     branches:
