@@ -39,7 +39,7 @@ Feature: Project Monitoring Page
         Then verify "Real_Time_Functions_Card_Statistics" element visibility on "Project" wizard
         When hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         Then verify "General_Info_Quick_Links" element visibility on "commonPagesHeader" wizard
-    
+
     @MLPM
     @passive
     @smoke
@@ -251,16 +251,16 @@ Feature: Project Monitoring Page
             |    key2   |    value2   |
             |    key3   |    value3   |
         Then verify values in "Labels_Table" table on "Register_Model_Popup" wizard with attribute
-            | key_verify | value_verify | 
+            | key_verify | value_verify |
             |    key1    |    value1    |
             |    key2    |    value2    |
             |    key3    |    value3    |
         When click on "remove_btn" in "Labels_Table" table on "Register_Model_Popup" wizard with attribute
-            | key_verify | 
-            |    key1    |    
-            |    key3    |      
+            | key_verify |
+            |    key1    |
+            |    key3    |
         Then verify values in "Labels_Table" table on "Register_Model_Popup" wizard with attribute
-            | key_verify | value_verify | 
+            | key_verify | value_verify |
             |    key2    |    value2    |
 
     @MLPM
@@ -307,7 +307,7 @@ Feature: Project Monitoring Page
         Then verify "Name_Input" input should contains "dataset" value on "Register_Dataset" wizard
         Then verify "Path_Scheme_Combobox" input should contains "target/path" value in "Target_Path" on "Register_Dataset" wizard
         Then verify "Description_Input" input should contains "new dataset description" value on "Register_Dataset" wizard
-    
+
     @MLPM
     @passive
     @smoke
@@ -402,7 +402,7 @@ Feature: Project Monitoring Page
         Then verify "Parallel_Runs_Number_Input" element visibility on "Modal_Wizard_Form" wizard
         Then verify "Dask_Clutter_URL_Input" element visibility on "Modal_Wizard_Form" wizard
         Then "Teardown_Checkbox" element should be unchecked on "Modal_Wizard_Form" wizard
-    
+
     @MLPM
     @passive
     @smoke
@@ -531,7 +531,7 @@ Feature: Project Monitoring Page
         Then verify "Access_Key_Checkbox" element visibility on "New_Function" wizard
         Then verify "Cancel_Button" element visibility on "New_Function" wizard
         Then verify "Save_Button" element visibility on "New_Function" wizard
-        # Deploy button available for Serving function 
+        # Deploy button available for Serving function
         # Then verify "Deploy_Button" element visibility on "New_Function" wizard
 
     @MLPM
@@ -678,7 +678,7 @@ Feature: Project Monitoring Page
         Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
         Then verify "Table_Refresh_Button" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
-        
+
 
     @MLPM
     @passive
@@ -863,7 +863,7 @@ Feature: Project Monitoring Page
         Then verify "Consumer_Groups_Table" element visibility on "Consumer_Groups" wizard
         Then "Title" element on "Consumer_Groups" should contains "Consumer groups (v3io stream)" value
         Then "Description" element on "Consumer_Groups" should contains "This report displays the project's consumer groups for Iguazio v3io streams" value
-    
+
     @MLPM
     @smoke
     Scenario: MLPM021 - Verify filtering by name on Consumer Groups drill-down
