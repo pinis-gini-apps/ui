@@ -19,7 +19,6 @@ on:
   push:
     branches:
       - remote-regression-test-runs-vite
-      - remote-pre-merge-tests-vite
   pull_request_target:
     types: [labeled, opened, reopened, synchronize]
     branches:

@@ -5,7 +5,6 @@ Feature: Project Monitoring Page
     @MLPM
     @passive
     @smoke
-    @uniqueTag
     Scenario: MLPM002 - Check all mandatory components
         Given open url
         And wait load page
