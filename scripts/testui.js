@@ -48,7 +48,7 @@ const cucumberCommand =
   report +
   '_default.html tests ' +
   argv.join(' ') +
-  '-t @smoke'
+  '-t @uniqueTag'
 
 // check and create report folder
 const reportDir = report.split('/').slice(0, -1).join('/')
