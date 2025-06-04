@@ -18,7 +18,6 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import express from 'express'
-
 import bodyParser from 'body-parser'
 import yaml from 'js-yaml'
 import fs from 'fs'

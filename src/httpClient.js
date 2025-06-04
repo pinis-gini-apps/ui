@@ -36,12 +36,9 @@ const paramsSerializer = params => qs.stringify(params, { arrayFormat: 'repeat' 
 const MAX_CONSECUTIVE_ERRORS_COUNT = 2
 let consecutiveErrorsCount = 0
 
-// export const mainBaseUrl = 'http://localhost:30000/api/v1'
-// export const mainBaseUrlV2 = 'http://localhost:30000/api/v2'
-export const mainBaseUrl =
-  'http://localhost:30000/mlrun-api-ingress.default-tenant.app.vmdev36.lab.iguazeng.com/api/v1'
-export const mainBaseUrlV2 =
-  'http://localhost:30000/mlrun-api-ingress.default-tenant.app.vmdev36.lab.iguazeng.com/api/v2'
+export const mainBaseUrl = `${import.meta.env.VITE_PUBLIC_URL}/api/v1`
+export const mainBaseUrlV2 = `${import.meta.env.VITE_PUBLIC_URL}/api/v2`
+
 export const mainHttpClient = axios.create({
   baseURL: mainBaseUrl,
   headers,
