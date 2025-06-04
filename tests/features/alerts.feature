@@ -4,6 +4,7 @@ Feature: Alerts Page
 
     @MLAlert
     @smoke
+    @smoke1
     Scenario: MLAlert001 - Check components on Alerts page
         Given open url
         And wait load page
