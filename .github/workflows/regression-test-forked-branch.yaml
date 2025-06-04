@@ -15,10 +15,6 @@
 name: Pre-Merge Regression Tests
 
 on:
-  workflow_dispatch:
-  push:
-    branches:
-      - remote-regression-test-runs-vite
   pull_request_target:
     types: [labeled, opened, reopened, synchronize]
     branches:
@@ -36,10 +32,11 @@ jobs:
       github.event_name == 'push' ||
       github.event_name == 'pull_request_target'
     env:
-      REACT_APP_FUNCTION_CATALOG_URL: ${{ secrets.REACT_APP_FUNCTION_CATALOG_URL }}
-      REACT_APP_MLRUN_API_URL: ${{ secrets.REACT_APP_MLRUN_API_URL }}
-      REACT_APP_NUCLIO_API_URL: ${{ secrets.REACT_APP_NUCLIO_API_URL }}
-      REACT_APP_IGUAZIO_API_URL: ${{ secrets.REACT_APP_IGUAZIO_API_URL }}
+      VITE_PUBLIC_URL: ${{ secrets.VITE_PUBLIC_URL }}
+      VITE_MLRUN_V3IO_ACCESS_KEY: ${{ secrets.VITE_MLRUN_V3IO_ACCESS_KEY }}
+      VITE_MLRUN_API_URL: ${{ secrets.VITE_MLRUN_API_URL }}
+      VITE_NUCLIO_API_URL: ${{ secrets.VITE_NUCLIO_API_URL }}
+      VITE_IGUAZIO_API_URL: ${{ secrets.VITE_IGUAZIO_API_URL }}
     outputs:
       failed_step: ${{ steps.identify_failure.outputs.FAILED_STEP }}
       job_status: ${{ job.status }}
