@@ -76,7 +76,7 @@ export default defineConfig(({ mode }) => {
       ]
     },
     optimizeDeps: {
-      force: true,
+      force: true
     },
     build: {
       sourcemap: true,
