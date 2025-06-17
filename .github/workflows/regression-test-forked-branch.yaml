@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - remote-regression-test-runs-vite
+      - remote-regression-test-runs-vite-olena-2
 
 jobs:
   regression-test-forked:
