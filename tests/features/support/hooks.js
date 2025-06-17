@@ -27,9 +27,12 @@ Before(async function () {
   this.createdItems = []
   this.testContext = {}
   await this.driver.get('http://localhost:3000')
-  await this.driver.executeScript(function() {
+  await this.driver.executeScript(function () {
     localStorage.setItem('igzFullVersion', '3.5.5')
   })
+
+  // Zoom out the page to 90%
+  await this.driver.executeScript("document.body.style.zoom = '0.6'")
 })
 
 After(async function (testCase) {
