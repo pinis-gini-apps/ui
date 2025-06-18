@@ -51,7 +51,7 @@ class CustomWorld extends World {
         browseConfigs.addArguments('no-sandbox')
         browseConfigs.addArguments('disable-gpu')
         browseConfigs.addArguments(`window-size=${screen_size.width},${screen_size.height}`)
-        browseConfigs.addArguments('force-device-scale-factor=0.7') // Optional
+        browseConfigs.addArguments('force-device-scale-factor=0.9') // Optional
         browseConfigs.addArguments('high-dpi-support=1') // Optional
       }
     }
