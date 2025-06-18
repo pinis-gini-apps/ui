@@ -32,7 +32,7 @@ Before(async function () {
   })
 
   // Zoom out the page to 90%
-  await this.driver.executeScript("document.body.style.zoom = '0.6'")
+  await this.driver.executeScript("document.body.style.zoom = '0.7'")
 })
 
 After(async function (testCase) {

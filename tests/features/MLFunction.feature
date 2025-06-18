@@ -5,6 +5,7 @@ Feature: ML Functions
     @MLF
     @passive
     @smoke
+    @smoke2
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF005 - Check all mandatory components on ML Functions Page
         Given open url
@@ -68,6 +69,7 @@ Feature: ML Functions
     @MLF
     @passive
     @smoke
+    @smoke2
     Scenario: MLF006 - Verify filtering by function name on Functions page
         Given open url
         And wait load page
@@ -158,6 +160,7 @@ Feature: ML Functions
     @MLF
     @passive
     @smoke
+    @smoke2
     Scenario: MLF009 - Verify all mandatory components on Delete existing function in Item infopane
         Given open url
         And wait load page
@@ -251,16 +254,16 @@ Feature: ML Functions
             |    key2   |    value2   |
             |    key3   |    value3   |
         Then verify values in "Labels_Table" table in "General_Accordion" on "New_Function" wizard with attribute
-            | key_verify | value_verify | 
+            | key_verify | value_verify |
             |    key1    |    value1    |
             |    key2    |    value2    |
             |    key3    |    value3    |
         When click on "remove_btn" in "Labels_Table" table in "General_Accordion" on "New_Function" wizard with attribute
-            | key_verify | 
-            |    key1    |    
+            | key_verify |
+            |    key1    |
             |    key3    |
         Then verify values in "Labels_Table" table in "General_Accordion" on "New_Function" wizard with attribute
-            | key_verify | value_verify | 
+            | key_verify | value_verify |
             |    key2    |    value2    |
 
     @MLF
@@ -625,7 +628,7 @@ Feature: ML Functions
         Then verify "Save_Button" element visibility on "New_Function" wizard
         Then "Save_Button" element on "New_Function" should contains "Save" value
         Then verify "Deploy_Button" element visibility on "New_Function" wizard
-        Then "Deploy_Button" element on "New_Function" should contains "Create" value 
+        Then "Deploy_Button" element on "New_Function" should contains "Create" value
         And click on "Save_Button" element on "New_Function" wizard
         Then verify "Cancel_Button" element on "New_Function" wizard is enabled
         Then verify "Save_Button" element on "New_Function" wizard is disabled
@@ -1401,8 +1404,8 @@ Feature: ML Functions
         Then compare "Header" element value on "ML_Function_Info_Pane" wizard with test "name" context value
 	    Then verify that row index 1 is active in "Functions_Table" table on "ML_Functions" wizard
         Then verify that row index 2 is NOT active in "Functions_Table" table on "ML_Functions" wizard
-        Then click on cell with row index 2 in "name" column in "Functions_Table" table on "ML_Functions" wizard  
-        Then verify that row index 2 is active in "Functions_Table" table on "ML_Functions" wizard   
+        Then click on cell with row index 2 in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        Then verify that row index 2 is active in "Functions_Table" table on "ML_Functions" wizard
         Then verify that row index 1 is NOT active in "Functions_Table" table on "ML_Functions" wizard
         Then verify "Info_Pane_Tab_Selector" element visibility on "ML_Function_Info_Pane" wizard
         Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "ML_Function_Info_Pane" wizard
@@ -1488,4 +1491,3 @@ Feature: ML Functions
         Then "Function_Name" element in "General_Accordion" on "New_Function" should contains "churn-server" value
         Then verify "Deploy_Button" element visibility on "New_Function" wizard
         Then "Deploy_Button" element on "New_Function" should contains "Deploy" value
-        
