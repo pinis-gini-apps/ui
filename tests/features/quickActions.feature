@@ -4,6 +4,7 @@ Feature: Quick actions Page
 
     @MLPH
     @smoke
+    @smoke2
     Scenario: MLPH001 - Check all mandatory components on Project Home
         * set tear-down property "project" created with "automation-test-1002" value
         * create "automation-test-1002" MLRun Project with code 201
@@ -82,9 +83,10 @@ Feature: Quick actions Page
             |     RT Pipelines    |
             |  Nuclio Functions   |
             |     Monitoring      |
-    
+
     @MLPH
     @smoke
+    @smoke2
     Scenario: MLPH002 - Verify behaviour on Register Model Popup on Project Home Page
         Given open url
         And wait load page
@@ -137,7 +139,7 @@ Feature: Quick actions Page
         Then check "new-model" value in "key" column in "Overview_Table" table on "Models_Info_Pane" wizard
         Then check "latest" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
         Then check "v3io:///target/" value in "path" column in "Overview_Table" table on "Models_Info_Pane" wizard
-    
+
     @MLPH
     @smoke
     @passive
@@ -188,7 +190,7 @@ Feature: Quick actions Page
         Then verify "Cancel_Button" element visibility on "New_Feature_Set" wizard
         Then verify "Save_Button" element visibility on "New_Feature_Set" wizard
         Then verify "Save_And_Ingest_Button" element visibility on "New_Feature_Set" wizard
-    
+
     @MLPH
     @passive
     @smoke
@@ -247,8 +249,8 @@ Feature: Quick actions Page
         Then check "dataset" value in "key" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
         Then check "latest" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
         Then check "v3io:///target/path" value in "path" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
-    
-    @MLPH 
+
+    @MLPH
     @passive
     @smoke
     Scenario: MLPH005 - Check all mandatory components on Create ML Function on Project Home Page
@@ -449,7 +451,7 @@ Feature: Quick actions Page
         Then check "artifact" value in "key" column in "Overview_Table" table on "Files_Info_Pane" wizard
         Then check "latest" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
         Then check "v3io:///target/path" value in "path" column in "Overview_Table" table on "Files_Info_Pane" wizard
-    
+
     @MLPH
     @passive
     @smoke
@@ -817,7 +819,7 @@ Feature: Quick actions Page
         Then verify "Real_Time_Functions_Card_Statistics" element visibility on "Project" wizard
         When hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         Then verify "General_Info_Quick_Links" element visibility on "commonPagesHeader" wizard
-    
+
     @MLPH
     @smoke
     Scenario: MLPH020 - Check all mandatory components on Batch inference in Advanced section
@@ -868,7 +870,7 @@ Feature: Quick actions Page
         Then verify data in "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard
             | name_verify | type_dropdown_verify |       value_verify       |
             |    name1    |        value         |          value1          |
-            |    name2    |        secret        | sectretName1:sectretKey1 | 
+            |    name2    |        secret        | sectretName1:sectretKey1 |
             |    name3    |        secret        | sectretName2:sectretKey2 |
             |    name4    |        value         |          value2          |
             |    name5    |        secret        | sectretName3:sectretKey3 |
@@ -882,29 +884,29 @@ Feature: Quick actions Page
             |    name6    |
         Then verify data in "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard
             | name_verify | type_dropdown_verify |       value_verify       |
-            |    name2    |        secret        | sectretName1:sectretKey1 | 
+            |    name2    |        secret        | sectretName1:sectretKey1 |
             |    name4    |        value         |          value2          |
             |    name5    |        secret        | sectretName3:sectretKey3 |
             |    name7    |        secret        | sectretName4:sectretKey4 |
             |    name8    |        value         |          value4          |
         And wait load page
         Then edit 1 row in "Advanced_Environment_Variables_Table" key-value table on "Modal_Wizard_Form" wizard
-            | name_input | value_input | 
+            | name_input | value_input |
             |   edited   |    edited   |
         Then verify data in "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard
             | name_verify | type_dropdown_verify |          value_verify          |
-            | name2edited |        secret        | sectretName1edited:sectretKey1 | 
+            | name2edited |        secret        | sectretName1edited:sectretKey1 |
             |    name4    |        value         |             value2             |
             |    name5    |        secret        |    sectretName3:sectretKey3    |
             |    name7    |        secret        |    sectretName4:sectretKey4    |
             |    name8    |        value         |             value4             |
         And wait load page
         Then edit 5 row in "Advanced_Environment_Variables_Table" key-value table on "Modal_Wizard_Form" wizard
-            | name_input | value_input | 
+            | name_input | value_input |
             |   edited   |    edited   |
         Then verify data in "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard
             | name_verify | type_dropdown_verify |          value_verify          |
-            | name2edited |        secret        | sectretName1edited:sectretKey1 | 
+            | name2edited |        secret        | sectretName1edited:sectretKey1 |
             |    name4    |        value         |             value2             |
             |    name5    |        secret        |    sectretName3:sectretKey3    |
             |    name7    |        secret        |    sectretName4:sectretKey4    |
@@ -914,7 +916,7 @@ Feature: Quick actions Page
             | name_verify |
             |    name4    |
             |    name5    |
-        And wait load page    
+        And wait load page
         Then verify "Default_Input_Path_Input" element visibility in "Advanced_Accordion" on "Modal_Wizard_Form" wizard
         Then type value "test" to "Default_Input_Path_Input" field on "Advanced_Accordion" on "Modal_Wizard_Form" wizard
         Then verify "Default_Artifact_Path_Input" element visibility in "Advanced_Accordion" on "Modal_Wizard_Form" wizard
@@ -931,7 +933,7 @@ Feature: Quick actions Page
         And click on "Infer_Now_Button" element on "Modal_Wizard_Form" wizard
         And wait load page
         Then value in "name" column with "text" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "batch-inference-v2"
-    
+
     @MLPH
     @inProgress
     @smoke
