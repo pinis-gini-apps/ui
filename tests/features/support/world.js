@@ -72,7 +72,7 @@ class CustomWorld extends World {
       .build()
   }
 
-  async zoomOut(factor = 0.9) {
+  async zoomOut(factor = 0.7) {
     await this.driver.executeScript(`document.body.style.zoom = '${factor}'`)
   }
 }
