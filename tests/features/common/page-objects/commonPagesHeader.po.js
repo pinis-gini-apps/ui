@@ -23,11 +23,11 @@ import breadcrumbsComponent from '../components/breadcrumbs.component'
 import commonTable from '../components/table.component'
 
 const generalInfoQuickLinks = {
-  root: '.navbar .navbar__body .navbar-links',
+  root: '[data-testid="navbar"]',
   header: {},
   body: {
     row: {
-      root: '.nav-link',
+      root: '.navbar__body .nav-link',
       fields: {
         link: '.nav-link__button span'
       }
