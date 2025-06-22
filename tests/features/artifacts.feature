@@ -91,7 +91,7 @@ Feature: Artifacts Page
 
   @MLA
   @passive
-  @smoke2
+  @smoke
   Scenario: MLA004 - Verify behaviour of Show iterations checkbox on Artifacts tab
     Given open url
     And wait load page
