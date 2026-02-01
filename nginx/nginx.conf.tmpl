@@ -4,12 +4,10 @@ map $http_x_v3io_session_key $v3io_session_key {
 }
 
 server {
-
   listen 8090;
-
   include resolvers.conf;
 
-  # https://raw.githubusercontent.com
+  # Function Catalog Proxy
   set $function_catalog ${MLRUN_FUNCTION_CATALOG_URL};
   location /function-catalog {
     rewrite /function-catalog/(.*) ${MLRUN_FUNCTION_CATALOG_PATH}/$1 break;
@@ -20,36 +18,34 @@ server {
     rewrite ^/mlrun(/|$)(.*) /$2 last;
   }
 
-    # -------------------------------
-    # Serve Static Frontend + CORS preflight handling
-    # -------------------------------
-    location / {
-      if ($request_method = 'OPTIONS') {
-        # CORS: Allowed origin from env
-        add_header 'Access-Control-Allow-Origin' '${MLRUN_IGZ_UI_ALLOWED_ORIGIN}';
-        add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS';
-        add_header 'Access-Control-Allow-Headers' 'Origin, Content-Type, Accept';
-        add_header 'Content-Length' 0;
-        add_header 'Content-Type' 'text/plain';
-        return 204;
-      }
-
-      root   /usr/share/nginx/html;
-      index  index.html index.htm;
-      try_files $uri $uri/ /index.html;
-
-      # CORS: Allowed origin from env
-      add_header 'Access-Control-Allow-Origin' '${MLRUN_IGZ_UI_ALLOWED_ORIGIN}' always;
-      add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;
-      add_header 'Access-Control-Allow-Headers' 'Origin, Content-Type, Accept' always;
+  # Main UI + CORS Handling
+  location / {
+    if ($request_method = 'OPTIONS') {
+      add_header 'Access-Control-Allow-Origin' '${MLRUN_IGZ_UI_ALLOWED_ORIGIN}';
+      add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS';
+      add_header 'Access-Control-Allow-Headers' 'Origin, Content-Type, Accept';
+      add_header 'Content-Length' 0;
+      add_header 'Content-Type' 'text/plain';
+      return 204;
     }
 
+    root   /usr/share/nginx/html;
+    index  index.html index.htm;
+    try_files $uri $uri/ /index.html;
+
+    add_header 'Access-Control-Allow-Origin' '${MLRUN_IGZ_UI_ALLOWED_ORIGIN}' always;
+    add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;
+    add_header 'Access-Control-Allow-Headers' 'Origin, Content-Type, Accept' always;
+  }
+
+  # MLRun API Proxy
   set $backend ${MLRUN_API_PROXY_URL};
   location /api {
     proxy_set_header x-v3io-session-key $v3io_session_key;
     proxy_pass $backend;
   }
 
+  # Nuclio API Proxy (pointing to the dashboard service)
   set $nuclio_backend ${MLRUN_NUCLIO_API_URL};
   location /nuclio {
     rewrite ^/nuclio(/|$)(.*) /$2 break;
@@ -57,7 +53,6 @@ server {
   }
 
   error_page   500 502 503 504  /50x.html;
-
   location = /50x.html {
     root   /usr/share/nginx/html;
   }

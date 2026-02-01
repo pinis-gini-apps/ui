@@ -20,10 +20,14 @@ such restriction.
 
 import { HTTP, HTTPS } from './constants'
 
+const withProtocolIfNeeded = url => {
+  if (!url) return url
+  return url.startsWith(HTTP) || url.startsWith(HTTPS)
+    ? url
+    : `${window.location.protocol}//${url}`
+}
+
 export const loadRemoteConfig = async (url, services = {}) => {
-  /**
-   * Store host-provided services (auth bridge from igz-ui)
-   */
   if (services && Object.keys(services).length > 0) {
     window.__mlrunHostServices = services
   }
@@ -34,17 +38,17 @@ export const loadRemoteConfig = async (url, services = {}) => {
 
   const config = await response.json()
 
-  if (config.nuclioUiUrl) {
-    const mlrunProtocol =
-      config.nuclioUiUrl.startsWith(HTTP) || config.nuclioUiUrl.startsWith(HTTPS)
-        ? ''
-        : `${window.location.protocol}//`
+  const nuclioUiUrl = config.nuclioUiUrl
+    ? withProtocolIfNeeded(config.nuclioUiUrl)
+    : undefined
 
-    window.mlrunConfig = {
-      ...config,
-      nuclioUiUrl: `${mlrunProtocol}${config.nuclioUiUrl}`
-    }
-  } else {
-    window.mlrunConfig = config
+  const nuclioRemoteEntryUrl = config.nuclioRemoteEntryUrl
+    ? withProtocolIfNeeded(config.nuclioRemoteEntryUrl)
+    : nuclioUiUrl
+
+  window.mlrunConfig = {
+    ...config,
+    ...(nuclioUiUrl ? { nuclioUiUrl } : {}),
+    ...(nuclioRemoteEntryUrl ? { nuclioRemoteEntryUrl } : {})
   }
 }

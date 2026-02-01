@@ -123,15 +123,16 @@ export const getLinks = projectName => {
       icon: <NuclioIcon />,
       id: 'real-time-functions',
       label: 'Real-time functions',
-      link: generateNuclioLink(`${pathname}/functions`),
-      externalLink: true
+      // Use relative path to stay in the Host app
+      link: `${pathname}/real-time-functions`,
+      externalLink: false
     },
     {
       icon: <APIIcon />,
       id: 'api-gateways',
       label: 'API gateways',
       link: generateNuclioLink(`${pathname}/api-gateways`),
-      externalLink: true
+      externalLink: false
     }
   ]
 }
