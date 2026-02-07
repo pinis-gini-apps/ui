@@ -319,9 +319,7 @@ const ProjectSettings = () => {
                   }}
                   className="delete-project-btn"
                   disabled={
-                    (!frontendSpec?.ce?.version && !userIsProjectOwner) ||
-                    projectStore.loading ||
-                    projectStore.project.loading
+                    !userIsProjectOwner || projectStore.loading || projectStore.project.loading
                   }
                 />
               )}
